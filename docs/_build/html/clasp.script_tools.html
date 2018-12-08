@@ -1,0 +1,298 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>script_tools &#8212; clasp (0.0.1) 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="sphinx_click_ext" href="clasp.sphinx_click_ext.html" />
+    <link rel="prev" title="click_ext" href="clasp.click_ext.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">clasp (0.0.1)</a></h1>
+
+
+
+
+
+
+
+
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="clasp.click_ext.html">click_ext</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">script_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clasp.sphinx_click_ext.html">sphinx_click_ext</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="search.html">Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">Todo</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-clasp.script_tools">
+<span id="script-tools"></span><h1>script_tools<a class="headerlink" href="#module-clasp.script_tools" title="Permalink to this headline">¶</a></h1>
+<p>library of functions helpful for cli script development and parallel
+computing particulary w/ subprocess calls.</p>
+<dl class="function">
+<dt id="clasp.script_tools.try_mkdir">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">try_mkdir</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#try_mkdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.try_mkdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>exception free mkdir</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.arange">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">arange</code><span class="sig-paren">(</span><em>start</em>, <em>stop=None</em>, <em>step=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#arange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.arange" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.rm_dup">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">rm_dup</code><span class="sig-paren">(</span><em>seq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#rm_dup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.rm_dup" title="Permalink to this definition">¶</a></dt>
+<dd><p>removes duplicates from list while preserving order</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.kwarg_match">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">kwarg_match</code><span class="sig-paren">(</span><em>func</em>, <em>kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#kwarg_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.kwarg_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>filters dict for keys used by func</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.arg_match">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">arg_match</code><span class="sig-paren">(</span><em>func</em>, <em>kwargs</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#arg_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.arg_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>filters dict for positional arguments used by func</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.kwarg_arg">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">kwarg_arg</code><span class="sig-paren">(</span><em>func</em>, <em>kwargs</em>, <em>skip=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#kwarg_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.kwarg_arg" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns ordered list of optional arg values</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.crossref">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">crossref</code><span class="sig-paren">(</span><em>l1</em>, <em>l2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#crossref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.crossref" title="Permalink to this definition">¶</a></dt>
+<dd><p>return all possible pairs of 2 lists</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.crossref_all">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">crossref_all</code><span class="sig-paren">(</span><em>l</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#crossref_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.crossref_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>return all possible combos of list of lists</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.subpipe">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">subpipe</code><span class="sig-paren">(</span><em>commands</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#subpipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.subpipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>parses special syntax in pipe expressions</p>
+<div class="line-block">
+<div class="line">$(some command) executes to a temporary file whose path is inserted in</div>
+<div class="line">the command.</div>
+<div class="line">$((expression)) evaluates a arithmetic expression in place +-<a href="#id1"><span class="problematic" id="id2">*</span></a>/()</div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.pipeline">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">pipeline</code><span class="sig-paren">(</span><em>commands</em>, <em>outfile=None</em>, <em>inp=None</em>, <em>close=False</em>, <em>cwd=None</em>, <em>writemode='w'</em>, <em>forceinpfile=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>executes pipeline of shell commands (given as list of strings)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>commands</strong> (<em>list</em>) – list of commands to execute in order</li>
+<li><strong>outfile</strong> (<em>writeable file object</em>) – optional destination for stdout</li>
+<li><strong>inp</strong> (<em>str</em><em> or </em><em>filebuffer</em>) – string to feed to stdin at start of pipeline</li>
+<li><strong>close</strong> (<em>bool</em>) – if true closes file object before returning</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> – returns stdout of pipeline (will be None if outfile is given)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.flat_list">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">flat_list</code><span class="sig-paren">(</span><em>l</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#flat_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.flat_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>flattens any depth list</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.cluster_call">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">cluster_call</code><span class="sig-paren">(</span><em>func</em>, <em>args</em>, <em>profile=None</em>, <em>kwargs=None</em>, <em>timeout=0.1</em>, <em>cwd=None</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#cluster_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.cluster_call" title="Permalink to this definition">¶</a></dt>
+<dd><p>execute func on ipcluster if available return output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>func</strong> (<em>python function</em>) – function to execute</li>
+<li><strong>outfile</strong> (<em>list of args</em>) – each item is mapped to function</li>
+<li><strong>profile</strong> (<em>str</em>) – name of ipcluster profile to execute on</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> – returns stdout of each function call</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.cluster_command">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">cluster_command</code><span class="sig-paren">(</span><em>com</em>, <em>cwd</em>, <em>stdin=None</em>, <em>stdout=None</em>, <em>shell=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#cluster_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.cluster_command" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.get_results">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">get_results</code><span class="sig-paren">(</span><em>ar</em>, <em>stdout</em>, <em>coms</em>, <em>sh</em>, <em>i</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>get results from asyncronous results when ready use in while pending</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.run_sh">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">run_sh</code><span class="sig-paren">(</span><em>remotes</em>, <em>sh</em>, <em>prof</em>, <em>cwd</em>, <em>stdout=None</em>, <em>ordered=False</em>, <em>nodir=False</em>, <em>exclude='NOTRANSFER/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#run_sh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.run_sh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.start_farm">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">start_farm</code><span class="sig-paren">(</span><em>remotes</em>, <em>prof</em>, <em>thr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#start_farm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.start_farm" title="Permalink to this definition">¶</a></dt>
+<dd><p>output shell command for starting farm</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.stop_farm">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">stop_farm</code><span class="sig-paren">(</span><em>profile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#stop_farm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.stop_farm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.add_engine">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">add_engine</code><span class="sig-paren">(</span><em>remotes</em>, <em>sh</em>, <em>prof</em>, <em>thr</em>, <em>nodir=False</em>, <em>exclude='NOTRANSFER/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#add_engine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.add_engine" title="Permalink to this definition">¶</a></dt>
+<dd><p>call ipcluster to add additional engines to farm</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.remove_engines">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">remove_engines</code><span class="sig-paren">(</span><em>remotes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#remove_engines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.remove_engines" title="Permalink to this definition">¶</a></dt>
+<dd><p>remove remote from ipcluster</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.send_working_dir">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">send_working_dir</code><span class="sig-paren">(</span><em>remotes</em>, <em>workdir</em>, <em>cwd='ipcluster'</em>, <em>exclude='NOTRANSFER/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#send_working_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.send_working_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>transfer file dependencies to remotes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.get_cpu">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">get_cpu</code><span class="sig-paren">(</span><em>remotes</em>, <em>stat=None</em>, <em>cwd='ipcluster'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_cpu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_cpu" title="Permalink to this definition">¶</a></dt>
+<dd><p>print top usage stats for remotes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.check_farm">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">check_farm</code><span class="sig-paren">(</span><em>profile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#check_farm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.check_farm" title="Permalink to this definition">¶</a></dt>
+<dd><p>output number of engines running on farm</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.gather_files">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">gather_files</code><span class="sig-paren">(</span><em>remotes</em>, <em>get</em>, <em>rsync</em>, <em>cwd='ipcluster'</em>, <em>nocheck=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#gather_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.gather_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>gather files from list of remotes via rsync and ssh</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.dist_command">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">dist_command</code><span class="sig-paren">(</span><em>remotes</em>, <em>command</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#dist_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.dist_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>run command once on each remote</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.get_cpu_log">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">get_cpu_log</code><span class="sig-paren">(</span><em>remotes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_cpu_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_cpu_log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.farm_log">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">farm_log</code><span class="sig-paren">(</span><em>remotes</em>, <em>interval</em>, <em>outf='farm_log.txt'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#farm_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.farm_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>record cpu usage of ssh remotes</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Stephen Wasilewski.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/clasp.script_tools.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
