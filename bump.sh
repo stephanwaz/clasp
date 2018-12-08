@@ -1,27 +1,35 @@
 #!/bin/bash
 clean=$(git status --porcelain --untracked-files=no | wc -l)
+nobump=nobump
 if [ \( $# -eq 1 \) -a \( $clean -lt 1 \) ]
 then
-	eval "$(bumpversion --list "$1")"
-
-	echo 'Bump version: '"$current_version"' → '"$new_version"''
-
+	if [ "$1" == "$nobump" ]
+	then
+		commitmessage='small version error'
+	else
+		eval "$(bumpversion --list "$1")"
+		commitmessage='Bump version: '"$current_version"' → '"$new_version"''
+	fi
+	echo $commitmessage
 	read -p "proceed to build docs? " -n 1 -r
-	echo    # (optional) move to a new line
+	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		mate -w history.rst
 		make docs
-		git add ru_docs/
+		git add docs/
 	fi
 
 	read -p "proceed with commit? " -n 1 -r
-	echo    # (optional) move to a new line
+	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
-		git commit -a -m 'Bump version: '"$current_version"' → '"$new_version"''
-		git tag v$new_version
-		git push --tags
+		git commit -a -m "$commitmessage"
+		if [ "$1" != "$nobump" ]
+		then
+			git tag v$new_version
+			git push --tags
+		fi
 		git checkout master
 		git merge develop
 		git checkout develop
@@ -31,7 +39,7 @@ then
 
 	git log --graph --oneline --all --decorate
 
-	echo 'Bump version: '"$current_version"' → '"$new_version"''
+	echo $message
 else
-	echo usage: ./bump.sh [patch/minor/major]
+	echo usage: ./bump.sh [patch/minor/major/nobump]
 fi
