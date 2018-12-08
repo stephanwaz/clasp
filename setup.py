@@ -59,7 +59,7 @@ setup(
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://bitbucket.org/loisosubbelohde/clasp.git',
+    url='https://stephenwasilewski@bitbucket.org/loisosubbelohde/clasp/get/master.zip#egg=clasp',
     version='0.0.1',
-    zip_safe=False,
+    zip_safe=True,
 )
