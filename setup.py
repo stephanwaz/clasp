@@ -60,6 +60,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://stephenwasilewski@bitbucket.org/loisosubbelohde/clasp/get/master.zip#egg=clasp',
-    version='version='0.0.1'',
+    version='0.0.1',
     zip_safe=True,
 )
