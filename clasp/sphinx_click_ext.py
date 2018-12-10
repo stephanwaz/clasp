@@ -109,16 +109,8 @@ ext._format_options = _format_options
 ext._format_command = _format_command
 
 
-class RUClickDirective(ext.ClickDirective):
+class ClaspClickDirective(ext.ClickDirective):
     pass
-    # has_content = False
-    # required_arguments = 1
-    # option_spec = {
-    #     'prog': directives.unchanged_required,
-    #     'show-nested': directives.flag,
-    #     'commands': directives.unchanged,
-    # }
-
 
 def setup(app):
-    app.add_directive('click', RUClickDirective)
+    app.add_directive('click', ClaspClickDirective)

@@ -22,6 +22,7 @@ from glob import glob
 import clasp.script_tools as mgr
 
 
+# Edited from click completion script to avoid running out of turn (faster) 
 COMPLETION_SCRIPT_BASH = '''
 %(complete_func)s() {
     local cw="${COMP_WORDS[*]}"
@@ -36,6 +37,7 @@ COMPLETION_SCRIPT_BASH = '''
     done
     local hdif=$(($COMP_CWORD - $hcnt * 2 ))
     if [[ $cw != *">"* ]]; then
+    if [[ $cw != *"|"* ]]; then
     if [[ ${ar[$COMP_CWORD]} == -*  ]] || [[ $hdif == 1 ]]; then
     if [[ ${ar[$COMP_CWORD]} != -* ]] && [[ ${ar[$COMP_CWORD-1]} == -* ]]; then
         :
@@ -44,6 +46,7 @@ COMPLETION_SCRIPT_BASH = '''
             COMPREPLY=( $( env COMP_WORDS="${COMP_WORDS[*]}" \\
                         COMP_CWORD=$COMP_CWORD \\
                         %(autocomplete_var)s=complete $1 ) )
+    fi
     fi
     fi
     fi
@@ -66,7 +69,8 @@ COMPLETION_SCRIPT_BASH = '''
 %(complete_func)setup
 '''
 
-
+# basic script template for one offs, docstring contains available callback
+# descriptions
 script_template = '''#!/usr/bin/env python
 from __future__ import print_function
 
@@ -188,6 +192,7 @@ def click_ext(click):
     click._bashcomplete.COMPLETION_SCRIPT_BASH = COMPLETION_SCRIPT_BASH
     return click
 
+
 # shared decorators for all main command groups
 main_decs = [
     click.option('--config', '-c', type=click.Path(exists=True)),
@@ -258,18 +263,23 @@ def sglob(s):
 
 
 def tmp_stdin(ctx):
-    f, path = tempfile.mkstemp(dir="./", prefix='ru_tmp')
-    f = open(path, 'w')
-    f.write(sys.stdin.read())
-    f.close()
-    if ctx.obj is None:
-        ctx.obj = dict(temps=[path])
+    '''read stdin into temporary file'''
+    if not ctx.resilient_parsing:
+        f, path = tempfile.mkstemp(dir="./", prefix='clasp_tmp')
+        f = open(path, 'w')
+        f.write(sys.stdin.read())
+        f.close()
+        if ctx.obj is None:
+            ctx.obj = dict(temps=[path])
+        else:
+            ctx.obj['temps'].append(path)
+        return path
     else:
-        ctx.obj['temps'].append(path)
-    return path
+        return "-"
 
 
 def tmp_clean(ctx):
+    '''reomve files placed int temps context object (called at end of scripts)'''
     for i in ctx.obj['temps']:
         try:
             os.remove(i)
@@ -314,14 +324,14 @@ def is_file(ctx, param, s):
             raise ValueError(s)
     except ValueError, e:
         try:
-            # use os.environ['RU_PIPE'] = '1' in parent script
-            # or set RU_PIPE=1
+            # use os.environ['CLASP_PIPE'] = '1' in parent script
+            # or set CLASP_PIPE=1
             # to disable prompt and avoid hanging process
-            nopipe = os.environ['RU_PIPE'] != '1'
+            nopipe = os.environ['CLASP_PIPE'] != '1'
         except KeyError:
             nopipe = True
         click.echo("{} not an existing file".format(e), err=True)
-        if nopipe:
+        if nopipe and not ctx.resilient_parsing:
             s2 = click.prompt("{} for {}".format(name, command))
             return is_file(ctx, param, s2)
         else:
@@ -337,16 +347,16 @@ def are_files(ctx, param, s, prompt=True):
     try:
         return parse_file_list(ctx, s)
     except ValueError, e:
-        if prompt:
+        if prompt and not ctx.resilient_parsing:
             try:
-                # use os.environ['RU_PIPE'] = '1' in parent script
-                # or set RU_PIPE=1
+                # use os.environ['CLASP_PIPE'] = '1' in parent script
+                # or set CLASP_PIPE=1
                 # to disable prompt
-                nopipe = os.environ['RU_PIPE'] != '1'
+                nopipe = os.environ['CLASP_PIPE'] != '1'
             except KeyError:
                 nopipe = True
             click.echo("{} not an existing file".format(e), err=True)
-            if nopipe:
+            if nopipe and ctx.resilient_parsing:
                 s2 = click.prompt("{} for {}".format(name, command))
             else:
                 raise click.Abort()
@@ -590,6 +600,7 @@ def setargs(Config, ini, section):
 
 
 def index_param(ctx, param):
+    '''tag param with index to sort by option type for help display'''
     if param.human_readable_name == 'help':
         a = 10
     elif param.human_readable_name == 'debug':
@@ -611,6 +622,7 @@ def index_param(ctx, param):
 
 
 def index_seps(params):
+    '''insert section headers into param list for help display'''
     seps = []
     sections = set([i[0] for i in params])
     if 1 in sections:
@@ -628,13 +640,12 @@ def index_seps(params):
     return seps
 
 
-def get_config(ctx, config, outconfig, configalias, inputalias):
+def get_config(ctx, config, outconfig, configalias, inputalias, template=None):
     """load config file into click options"""
     Parser = ConfigParser.ConfigParser()
     com = ctx.info_name.split("_")[-1]
     subc = ctx.invoked_subcommand
-    if configalias:
-        template = mgr.get_root() + "/templates/master.cfg"
+    if configalias and template is not None:
         gargs = setargs(Parser, template, "{}_{}".format(com, configalias))
     else:
         gargs = {}
@@ -646,13 +657,15 @@ def get_config(ctx, config, outconfig, configalias, inputalias):
         args = setargs(Parser, config, alias)
     gargs.update(args)
     if not gargs and outconfig is None and (config is not None or configalias):
-        click.echo("WARNING: {} not found in local config or central templates"
-                   "".format(alias), err=True)
+        click.echo("WARNING: {} not found in local config file: {} or "
+                   "global config file: {}"
+                   "".format(alias, config, template), err=True)
         raise click.Abort()
     ctx.command.commands[subc].context_settings['default_map'] = gargs
 
 
 def match_multiple(ctx, subc):
+    '''identify params with multiple=True for config file parsing'''
     ismultiple = {}
     for opt in ctx.command.commands[subc].params:
         ismultiple[opt.human_readable_name] = opt.multiple
@@ -725,6 +738,7 @@ def print_config(ctx, opts, outconfig, config, configalias):
 
 
 def print_except(ex, debug=False):
+    '''general human readable exception message'''
     if debug:
         traceback.print_exc()
     click.echo("\n**************\n**************", err=True)
@@ -733,8 +747,44 @@ def print_except(ex, debug=False):
     click.echo("**************\n**************\n", err=True)
 
 
+def formatarg_line(v, i=None, idx=None):
+    '''reduce output of long lists subroutine'''
+    if len(v) > 30 or len("".join(["{}".format(j) for j in v])) > 100:
+        sv = ""
+        k = 0
+        while (len(sv) <= 30 and k < 10) or k < 3:
+            sv += "{}, ".format(v[k])
+            k += 1
+        a = "list of length: {} [ {}... , {} ]".format(len(v), sv, v[-1])
+    else:
+        a = "{}".format(v)
+    if i is not None:
+        if idx is not None:
+            i = "{}_{:03d}".format(i, idx)
+        a = "{0:.<15}{1}".format(i, a)
+    return a
+
+
+
+def formatarg_stdout(v, i=None):
+    '''reduce output of long lists'''
+    if type(v) == tuple or type(v) == list:
+        if len(v) > 0 and type(v[0]) == list:
+            a = []
+            for j, v0 in enumerate(v):
+                a += [formatarg_line(v0, i=i, idx=j)]
+            a = "\n".join(a)
+        else:
+            a = formatarg_line(v, i)
+    else:
+        a = "{}".format(v)
+        if i is not None:
+            a = "{0:.<15}{1}".format(i, a)
+    return a
+
+
 def echo_args(*args, **kwargs):
-    """print legible version of parsed args"""
+    """print human readable version of parsed args"""
     print("Positonal Arguments:\n", file=sys.stderr)
     for v in args:
         try:
@@ -746,16 +796,8 @@ def echo_args(*args, **kwargs):
                 v = v.name
             except Exception:
                 v = "file like object"
-        if (type(v) == tuple or type(v) == list) and len(v) > 30:
-            print("item 0: {1} list of length: {0}\n".format(
-                  len(v), v[0]), file=sys.stderr)
-        else:
-            print("{}\n".format(v), file=sys.stderr)
+        print(formatarg_stdout(v), file=sys.stderr)
     print("\nOptions:\n", file=sys.stderr)
     srt = sorted([(i, u) for i, u in kwargs.iteritems()])
     for i, v in srt:
-        if type(v) == list and len(v) > 30:
-            print("{0:.<15}item 0: {2} list of length: {1}".format(
-                  i, len(v), v[0]), file=sys.stderr)
-        else:
-            print("{0:.<15}{1}".format(i, v), file=sys.stderr)
+        print(formatarg_stdout(v, i), file=sys.stderr)

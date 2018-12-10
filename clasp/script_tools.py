@@ -130,7 +130,7 @@ def subpipe(commands):
                             click.echo("bad expression: {}".format(exp))
                             raise click.Abort
                 else:
-                    f, pt = tempfile.mkstemp(dir="./", prefix='ru_tmp')
+                    f, pt = tempfile.mkstemp(dir="./", prefix='clasp_tmp')
                     temps.append(pt)
                     pipeline([sub.strip('$()')], outfile=pt)
                 commands[i] = command.replace(sub, pt)
