@@ -6,3 +6,8 @@ __author__ = """Stephen Wasilewski"""
 __email__ = 'stephanwaz@gmail.com'
 __version__ = '0.0.1'
 __all__ = ['script_tools', 'click_ext', 'sphinx_click_ext']
+
+import click
+import clasp.click_ext
+
+click = clasp.click_ext.click_ext(click)
