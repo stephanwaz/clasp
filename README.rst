@@ -143,13 +143,12 @@ Number parsing
     * split_float: splits list of floats and extends ranges based on : notation
     * split_int: splits list of ints and extends ranges based on : notation
 
-
 Documentation
 -------------
 
 Click and sphinx_click make help and documentation super easy, but there are
 a few conflicts in formatting docstrings both for --help and for sphinx.
-clasp.sphinx_click_ext resolves these conflicts and does some sorting of options
+clasp.sphinx_click_ext attempts to resolve these conflicts and does some sorting of options
 and help display based on the script template shown above.  To use with sphinx
 add 'clasp.sphinx_click_ext' to extensions in your conf.py
 
