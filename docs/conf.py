@@ -32,7 +32,7 @@ import clasp
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode', 'sphinx.ext.napoleon', 'clasp.sphinx_click_ext', 'sphinx.ext.todo']
+extensions = ['sphinx.ext.extlinks', 'sphinx.ext.autodoc', 'sphinx.ext.viewcode', 'sphinx.ext.napoleon', 'clasp.sphinx_click_ext', 'sphinx.ext.todo']
 autodoc_member_order = 'bysource'
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -54,6 +54,10 @@ master_doc = 'index'
 version = clasp.__version__
 # The full version, including alpha/beta/rc tags.
 release = clasp.__version__
+
+
+extlinks = {'clasp-dl': ('https://bitbucket.org/loisosubbelohde/clasp/get/v{}.zip'.format(version), '')}
+
 
 # General information about the project.
 project = u'clasp ({})'.format(release)

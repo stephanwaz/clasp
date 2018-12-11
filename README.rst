@@ -11,9 +11,9 @@ programs to allow for organized development of suites of command line tools.
 Installation
 ------------
 
-download from:
+:clasp-dl:`download <>`
 
-https://bitbucket.org/loisosubbelohde/clasp/get/v|release|.zip
+
 
 ::
     cd path/to/uncompressed/folder/
