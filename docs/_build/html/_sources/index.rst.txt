@@ -1,6 +1,8 @@
 clasp (|release|)
 =================
 
+clasp is  tools for command line and subprocess script development
+
 .. toctree::
 
    clasp.click_ext
