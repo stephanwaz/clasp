@@ -11,13 +11,13 @@ programs to allow for organized development of suites of command line tools.
 Installation
 ------------
 
-:clasp-dl:`download <>`
-
-
+:clasp-dl:`download <>` 
 
 ::
+
     cd path/to/uncompressed/folder/
     pip install .
+
 
 Usage
 -----
