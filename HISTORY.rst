@@ -2,6 +2,10 @@
 History
 =======
 
+0.1.3
+-----
+added script_template and script_template2 for easy in directory coding
+
 0.1.2
 -----
 wrote readme
