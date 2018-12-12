@@ -36,7 +36,7 @@ setup(
     author_email='stephanwaz@gmail.com',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
-        'License :: OSI Approved :: Mozilla Public License v. 2.0',
+        'License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)',
         'Natural Language :: English',
         'Programming Language :: Python :: 2.7'
     ],

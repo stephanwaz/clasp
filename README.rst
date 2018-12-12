@@ -11,12 +11,7 @@ programs to allow for organized development of suites of command line tools.
 Installation
 ------------
 
-https://bitbucket.org/loisosubbelohde/clasp/get/master.zip
-
-::
-
-    cd path/to/uncompressed/folder/
-    pip install .
+pip install clasp
 
 
 Usage
