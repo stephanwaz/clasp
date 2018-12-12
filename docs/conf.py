@@ -56,9 +56,6 @@ version = clasp.__version__
 release = clasp.__version__
 
 
-extlinks = {'clasp-dl': ('https://bitbucket.org/loisosubbelohde/clasp/get/v{}.zip'.format(version), '')}
-
-
 # General information about the project.
 project = u'clasp ({})'.format(release)
 copyright = u"2018, Stephen Wasilewski"
