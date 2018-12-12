@@ -6,10 +6,10 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>clasp.click_ext &#8212; clasp (0.1.3) 0.1.3 documentation</title>
+    <title>clasp.click_ext &#8212; clasp (0.1.4) 0.1.4 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
@@ -26,7 +26,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">clasp (0.1.3)</a></h1>
+<h1 class="logo"><a href="../../index.html">clasp (0.1.4)</a></h1>
 
 
 
@@ -65,8 +65,6 @@
       </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <h1>Source code for clasp.click_ext</h1><div class="highlight"><pre>
@@ -94,7 +92,7 @@
 <span class="kn">import</span> <span class="nn">clasp.script_tools</span> <span class="k">as</span> <span class="nn">mgr</span>
 
 
-<span class="c1"># Edited from click completion script to avoid running out of turn (faster) </span>
+<span class="c1"># Edited from click completion script to avoid running out of turn (faster)</span>
 <span class="n">COMPLETION_SCRIPT_BASH</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
 <span class="si">%(complete_func)s</span><span class="s1">() {</span>
 <span class="s1">    local cw=&quot;$</span><span class="si">{COMP_WORDS[*]}</span><span class="s1">&quot;</span>
@@ -158,7 +156,7 @@
 <span class="s1">def main(arg1, **kwargs):</span>
 <span class="s1">    &quot;&quot;&quot;</span>
 <span class="s1">    callbacks:</span>
-<span class="s1">    </span>
+
 <span class="s1">    File input</span>
 <span class="s1">    ~~~~~~~~~~</span>
 
@@ -233,7 +231,7 @@
 <span class="s1">def XXX(ctx, arg1, **kwargs):</span>
 <span class="s1">    &quot;&quot;&quot;</span>
 <span class="s1">    callbacks:</span>
-<span class="s1">    </span>
+
 <span class="s1">    File input</span>
 <span class="s1">    ~~~~~~~~~~</span>
 
@@ -373,8 +371,8 @@
             <span class="n">click</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">fast_exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">click</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">_bashcomplete</span> <span class="o">=</span> <span class="n">_bashcomplete</span>
-    <span class="n">click</span><span class="o">.</span><span class="n">_bashcomplete</span><span class="o">.</span><span class="n">COMPLETION_SCRIPT_BASH</span> <span class="o">=</span> <span class="n">COMPLETION_SCRIPT_BASH</span>
-    <span class="k">return</span> <span class="n">click</span></div>
+    <span class="n">click</span><span class="o">.</span><span class="n">_bashcomplete</span><span class="o">.</span><span class="n">COMPLETION_SCRIPT_BASH</span> <span class="o">=</span> <span class="n">COMPLETION_SCRIPT_BASH</span></div>
+    <span class="k">return</span> <span class="n">click</span>
 
 
 <span class="c1"># shared decorators for all main command groups</span>
@@ -396,8 +394,8 @@
     <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">dec</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">decs</span><span class="p">):</span>
             <span class="n">f</span> <span class="o">=</span> <span class="n">dec</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">f</span>
-    <span class="k">return</span> <span class="n">decorate</span></div>
+        <span class="k">return</span> <span class="n">f</span></div>
+    <span class="k">return</span> <span class="n">decorate</span>
 
 
 <div class="viewcode-block" id="callback_error"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.callback_error">[docs]</a><span class="k">def</span> <span class="nf">callback_error</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">example</span><span class="p">):</span>
@@ -412,8 +410,8 @@
 <span class="sd">    example: example of valid entry format</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">can&#39;t parse: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">expected input &quot;</span>\
-              <span class="s2">&quot;format: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">example</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">BadParameter</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+              <span class="s2">&quot;format: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">example</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">BadParameter</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="expandpat"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.expandpat">[docs]</a><span class="k">def</span> <span class="nf">expandpat</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">mark</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -430,8 +428,8 @@
         <span class="n">patm</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
         <span class="n">allpat</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">mgr</span><span class="o">.</span><span class="n">crossref_all</span><span class="p">(</span><span class="n">patm</span><span class="p">))]</span>
         <span class="k">return</span> <span class="n">allpat</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[]</span></div>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="p">[]</span>
 
 
 <div class="viewcode-block" id="sglob"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.sglob">[docs]</a><span class="k">def</span> <span class="nf">sglob</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -442,8 +440,8 @@
     <span class="n">exglob</span> <span class="o">=</span> <span class="n">mgr</span><span class="o">.</span><span class="n">flat_list</span><span class="p">([</span><span class="n">expandpat</span><span class="p">(</span><span class="n">exre</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inpat</span><span class="p">])</span>
     <span class="n">inglob</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">exre</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inpat</span><span class="p">]</span>
     <span class="n">infiles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">mgr</span><span class="o">.</span><span class="n">flat_list</span><span class="p">([</span><span class="n">glob</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inglob</span><span class="p">]))</span>
-    <span class="n">exfiles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">mgr</span><span class="o">.</span><span class="n">flat_list</span><span class="p">([</span><span class="n">glob</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">exglob</span><span class="p">]))</span>
-    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">infiles</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">exfiles</span><span class="p">)))</span></div>
+    <span class="n">exfiles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">mgr</span><span class="o">.</span><span class="n">flat_list</span><span class="p">([</span><span class="n">glob</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">exglob</span><span class="p">]))</span></div>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">infiles</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">exfiles</span><span class="p">)))</span>
 
 
 <div class="viewcode-block" id="tmp_stdin"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.tmp_stdin">[docs]</a><span class="k">def</span> <span class="nf">tmp_stdin</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
@@ -458,17 +456,18 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;temps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">path</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;-&quot;</span></div>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="s2">&quot;-&quot;</span>
 
 
 <div class="viewcode-block" id="tmp_clean"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.tmp_clean">[docs]</a><span class="k">def</span> <span class="nf">tmp_clean</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;reomve files placed int temps context object (called at end of scripts)&#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39;reomve files placed int temps context object</span>
+<span class="sd">    (called at end of scripts)&#39;&#39;&#39;</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;temps&#39;</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">pass</span></div>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span></div>
+            <span class="k">pass</span>
 
 
 <div class="viewcode-block" id="parse_file_list"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.parse_file_list">[docs]</a><span class="k">def</span> <span class="nf">parse_file_list</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -489,8 +488,8 @@
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
                 <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">files</span></div>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">i</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">files</span>
 
 
 <div class="viewcode-block" id="is_file"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.is_file">[docs]</a><span class="k">def</span> <span class="nf">is_file</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -518,8 +517,8 @@
         <span class="k">if</span> <span class="n">nopipe</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resilient_parsing</span><span class="p">:</span>
             <span class="n">s2</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">command</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">is_file</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="are_files"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.are_files">[docs]</a><span class="k">def</span> <span class="nf">are_files</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -545,24 +544,24 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">are_files</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">are_files</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="is_files_iter"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.is_files_iter">[docs]</a><span class="k">def</span> <span class="nf">is_files_iter</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;calls are_files for each item in iterable s&quot;&quot;&quot;</span>
     <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
-        <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">is_file</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">files</span></div>
+        <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">is_file</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">files</span>
 
 
 <div class="viewcode-block" id="are_files_iter"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.are_files_iter">[docs]</a><span class="k">def</span> <span class="nf">are_files_iter</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;calls are_files for each item in iterable s&quot;&quot;&quot;</span>
     <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
-        <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">are_files</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">prompt</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">files</span></div>
+        <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">are_files</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">prompt</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">files</span>
 
 
 <div class="viewcode-block" id="are_files_or_str"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.are_files_or_str">[docs]</a><span class="k">def</span> <span class="nf">are_files_or_str</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -578,24 +577,24 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">split_float</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">)]</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">pass</span>
-    <span class="k">return</span> <span class="n">split_str</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
+        <span class="k">pass</span></div>
+    <span class="k">return</span> <span class="n">split_str</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="are_files_or_str_iter"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.are_files_or_str_iter">[docs]</a><span class="k">def</span> <span class="nf">are_files_or_str_iter</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;tries are_files then split_str&quot;&quot;&quot;</span>
     <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
-        <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">are_files_or_str</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">files</span></div>
+        <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">are_files_or_str</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">files</span>
 
 
 <div class="viewcode-block" id="split_str_iter"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.split_str_iter">[docs]</a><span class="k">def</span> <span class="nf">split_str_iter</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;calls are_files for each item in iterable s&quot;&quot;&quot;</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
-        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">split_str</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">args</span></div>
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">split_str</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">args</span>
 
 
 <div class="viewcode-block" id="color_inp"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.color_inp">[docs]</a><span class="k">def</span> <span class="nf">color_inp</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -608,8 +607,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">so</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">so</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">s</span></div>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="n">s</span>
 
 
 <div class="viewcode-block" id="int_rng"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.int_rng">[docs]</a><span class="k">def</span> <span class="nf">int_rng</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -622,8 +621,8 @@
             <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span></div>
+    <span class="k">return</span> <span class="n">result</span>
 
 
 <div class="viewcode-block" id="tup_int"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.tup_int">[docs]</a><span class="k">def</span> <span class="nf">tup_int</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -641,8 +640,8 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">so</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">int_rng</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">callback_error</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;0 0,1 0,3&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">so</span></div>
+            <span class="n">callback_error</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;0 0,1 0,3&#39;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">so</span>
 
 
 <div class="viewcode-block" id="tup_float"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.tup_float">[docs]</a><span class="k">def</span> <span class="nf">tup_float</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -658,24 +657,24 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">so</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">callback_error</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;0 0,1 0,3.6&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">so</span></div>
+            <span class="n">callback_error</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;0 0,1 0,3.6&#39;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">so</span>
 
 
 <div class="viewcode-block" id="split_str"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.split_str">[docs]</a><span class="k">def</span> <span class="nf">split_str</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;splits space seperated string&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
 
 
 <div class="viewcode-block" id="tup_list"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.tup_list">[docs]</a><span class="k">def</span> <span class="nf">tup_list</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;convert tuple to list&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
 
 
 <div class="viewcode-block" id="split_float"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.split_float">[docs]</a><span class="k">def</span> <span class="nf">split_float</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -694,8 +693,8 @@
                     <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">callback_error</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;0 30.5 40&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+            <span class="n">callback_error</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;0 30.5 40&#39;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">result</span>
 
 
 <div class="viewcode-block" id="split_int"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.split_int">[docs]</a><span class="k">def</span> <span class="nf">split_int</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -715,8 +714,8 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">callback_error</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;0 30 40&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+            <span class="n">callback_error</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;0 30 40&#39;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">result</span>
 
 
 <div class="viewcode-block" id="ConfigSectionMap"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.ConfigSectionMap">[docs]</a><span class="k">def</span> <span class="nf">ConfigSectionMap</span><span class="p">(</span><span class="n">Config</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
@@ -744,8 +743,8 @@
                 <span class="n">dict1</span><span class="p">[</span><span class="n">option</span><span class="p">]</span> <span class="o">=</span> <span class="n">opt</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">ex</span><span class="p">:</span>
             <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;exception on </span><span class="si">{}</span><span class="s2">! </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">ex</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">dict1</span><span class="p">[</span><span class="n">option</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">return</span> <span class="n">dict1</span></div>
+            <span class="n">dict1</span><span class="p">[</span><span class="n">option</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+    <span class="k">return</span> <span class="n">dict1</span>
 
 
 <div class="viewcode-block" id="format_depth"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.format_depth">[docs]</a><span class="k">def</span> <span class="nf">format_depth</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
@@ -755,8 +754,8 @@
     <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">:</span>
         <span class="n">wv</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">format_depth</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">wv</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">wv</span></div>
+        <span class="n">wv</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">wv</span>
 
 
 <div class="viewcode-block" id="formatarg"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.formatarg">[docs]</a><span class="k">def</span> <span class="nf">formatarg</span><span class="p">(</span><span class="n">Parser</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
@@ -770,8 +769,8 @@
         <span class="n">Parser</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">wv</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">ConfigParser</span><span class="o">.</span><span class="n">NoSectionError</span><span class="p">:</span>
         <span class="n">Parser</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-        <span class="n">Parser</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">wv</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">Parser</span></div>
+        <span class="n">Parser</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">wv</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">Parser</span>
 
 
 <div class="viewcode-block" id="setargs"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.setargs">[docs]</a><span class="k">def</span> <span class="nf">setargs</span><span class="p">(</span><span class="n">Config</span><span class="p">,</span> <span class="n">ini</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
@@ -779,8 +778,8 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">Config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ini</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ConfigSectionMap</span><span class="p">(</span><span class="n">Config</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{}</span></div>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="p">{}</span>
 
 
 <div class="viewcode-block" id="index_param"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.index_param">[docs]</a><span class="k">def</span> <span class="nf">index_param</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
@@ -801,8 +800,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">a</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">human_readable_name</span><span class="p">,</span> <span class="n">param</span></div>
+        <span class="n">a</span> <span class="o">=</span> <span class="mi">3</span></div>
+    <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">human_readable_name</span><span class="p">,</span> <span class="n">param</span>
 
 
 <div class="viewcode-block" id="index_seps"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.index_seps">[docs]</a><span class="k">def</span> <span class="nf">index_seps</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
@@ -820,8 +819,8 @@
     <span class="k">if</span> <span class="mi">5</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
         <span class="n">seps</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mf">4.5</span><span class="p">,</span> <span class="s2">&quot;FLAGS (DEFAULT FALSE):&quot;</span><span class="p">))</span>
     <span class="k">if</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">]:</span>
-        <span class="n">seps</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mf">7.5</span><span class="p">,</span> <span class="s1">&#39;HELP:&#39;</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">seps</span></div>
+        <span class="n">seps</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mf">7.5</span><span class="p">,</span> <span class="s1">&#39;HELP:&#39;</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">seps</span>
 
 
 <div class="viewcode-block" id="get_config"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.get_config">[docs]</a><span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">outconfig</span><span class="p">,</span> <span class="n">configalias</span><span class="p">,</span> <span class="n">inputalias</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -844,16 +843,16 @@
         <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;WARNING: </span><span class="si">{}</span><span class="s2"> not found in local config file: </span><span class="si">{}</span><span class="s2"> or &quot;</span>
                    <span class="s2">&quot;global config file: </span><span class="si">{}</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alias</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">template</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
-    <span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">subc</span><span class="p">]</span><span class="o">.</span><span class="n">context_settings</span><span class="p">[</span><span class="s1">&#39;default_map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gargs</span></div>
+        <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span></div>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">subc</span><span class="p">]</span><span class="o">.</span><span class="n">context_settings</span><span class="p">[</span><span class="s1">&#39;default_map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gargs</span>
 
 
 <div class="viewcode-block" id="match_multiple"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.match_multiple">[docs]</a><span class="k">def</span> <span class="nf">match_multiple</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">subc</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;identify params with multiple=True for config file parsing&#39;&#39;&#39;</span>
     <span class="n">ismultiple</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">subc</span><span class="p">]</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
-        <span class="n">ismultiple</span><span class="p">[</span><span class="n">opt</span><span class="o">.</span><span class="n">human_readable_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">multiple</span>
-    <span class="k">return</span> <span class="n">ismultiple</span></div>
+        <span class="n">ismultiple</span><span class="p">[</span><span class="n">opt</span><span class="o">.</span><span class="n">human_readable_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">multiple</span></div>
+    <span class="k">return</span> <span class="n">ismultiple</span>
 
 
 <div class="viewcode-block" id="config_comments"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.config_comments">[docs]</a><span class="k">def</span> <span class="nf">config_comments</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
@@ -870,8 +869,8 @@
             <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cm</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">comments</span><span class="p">:</span>
-                    <span class="n">comments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+                    <span class="n">comments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span></div>
+    <span class="k">return</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="add_opt_comment"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.add_opt_comment">[docs]</a><span class="k">def</span> <span class="nf">add_opt_comment</span><span class="p">(</span><span class="n">comments</span><span class="p">,</span> <span class="n">opts</span><span class="p">):</span>
@@ -879,8 +878,8 @@
     <span class="n">comments</span> <span class="o">=</span> <span class="n">comments</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;#\s*\[</span><span class="si">{}</span><span class="s1">\]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">),</span> <span class="n">comments</span><span class="p">):</span>
-            <span class="n">comments</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{: &lt;30}</span><span class="s2">#&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"># [</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">comments</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span></div>
+            <span class="n">comments</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{: &lt;30}</span><span class="s2">#&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"># [</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">comments</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
 
 
 <div class="viewcode-block" id="print_config"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.print_config">[docs]</a><span class="k">def</span> <span class="nf">print_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">outconfig</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">configalias</span><span class="p">):</span>
@@ -917,8 +916,8 @@
         <span class="n">Parser</span><span class="o">.</span><span class="n">_sections</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">(</span><span class="n">srt</span><span class="p">)</span>
     <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outconfig</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span>
-    <span class="n">Parser</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="n">Parser</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="print_except"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.print_except">[docs]</a><span class="k">def</span> <span class="nf">print_except</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -927,8 +926,8 @@
         <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
     <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">**************</span><span class="se">\n</span><span class="s2">**************&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;Execution failed:&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">ex</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;**************</span><span class="se">\n</span><span class="s2">**************</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">ex</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;**************</span><span class="se">\n</span><span class="s2">**************</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="formatarg_line"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.formatarg_line">[docs]</a><span class="k">def</span> <span class="nf">formatarg_line</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -945,9 +944,8 @@
     <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{:03d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{0:.&lt;15}{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">a</span></div>
-
+        <span class="n">a</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{0:.&lt;15}{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">a</span>
 
 
 <div class="viewcode-block" id="formatarg_stdout"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.formatarg_stdout">[docs]</a><span class="k">def</span> <span class="nf">formatarg_stdout</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -963,8 +961,8 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">a</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{0:.&lt;15}{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">a</span></div>
+            <span class="n">a</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{0:.&lt;15}{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">a</span>
 
 
 <div class="viewcode-block" id="echo_args"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.echo_args">[docs]</a><span class="k">def</span> <span class="nf">echo_args</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -983,12 +981,11 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">formatarg_stdout</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Options:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
     <span class="n">srt</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="n">i</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()])</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">srt</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">formatarg_stdout</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span></div>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">srt</span><span class="p">:</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="n">formatarg_stdout</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
 </pre></div>
 
           </div>
-          
         </div>
       </div>
     <div class="clearer"></div>
@@ -997,8 +994,8 @@
       &copy;2018, Stephen Wasilewski.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
 

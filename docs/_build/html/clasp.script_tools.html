@@ -6,10 +6,10 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>script_tools &#8212; clasp (0.1.3) 0.1.3 documentation</title>
+    <title>script_tools &#8212; clasp (0.1.4) 0.1.4 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -28,7 +28,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">clasp (0.1.3)</a></h1>
+<h1 class="logo"><a href="index.html">clasp (0.1.4)</a></h1>
 
 
 
@@ -67,8 +67,6 @@
       </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="section" id="module-clasp.script_tools">
@@ -270,11 +268,125 @@ computing particulary w/ subprocess calls.</p>
 <dd><p>record cpu usage of ssh remotes</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="clasp.script_tools.read_epw">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">read_epw</code><span class="sig-paren">(</span><em>epw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_epw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_epw" title="Permalink to this definition">¶</a></dt>
+<dd><p>read daylight sky data from epw or wea file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>out</strong> – (month, day, hour, dirnorn, difhoriz, globhoriz, skycover)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.isnum">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">isnum</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#isnum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.isnum" title="Permalink to this definition">¶</a></dt>
+<dd><p>test if input can be converted to float</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.try_float">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">try_float</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#try_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.try_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>attempt conversion to float</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.coerce_data">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">coerce_data</code><span class="sig-paren">(</span><em>datastr</em>, <em>i_vals</em>, <em>dataf</em>, <em>coerce=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#coerce_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.coerce_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>ensure all data points parsed are valid numbers</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.get_i">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">get_i</code><span class="sig-paren">(</span><em>i</em>, <em>d_vals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_i"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_i" title="Permalink to this definition">¶</a></dt>
+<dd><p>if (x, y) return y if x == i
+if y return y</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.read_data_file">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">read_data_file</code><span class="sig-paren">(</span><em>dataf</em>, <em>header</em>, <em>xheader</em>, <em>comment</em>, <em>delim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_data_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_data_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.read_data">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">read_data</code><span class="sig-paren">(</span><em>dataf, x_vals=[0], y_vals=[-1], rows=False, header=False, weax=None, reverse=False, autox=None, comment='#', xheader=False, delim='\t, ', coerce=True, weatherfile=False, drange=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>read generic csv/tsv data file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dataf</strong> (<em>str</em>) – file to read data from</li>
+<li><strong>x_vals</strong> (<em>list of ints</em>) – column (or row with rows=True) indices for x values</li>
+<li><strong>y_vals</strong> (<em>list of ints</em>) – column (or row with rows=True) indices for y values</li>
+<li><strong>rows</strong> (<em>Boolean</em>) – if True read data in rows</li>
+<li><strong>header</strong> (<em>Boolean</em>) – return first row (or column with rows=True) as series labels</li>
+<li><strong>weax</strong> (<em>2 item list of ints</em>) – idx for month and day to use day number as x_vals, if given ignores
+x_val</li>
+<li><strong>reverse</strong> (<em>Boolean</em>) – reverse order of data (use with autox)</li>
+<li><strong>autox</strong> (<em>Boolean</em>) – assigns integers (starting at 0) as x_vals</li>
+<li><strong>comment</strong> (<em>str</em>) – comment line signifiers (inserted in regex ^[comment].*)</li>
+<li><strong>delim</strong> (<em>str</em>) – delimeters for parsing data (inserted in regex [delim]+)</li>
+<li><strong>coerce</strong> (<em>Boolean</em>) – raise exception if all values are are not numbers</li>
+<li><strong>weatherfile</strong> (<em>str of file path</em>) – handles wea and epw file formates returning daylight parameters</li>
+<li><strong>drange</strong> (<em>list of ints</em>) – limit series output to given indices.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>datax</strong> (<em>list</em>) – list of x_vals for each y_val (pads with last item if necessary)
+if there are more x_vals than y_vals does not return excess datax</li>
+<li><strong>datay</strong> (<em>list</em>) – list for each y_val</li>
+<li><strong>head</strong> (<em>list</em>) – if header=True list of labels for each y_val else []</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.script_tools.read_all_data">
+<code class="descclassname">clasp.script_tools.</code><code class="descname">read_all_data</code><span class="sig-paren">(</span><em>datafs</em>, <em>x_vals=[]</em>, <em>y_vals=[]</em>, <em>order=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_all_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_all_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>read multiple data files and pair x and y data call read_data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>datafs</strong> (<em>list of str</em>) – files to read data from</li>
+<li><strong>x_vals</strong> (<em>list of ints</em><em> or </em><em>tuple int pairs</em>) – (fileidx, colidx) or colidx to read from each file</li>
+<li><strong>y_vals</strong> (<em>ist of ints</em><em> or </em><em>tuple int pairs</em>) – (fileidx, colidx) or colidx to read from each file</li>
+<li><strong>order</strong> (<em>Boolean</em>) – preserve order of x_vals and y_vals at the expense of efficiency.
+if false returns data ordered by file, then index as give</li>
+<li><strong>kwargs</strong> – optional arguments for read_data</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>datax</strong> (<em>list</em>) – list of x_vals for each y_val (pads with last item if necessary)</li>
+<li><strong>datay</strong> (<em>list</em>) – list for each y_val</li>
+<li><strong>head</strong> (<em>list</em>) – if header=True list of labels for each y_val else []</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
           </div>
-          
         </div>
       </div>
     <div class="clearer"></div>
@@ -283,8 +395,8 @@ computing particulary w/ subprocess calls.</p>
       &copy;2018, Stephen Wasilewski.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
       <a href="_sources/clasp.script_tools.rst.txt"

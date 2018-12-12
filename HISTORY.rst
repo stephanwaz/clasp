@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.4
+-----
+
+added read_data, read_all_data, and read_epw to easily parse data files
+
 0.1.3
 -----
 added script_template and script_template2 for easy in directory coding
