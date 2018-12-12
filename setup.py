@@ -33,7 +33,7 @@ console_scripts = []
 
 setup(
     author="Stephen Wasilewski",
-    author_email='stephen@coolshadow.com',
+    author_email='stephanwaz@gmail.com',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: Mozilla Public License v. 2.0',
