@@ -10,11 +10,6 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
-from glob import glob
-from fnmatch import fnmatch
-import os
-import re
-import sys
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()

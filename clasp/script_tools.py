@@ -18,7 +18,7 @@ import os
 import re
 import math
 import datetime
-import click
+from clasp import click
 import ipyparallel as parallel
 
 
@@ -517,3 +517,257 @@ def farm_log(remotes, interval, outf="farm_log.txt"):
         f.write("{}\t{}\n".format(ti, vals))
         f.close()
         time.sleep(interval - ((time.time() - stime) % interval))
+
+
+def read_epw(epw):
+    '''read daylight sky data from epw or wea file
+
+    Returns
+    -------
+    out: tuple
+        (month, day, hour, dirnorn, difhoriz, globhoriz, skycover)
+    '''
+    if type(epw) in [str, unicode]:
+        f = open(epw, 'r')
+    else:
+        f = epw
+    lines = f.readlines()
+    f.seek(0)
+    hours = [re.split('[ \t,]+', i) for i in lines if re.match("\d.*", i)]
+    data = []
+    for h in hours:
+        if len(h) > 23:
+            dp = [h[1], h[2], h[3], h[14], h[15], h[16], h[23]]
+            hoff = .5
+        else:
+            dp = [h[0], h[1], h[2], h[3], h[4], "0", "0"]
+            hoff = 0
+        data.append([int(i.strip()) for i in dp[0:2]] +
+                    [float(dp[2]) - hoff] +
+                    [float(i.strip()) for i in dp[3:]])
+
+
+def isnum(s):
+    """test if input can be converted to float"""
+    try:
+        float(s)
+        return True
+    except Exception:
+        return False
+
+
+def try_float(s):
+    """attempt conversion to float"""
+    try:
+        a = float(s)
+        return a
+    except Exception:
+        return s
+
+
+def coerce_data(datastr, i_vals, dataf, coerce=True):
+    '''ensure all data points parsed are valid numbers'''
+    try:
+        if coerce:
+            data = [[float(j[i]) for j in datastr if isnum(j[i])]
+                    for i in i_vals]
+            # print(data)
+            if len(data[0]) == 0:
+                raise ValueError("check if data file {} has xheaders"
+                                 "".format(dataf))
+        else:
+            data = [[try_float(j[i]) for j in datastr] for i in i_vals]
+    except ValueError, ex:
+        raise ex
+    except Exception:
+        try:
+            err = "list index out of range index: {} in file: {}"\
+                  "".format(i, dataf)
+        except:
+            err = "bad value or no data in file: {}, try --no-coerce"\
+                  "".format(dataf)
+        raise IndexError(err)
+    return data
+
+
+def get_i(i, d_vals):
+    """
+    if (x, y) return y if x == i
+    if y return y
+    """
+    ds = []
+    for j in d_vals:
+        if type(j) == tuple and j[0] == i:
+            ds.append(j[1])
+        elif type(j) != tuple:
+            ds.append(j)
+    return ds
+
+
+def read_data_file(dataf, header, xheader, comment, delim):
+    delim = '[{}]+'.format(delim)
+    if comment != "#":
+        comment = "^[{}].*".format(comment)
+    elif not header and coerce:
+        comment = "^[^\-\d\w].*"
+    else:
+        comment = "^[{}].*".format(comment)
+    f = open(dataf, 'r')
+    dl = [i.strip() for i in re.split('[\n\r]+', f.read().strip())]
+    if xheader:
+        dl = [re.split(delim, i.strip(), 1)[1] for i in dl]
+    dl = [i for i in dl if not bool(re.match(comment, i))]
+    if len(dl) == 0:
+        click.echo("File: {} has no data".format(dataf), err=True)
+        raise click.Abort()
+    datastr = [[j.strip() for j in re.split(delim, i.strip())] for i in dl]
+    f.close()
+    return datastr
+
+
+def read_data(dataf, x_vals=[0], y_vals=[-1], rows=False, header=False,
+              weax=None, reverse=False, autox=None, comment="#", xheader=False,
+              delim="\t, ", coerce=True, weatherfile=False, drange=None):
+    """read generic csv/tsv data file
+
+    Parameters
+    ----------
+    dataf: str
+        file to read data from
+    x_vals: list of ints
+        column (or row with rows=True) indices for x values
+    y_vals: list of ints
+        column (or row with rows=True) indices for y values
+    rows: Boolean
+        if True read data in rows
+    header: Boolean
+        return first row (or column with rows=True) as series labels
+    weax: 2 item list of ints
+        idx for month and day to use day number as x_vals, if given ignores
+        x_val
+    reverse: Boolean
+        reverse order of data (use with autox)
+    autox: Boolean
+        assigns integers (starting at 0) as x_vals
+    comment: str
+        comment line signifiers (inserted in regex ^[comment].*)
+    delim: str
+        delimeters for parsing data (inserted in regex [delim]+)
+    coerce: Boolean
+        raise exception if all values are are not numbers
+    weatherfile: str of file path
+        handles wea and epw file formates returning daylight parameters
+    drange: list of ints
+        limit series output to given indices.
+
+    Returns
+    -------
+    datax: list
+        list of x_vals for each y_val (pads with last item if necessary)
+        if there are more x_vals than y_vals does not return excess datax
+    datay: list
+        list for each y_val
+    head: list
+        if header=True list of labels for each y_val else []
+    """
+    if weatherfile:
+        datastr = [[str(i) for i in j] for j in read_epw(dataf)]
+        head = ['month', 'day', 'hour', 'direct normal', 'diffuse horizontal',
+                'global horizontal', 'sky cover']
+        head = [head[i] for i in y_vals]
+    else:
+        datastr = read_data_file(dataf, header, xheader, comment, delim)
+        if header:
+            head = [datastr[0][i] for i in y_vals]
+            datastr = datastr[1:]
+        else:
+            head = []
+        if reverse:
+            datastr.reverse()
+        if rows:
+            datastr = map(list, zip(*datastr))
+    if drange is not None:
+        datastr = [v for i, v in enumerate(datastr) if i in drange]
+    datay = coerce_data(datastr, y_vals, dataf, coerce)
+    if autox is not None:
+        datax = []
+        for i in datay:
+            try:
+                inc = (autox[1]-autox[0])/float(len(i)-1)
+                datax.append([j*inc+autox[0] for j in range(len(i))])
+            except ZeroDivisionError:
+                datax.append([autox[0]])
+    elif weax is not None:
+        daycount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
+        datax = [[float(j[i]) for i in weax]
+                 for j in datastr if isnum(j[weax[0]])]
+        datax = [[daycount[int(i[0])-1] + i[1] for i in datax]]
+    else:
+        datax = coerce_data(datastr, x_vals, dataf, coerce)
+    while len(datax) < len(datay) and len(datax) > 0:
+        datax += [datax[-1]]
+    if len(datax) > len(datay):
+        datax = datax[:len(datay)]
+    return datax, datay, head
+
+
+def read_all_data(datafs, x_vals=[], y_vals=[], order=False, **kwargs):
+    """
+    read multiple data files and pair x and y data call read_data
+
+    Parameters
+    ----------
+    datafs: list of str
+        files to read data from
+    x_vals: list of ints or tuple int pairs
+        (fileidx, colidx) or colidx to read from each file
+    y_vals: ist of ints or tuple int pairs
+        (fileidx, colidx) or colidx to read from each file
+    order: Boolean
+        preserve order of x_vals and y_vals at the expense of efficiency.
+        if false returns data ordered by file, then index as give
+    kwargs:
+        optional arguments for read_data
+
+    Returns
+    -------
+    datax: list
+        list of x_vals for each y_val (pads with last item if necessary)
+    datay: list
+        list for each y_val
+    head: list
+        if header=True list of labels for each y_val else []
+    """
+    xds = []
+    yds = []
+    labels = []
+    if order:
+        for x in x_vals:
+            if type(x) == tuple:
+                xd, _, _ = read_data(datafs[x[0]], [x[1]], [], **kwargs)
+                xds += xd
+            else:
+                for d in datafs:
+                    xd, _, _ = read_data(d, [x], [], **kwargs)
+                    xds += xd
+        for y in y_vals:
+            if type(y) == tuple:
+                _, yd, label = read_data(datafs[y[0]], [], [y[1]], **kwargs)
+                yds += yd
+                labels += label
+            else:
+                for d in datafs:
+                    _, yd, label = read_data(d, [], [y], **kwargs)
+                    yds += yd
+                    labels += label
+    else:
+        for i, fi in enumerate(datafs):
+            xs = get_i(i, x_vals)
+            ys = get_i(i, y_vals)
+            xd, yd, label = read_data(fi, xs, ys, **kwargs)
+            xds += xd
+            yds += yd
+            labels += label
+    while len(xds) < len(yds) and len(xds) > 0:
+        xds += [xds[-1]]
+    return xds, yds, labels

@@ -22,7 +22,7 @@ from glob import glob
 import clasp.script_tools as mgr
 
 
-# Edited from click completion script to avoid running out of turn (faster) 
+# Edited from click completion script to avoid running out of turn (faster)
 COMPLETION_SCRIPT_BASH = '''
 %(complete_func)s() {
     local cw="${COMP_WORDS[*]}"
@@ -86,7 +86,7 @@ import clasp.click_ext as clk
 def main(arg1, **kwargs):
     """
     callbacks:
-    
+
     File input
     ~~~~~~~~~~
 
@@ -161,7 +161,7 @@ def main(ctx, config, outconfig, configalias, inputalias):
 def XXX(ctx, arg1, **kwargs):
     """
     callbacks:
-    
+
     File input
     ~~~~~~~~~~
 
@@ -391,7 +391,8 @@ def tmp_stdin(ctx):
 
 
 def tmp_clean(ctx):
-    '''reomve files placed int temps context object (called at end of scripts)'''
+    '''reomve files placed int temps context object
+    (called at end of scripts)'''
     for i in ctx.obj['temps']:
         try:
             os.remove(i)
@@ -875,7 +876,6 @@ def formatarg_line(v, i=None, idx=None):
             i = "{}_{:03d}".format(i, idx)
         a = "{0:.<15}{1}".format(i, a)
     return a
-
 
 
 def formatarg_stdout(v, i=None):
