@@ -2,6 +2,11 @@
 History
 =======
 
+0.1.5
+-----
+
+first release on pypi
+
 0.1.4
 -----
 
