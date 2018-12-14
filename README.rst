@@ -152,6 +152,11 @@ and help display based on the script template shown above.  To use with sphinx
 add 'clasp.sphinx_click_ext' to extensions in your conf.py
 
 
+Source Code
+-----------
+
+* clasp: https://bitbucket.org/stephenwasilewski/clasp
+
 Licence
 -------
 
