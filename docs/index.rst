@@ -15,7 +15,6 @@ clasp is  tools for command line and subprocess script development
    :maxdepth: 3
    :hidden:
 
-   tips
    history
    genindex
    search
