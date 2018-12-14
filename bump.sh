@@ -36,6 +36,12 @@ then
 		git push origin master
 		git push origin develop
 	fi
+	read -p "build? " -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+		make release
+	fi
 
 	git log --graph --oneline --all --decorate
 
