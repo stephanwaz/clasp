@@ -13,7 +13,9 @@ https://clasp.readthedocs.io/
 Installation
 ------------
 
-pip install clasp
+::
+
+    pip install clasp
 
 
 Usage
