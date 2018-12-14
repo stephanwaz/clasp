@@ -2,14 +2,16 @@
 History
 =======
 
+0.1.6
+-----
+add release to version bump
+
 0.1.5
 -----
-
 first release on pypi
 
 0.1.4
 -----
-
 added read_data, read_all_data, and read_epw to easily parse data files
 
 0.1.3
