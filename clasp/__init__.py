@@ -4,7 +4,7 @@
 
 __author__ = """Stephen Wasilewski"""
 __email__ = 'stephanwaz@gmail.com'
-__version__ = '0.1.6'
+__version__ = '0.1.7'
 __all__ = ['script_tools', 'click_ext', 'sphinx_click_ext']
 
 import click
