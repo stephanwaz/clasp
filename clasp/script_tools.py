@@ -545,6 +545,7 @@ def read_epw(epw):
         data.append([int(i.strip()) for i in dp[0:2]] +
                     [float(dp[2]) - hoff] +
                     [float(i.strip()) for i in dp[3:]])
+    return data
 
 
 def isnum(s):
