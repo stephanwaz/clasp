@@ -2,6 +2,10 @@
 History
 =======
 
+0.1.8
+-----
+bug fixes
+
 0.1.6
 -----
 add release to version bump
