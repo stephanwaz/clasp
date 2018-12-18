@@ -85,14 +85,34 @@ def crossref(l1, l2):
     return [flat_list(i) for i in out]
 
 
-def crossref_all(l):
+def crossref_all(l, followers=[]):
     '''return all possible combos of list of lists'''
     la = []
-    for i in range(len(l)):
+    followed = [i[0] for i in followers]
+    follows = [i[1] for i in followers]
+    leaders = [i for i in range(len(l)) if i not in follows]
+    for i in leaders:
         if i == 0:
-            la = l[i]
+            if i in followed:
+                k = follows[followed.index(i)]
+                try:
+                    la = [[lb, l[k][j]] for j,lb in enumerate(l[i])]
+                except:
+                    click.echo('length of follower must match leader', err=True)
+                    raise click.Abort()
+            else:
+                la = l[i]
         else:
-            la = crossref(la, l[i])
+            if i in followed:
+                lb = crossref(la, range(len(l[i])))
+                k = follows[followed.index(i)]
+                try:
+                    la = [j[:-1] + [l[i][j[-1]], l[k][j[-1]]] for j in lb]
+                except IndexError:
+                    click.echo('length of follower must match leader', err=True)
+                    raise click.Abort()
+            else:
+                la = crossref(la, l[i])
     return zip(*la)
 
 
