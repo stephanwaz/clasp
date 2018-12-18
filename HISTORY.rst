@@ -2,6 +2,10 @@
 History
 =======
 
+0.1.9
+-----
+added followers kwarg to crossref_all
+
 0.1.8
 -----
 bug fixes
