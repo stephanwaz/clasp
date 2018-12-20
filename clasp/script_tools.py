@@ -592,7 +592,6 @@ def coerce_data(datastr, i_vals, dataf, coerce=True):
         if coerce:
             data = [[float(j[i]) for j in datastr if isnum(j[i])]
                     for i in i_vals]
-            # print(data)
             if len(data[0]) == 0:
                 raise ValueError("check if data file {} has xheaders"
                                  "".format(dataf))
@@ -709,7 +708,10 @@ def read_data(dataf, x_vals=[0], y_vals=[-1], rows=False, header=False,
             datastr = map(list, zip(*datastr))
     if drange is not None:
         datastr = [v for i, v in enumerate(datastr) if i in drange]
-    datay = coerce_data(datastr, y_vals, dataf, coerce)
+    if len(y_vals) > 0:
+        datay = coerce_data(datastr, y_vals, dataf, coerce)
+    else:
+        datay = [[]]
     if autox is not None:
         datax = []
         for i in datay:
@@ -724,7 +726,10 @@ def read_data(dataf, x_vals=[0], y_vals=[-1], rows=False, header=False,
                  for j in datastr if isnum(j[weax[0]])]
         datax = [[daycount[int(i[0])-1] + i[1] for i in datax]]
     else:
-        datax = coerce_data(datastr, x_vals, dataf, coerce)
+        if len(x_vals) > 0:
+            datax = coerce_data(datastr, x_vals, dataf, coerce)
+        else:
+            datax = [[]]
     while len(datax) < len(datay) and len(datax) > 0:
         datax += [datax[-1]]
     if len(datax) > len(datay):
@@ -732,7 +737,7 @@ def read_data(dataf, x_vals=[0], y_vals=[-1], rows=False, header=False,
     return datax, datay, head
 
 
-def read_all_data(datafs, x_vals=[], y_vals=[], order=False, **kwargs):
+def read_all_data(datafs, x_vals=[], y_vals=[], **kwargs):
     """
     read multiple data files and pair x and y data call read_data
 
@@ -742,11 +747,8 @@ def read_all_data(datafs, x_vals=[], y_vals=[], order=False, **kwargs):
         files to read data from
     x_vals: list of ints or tuple int pairs
         (fileidx, colidx) or colidx to read from each file
-    y_vals: ist of ints or tuple int pairs
+    y_vals: list of ints or tuple int pairs
         (fileidx, colidx) or colidx to read from each file
-    order: Boolean
-        preserve order of x_vals and y_vals at the expense of efficiency.
-        if false returns data ordered by file, then index as give
     kwargs:
         optional arguments for read_data
 
@@ -762,33 +764,24 @@ def read_all_data(datafs, x_vals=[], y_vals=[], order=False, **kwargs):
     xds = []
     yds = []
     labels = []
-    if order:
-        for x in x_vals:
-            if type(x) == tuple:
-                xd, _, _ = read_data(datafs[x[0]], [x[1]], [], **kwargs)
-                xds += xd
-            else:
-                for d in datafs:
-                    xd, _, _ = read_data(d, [x], [], **kwargs)
-                    xds += xd
-        for y in y_vals:
-            if type(y) == tuple:
-                _, yd, label = read_data(datafs[y[0]], [], [y[1]], **kwargs)
-                yds += yd
-                labels += label
-            else:
-                for d in datafs:
-                    _, yd, label = read_data(d, [], [y], **kwargs)
-                    yds += yd
-                    labels += label
-    else:
-        for i, fi in enumerate(datafs):
-            xs = get_i(i, x_vals)
-            ys = get_i(i, y_vals)
-            xd, yd, label = read_data(fi, xs, ys, **kwargs)
+    for x in x_vals:
+        if type(x) == tuple:
+            xd, _, _ = read_data(datafs[x[0]], [x[1]], [-1], **kwargs)
             xds += xd
+        else:
+            for d in datafs:
+                xd, _, _ = read_data(d, [x], [-1], **kwargs)
+                xds += xd
+    for y in y_vals:
+        if type(y) == tuple:
+            _, yd, label = read_data(datafs[y[0]], [], [y[1]], **kwargs)
             yds += yd
             labels += label
+        else:
+            for d in datafs:
+                _, yd, label = read_data(d, [], [y], **kwargs)
+                yds += yd
+                labels += label
     while len(xds) < len(yds) and len(xds) > 0:
         xds += [xds[-1]]
     return xds, yds, labels
