@@ -26,28 +26,14 @@ import clasp.script_tools as mgr
 COMPLETION_SCRIPT_BASH = '''
 %(complete_func)s() {
     local cw="${COMP_WORDS[*]}"
-    local ar=($cw)
-    local hcnt=0
-    for el in ${ar[@]}; do
-        if [[ $el == --* ]]; then
-            :
-        elif [[ $el == -* ]]; then
-            hcnt=$(($hcnt + 1))
-        fi
-    done
-    local hdif=$(($COMP_CWORD - $hcnt * 2 ))
     if [[ $cw != *">"* ]]; then
-    if [[ $cw != *"|"* ]]; then
-    if [[ ${ar[$COMP_CWORD]} == -*  ]] || [[ $hdif == 1 ]]; then
-    if [[ ${ar[$COMP_CWORD]} != -* ]] && [[ ${ar[$COMP_CWORD-1]} == -* ]]; then
+    if [[ ${COMP_WORDS[$COMP_CWORD]} != -* ]] && [[ ${COMP_WORDS[$COMP_CWORD-1]} == -* ]]; then
         :
     else
-            local IFS=$'\n'
-            COMPREPLY=( $( env COMP_WORDS="${COMP_WORDS[*]}" \\
-                        COMP_CWORD=$COMP_CWORD \\
-                        %(autocomplete_var)s=complete $1 ) )
-    fi
-    fi
+        local IFS=$'\n'
+        COMPREPLY=( $( env COMP_WORDS="${COMP_WORDS[*]}" \\
+                    COMP_CWORD=$COMP_CWORD \\
+                    %(autocomplete_var)s=complete $1 ) )
     fi
     fi
     return 0
