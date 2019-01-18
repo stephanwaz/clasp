@@ -300,7 +300,7 @@ main_decs = [
                  "settings for same command"),
     click.option('--inputalias/--no-inputalias', default=True,
                  help="if true uses -ca for loading settings"),
-    click.version_option(version='0.5.8'),
+    click.version_option(version='TODO'),
     click.pass_context
 ]
 

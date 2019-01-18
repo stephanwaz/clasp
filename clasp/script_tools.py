@@ -560,7 +560,10 @@ def read_epw(epw):
             dp = [h[1], h[2], h[3], h[14], h[15], h[16], h[23]]
             hoff = .5
         else:
-            dp = [h[0], h[1], h[2], h[3], h[4], "0", "0"]
+            try:
+                dp = [h[0], h[1], h[2], h[3], h[4], h[5], h[6]]
+            except IndexError:
+                dp = [h[0], h[1], h[2], h[3], h[4], "0", "0"]
             hoff = 0
         data.append([int(i.strip()) for i in dp[0:2]] +
                     [float(dp[2]) - hoff] +
