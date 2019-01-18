@@ -767,6 +767,8 @@ def read_all_data(datafs, x_vals=[], y_vals=[], **kwargs):
     xds = []
     yds = []
     labels = []
+    if kwargs['autox']:
+        x_vals = y_vals
     for x in x_vals:
         if type(x) == tuple:
             xd, _, _ = read_data(datafs[x[0]], [x[1]], [-1], **kwargs)
