@@ -45,10 +45,18 @@ def rm_dup(seq):
     return [x for x in seq if not (x in mark or mark_add(x))]
 
 
-def kwarg_match(func, kwargs):
+def warn_match(kwargs, sargs):
+    for i in sargs:
+        if i not in kwargs:
+            click.echo('WARNING: {} not set'.format(i), err=True)
+
+
+def kwarg_match(func, kwargs, debug=False):
     """filters dict for keys used by func"""
     sargs = inspect.getargspec(func).args
     argsc = {i: kwargs[i] for i in sargs if i in kwargs}
+    if debug:
+        warn_match(kwargs, sargs)
     return argsc
 
 
