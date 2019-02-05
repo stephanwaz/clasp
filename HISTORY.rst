@@ -2,6 +2,10 @@
 History
 =======
 
+0.2.0
+-----
+kwarg_match debug option
+
 0.1.9
 -----
 added followers kwarg to crossref_all
