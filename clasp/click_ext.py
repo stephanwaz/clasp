@@ -292,17 +292,19 @@ def click_ext(click):
 
 
 # shared decorators for all main command groups
-main_decs = [
-    click.option('--config', '-c', type=click.Path(exists=True)),
-    click.option('--outconfig', '-oc', type=click.Path(file_okay=True)),
-    click.option('--configalias', '-ca',
-                 help="store config in alias section. use to store multiple"
-                 "settings for same command"),
-    click.option('--inputalias/--no-inputalias', default=True,
-                 help="if true uses -ca for loading settings"),
-    click.version_option(version='TODO'),
-    click.pass_context
-]
+def main_decs(v):
+    md = [
+        click.option('--config', '-c', type=click.Path(exists=True)),
+        click.option('--outconfig', '-oc', type=click.Path(file_okay=True)),
+        click.option('--configalias', '-ca',
+                     help="store config in alias section. use to store multiple"
+                     "settings for same command"),
+        click.option('--inputalias/--no-inputalias', default=True,
+                     help="if true uses -ca for loading settings"),
+        click.version_option(version=v),
+        click.pass_context
+    ]
+    return md
 
 
 def shared_decs(decs):
