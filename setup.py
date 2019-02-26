@@ -56,6 +56,6 @@ setup(
     tests_require=test_requirements,
     url='https://bitbucket.org/stephenwasilewski/clasp',
     project_urls= {'documentation': 'https://clasp.readthedocs.io/'},
-    version='0.2.0',
+    version='0.2.1',
     zip_safe=True,
 )

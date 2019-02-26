@@ -2,6 +2,10 @@
 History
 =======
 
+0.2.1
+-----
+change main_decs to function with version arg
+
 0.2.0
 -----
 kwarg_match debug option
