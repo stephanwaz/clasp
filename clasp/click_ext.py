@@ -8,8 +8,12 @@
 """extension, callbacks and interface for parsing with click and configparse"""
 
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import zip
 import click
-import ConfigParser
+import configparser
 import re
 import tempfile
 import sys
@@ -423,7 +427,7 @@ def is_file(ctx, param, s):
             return s
         else:
             raise ValueError(s)
-    except ValueError, e:
+    except ValueError as e:
         try:
             # use os.environ['CLASP_PIPE'] = '1' in parent script
             # or set CLASP_PIPE=1
@@ -447,7 +451,7 @@ def are_files(ctx, param, s, prompt=True):
     name = param.name
     try:
         return parse_file_list(ctx, s)
-    except ValueError, e:
+    except ValueError as e:
         if prompt and not ctx.resilient_parsing:
             try:
                 # use os.environ['CLASP_PIPE'] = '1' in parent script
@@ -659,7 +663,7 @@ def ConfigSectionMap(Config, section):
                 dict1[option] = None
             else:
                 dict1[option] = opt
-        except Exception, ex:
+        except Exception as ex:
             click.echo("exception on {}! {}".format(option, ex), err=True)
             dict1[option] = None
     return dict1
@@ -685,7 +689,7 @@ def formatarg(Parser, command, name, v):
     wv = format_depth(v)
     try:
         Parser.set(command, name, wv)
-    except ConfigParser.NoSectionError:
+    except configparser.NoSectionError:
         Parser.add_section(command)
         Parser.set(command, name, wv)
     return Parser
@@ -743,7 +747,7 @@ def index_seps(params):
 
 def get_config(ctx, config, outconfig, configalias, inputalias, template=None):
     """load config file into click options"""
-    Parser = ConfigParser.ConfigParser()
+    Parser = configparser.ConfigParser()
     com = ctx.info_name.split("_")[-1]
     subc = ctx.invoked_subcommand
     if configalias and template is not None:
@@ -808,7 +812,7 @@ def print_config(ctx, opts, outconfig, config, configalias):
         opt = "{}_{}".format(com, configalias)
     else:
         opt = "{}_{}".format(com, opts[0])
-    Parser = ConfigParser.ConfigParser()
+    Parser = configparser.ConfigParser()
     try:
         Parser.read(config)
     except Exception:
@@ -818,7 +822,7 @@ def print_config(ctx, opts, outconfig, config, configalias):
     except Exception:
         pass
     comments = config_comments(config, outconfig)
-    for i, v in opts[1].iteritems():
+    for i, v in list(opts[1].items()):
         try:
             if ismultiple[i]:
                 for j, k in enumerate(v):
@@ -830,7 +834,7 @@ def print_config(ctx, opts, outconfig, config, configalias):
             pass
     comments = add_opt_comment(comments, Parser.sections())
     for s in Parser._sections:
-        srt = sorted(Parser._sections[s].items(), key=lambda t: t[0])
+        srt = sorted(list(Parser._sections[s].items()), key=lambda t: t[0])
         Parser._sections[s] = collections.OrderedDict(srt)
     f = open(outconfig, 'w')
     f.write(comments)
@@ -898,6 +902,6 @@ def echo_args(*args, **kwargs):
                 v = "file like object"
         print(formatarg_stdout(v), file=sys.stderr)
     print("\nOptions:\n", file=sys.stderr)
-    srt = sorted([(i, u) for i, u in kwargs.iteritems()])
+    srt = sorted([(i, u) for i, u in list(kwargs.items())])
     for i, v in srt:
         print(formatarg_stdout(v, i), file=sys.stderr)
