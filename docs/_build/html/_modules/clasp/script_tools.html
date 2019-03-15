@@ -9,11 +9,10 @@
     <title>clasp.script_tools &#8212; clasp (0.2.1) 0.2.1 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -104,29 +103,29 @@
     <span class="sd">&#39;&#39;&#39;exception free mkdir&#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">pass</span></div>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span></div>
+        <span class="k">pass</span>
 
 
 <div class="viewcode-block" id="arange"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.arange">[docs]</a><span class="k">def</span> <span class="nf">arange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">stop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">stop</span> <span class="o">=</span> <span class="n">start</span>
         <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">old_div</span><span class="p">((</span><span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">*</span><span class="mf">1.</span><span class="p">,</span><span class="n">step</span><span class="p">)))</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span></div>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">old_div</span><span class="p">((</span><span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">*</span><span class="mf">1.</span><span class="p">,</span><span class="n">step</span><span class="p">)))</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
 
 
 <div class="viewcode-block" id="rm_dup"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.rm_dup">[docs]</a><span class="k">def</span> <span class="nf">rm_dup</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;removes duplicates from list while preserving order&quot;&quot;&quot;</span>
     <span class="n">mark</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="n">mark_add</span> <span class="o">=</span> <span class="n">mark</span><span class="o">.</span><span class="n">add</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">seq</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">mark</span> <span class="ow">or</span> <span class="n">mark_add</span><span class="p">(</span><span class="n">x</span><span class="p">))]</span></div>
+    <span class="n">mark_add</span> <span class="o">=</span> <span class="n">mark</span><span class="o">.</span><span class="n">add</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">seq</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">mark</span> <span class="ow">or</span> <span class="n">mark_add</span><span class="p">(</span><span class="n">x</span><span class="p">))]</span>
 
 
 <div class="viewcode-block" id="warn_match"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.warn_match">[docs]</a><span class="k">def</span> <span class="nf">warn_match</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">sargs</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sargs</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;WARNING: </span><span class="si">{}</span><span class="s1"> not set&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span></div>
+            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;WARNING: </span><span class="si">{}</span><span class="s1"> not set&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="kwarg_match"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.kwarg_match">[docs]</a><span class="k">def</span> <span class="nf">kwarg_match</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -134,15 +133,15 @@
     <span class="n">sargs</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">args</span>
     <span class="n">argsc</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sargs</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="n">warn_match</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">sargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">argsc</span></div>
+        <span class="n">warn_match</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">sargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">argsc</span>
 
 
 <div class="viewcode-block" id="arg_match"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.arg_match">[docs]</a><span class="k">def</span> <span class="nf">arg_match</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;filters dict for positional arguments used by func&quot;&quot;&quot;</span>
     <span class="n">sargs</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):]</span>
-    <span class="n">argsc</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sargs</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">argsc</span></div>
+    <span class="n">argsc</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sargs</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">argsc</span>
 
 
 <div class="viewcode-block" id="kwarg_arg"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.kwarg_arg">[docs]</a><span class="k">def</span> <span class="nf">kwarg_arg</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -157,8 +156,8 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">largs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="n">oarg</span><span class="p">])</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">largs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">largs</span></div>
+            <span class="n">largs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">default</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">largs</span>
 
 
 <div class="viewcode-block" id="crossref"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.crossref">[docs]</a><span class="k">def</span> <span class="nf">crossref</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">):</span>
@@ -167,8 +166,8 @@
     <span class="n">out</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">l1</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">l2</span><span class="p">):</span>
-            <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">l2</span><span class="p">)</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">m</span><span class="p">]</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">flat_list</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="p">]</span></div>
+            <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">l2</span><span class="p">)</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">m</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="n">flat_list</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="crossref_all"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.crossref_all">[docs]</a><span class="k">def</span> <span class="nf">crossref_all</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">followers</span><span class="o">=</span><span class="p">[]):</span>
@@ -198,8 +197,8 @@
                     <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;length of follower must match leader&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                     <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">la</span> <span class="o">=</span> <span class="n">crossref</span><span class="p">(</span><span class="n">la</span><span class="p">,</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">la</span><span class="p">))</span></div>
+                <span class="n">la</span> <span class="o">=</span> <span class="n">crossref</span><span class="p">(</span><span class="n">la</span><span class="p">,</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">la</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="subpipe"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.subpipe">[docs]</a><span class="k">def</span> <span class="nf">subpipe</span><span class="p">(</span><span class="n">commands</span><span class="p">):</span>
@@ -239,8 +238,8 @@
                     <span class="n">f</span><span class="p">,</span> <span class="n">pt</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;clasp_tmp&#39;</span><span class="p">)</span>
                     <span class="n">temps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
                     <span class="n">pipeline</span><span class="p">([</span><span class="n">sub</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;$()&#39;</span><span class="p">)],</span> <span class="n">outfile</span><span class="o">=</span><span class="n">pt</span><span class="p">)</span>
-                <span class="n">commands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">pt</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">temps</span><span class="p">,</span> <span class="n">commands</span></div>
+                <span class="n">commands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">pt</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">temps</span><span class="p">,</span> <span class="n">commands</span>
 
 
 <div class="viewcode-block" id="pipeline"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.pipeline">[docs]</a><span class="k">def</span> <span class="nf">pipeline</span><span class="p">(</span><span class="n">commands</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -307,8 +306,8 @@
     <span class="k">if</span> <span class="n">close</span><span class="p">:</span>
         <span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">temps</span><span class="p">:</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">out</span></div>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">out</span>
 
 
 <div class="viewcode-block" id="flat_list"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.flat_list">[docs]</a><span class="k">def</span> <span class="nf">flat_list</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
@@ -321,8 +320,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">a</span></div>
+        <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">a</span>
 
 
 <div class="viewcode-block" id="cluster_call"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.cluster_call">[docs]</a><span class="k">def</span> <span class="nf">cluster_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=.</span><span class="mi">1</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -373,8 +372,8 @@
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="o">*</span><span class="n">args2</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">output</span></div>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="o">*</span><span class="n">args2</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">output</span>
 
 
 <div class="viewcode-block" id="cluster_command"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.cluster_command">[docs]</a><span class="k">def</span> <span class="nf">cluster_command</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -390,8 +389,8 @@
         <span class="n">g</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
     <span class="n">f</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">h</span><span class="p">,</span>
-                         <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="n">shell</span><span class="p">)</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">f</span></div>
+                         <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="n">shell</span><span class="p">)</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">f</span>
 
 
 <div class="viewcode-block" id="get_results"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.get_results">[docs]</a><span class="k">def</span> <span class="nf">get_results</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">coms</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
@@ -419,8 +418,8 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;command: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
         <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="n">stdout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">i</span></div>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">i</span>
 
 
 <div class="viewcode-block" id="run_sh"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.run_sh">[docs]</a><span class="k">def</span> <span class="nf">run_sh</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">prof</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span>
@@ -461,16 +460,16 @@
             <span class="n">msg_id</span> <span class="o">=</span> <span class="n">pending</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">clients</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">msg_id</span><span class="p">)</span>
             <span class="n">pending</span> <span class="o">=</span> <span class="n">pending</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="n">ar</span> <span class="o">=</span> <span class="n">clients</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="n">msg_id</span><span class="p">)</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="n">get_results</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">coms</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span></div>
+            <span class="n">ar</span> <span class="o">=</span> <span class="n">clients</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="n">msg_id</span><span class="p">)</span></div>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">get_results</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">coms</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="start_farm"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.start_farm">[docs]</a><span class="k">def</span> <span class="nf">start_farm</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">prof</span><span class="p">,</span> <span class="n">thr</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;output shell command for starting farm&quot;&quot;&quot;</span>
     <span class="n">rem</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s1">:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">thr</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">])</span>
     <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;ipcluster start --profile=</span><span class="si">{}</span><span class="s2"> &quot;</span>
-               <span class="s2">&quot;--SSHEngineSetLauncher.engines=&#39;{{</span><span class="si">{}</span><span class="s2">}}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prof</span><span class="p">,</span> <span class="n">rem</span><span class="p">),</span>
-               <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+               <span class="s2">&quot;--SSHEngineSetLauncher.engines=&#39;{{</span><span class="si">{}</span><span class="s2">}}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prof</span><span class="p">,</span> <span class="n">rem</span><span class="p">),</span></div>
+               <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="stop_farm"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.stop_farm">[docs]</a><span class="k">def</span> <span class="nf">stop_farm</span><span class="p">(</span><span class="n">profile</span><span class="p">):</span>
@@ -479,8 +478,8 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">clients</span> <span class="o">=</span> <span class="n">parallel</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">)</span>
             <span class="n">clients</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span></div>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="add_engine"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.add_engine">[docs]</a><span class="k">def</span> <span class="nf">add_engine</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">prof</span><span class="p">,</span> <span class="n">thr</span><span class="p">,</span>
@@ -494,8 +493,8 @@
     <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">:</span>
         <span class="n">rem</span> <span class="o">=</span> <span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot;:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">thr</span><span class="p">)</span>
         <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;ipcluster engines --daemonize  --profile=</span><span class="si">{}</span><span class="s2">&quot;</span>\
-                  <span class="s2">&quot; --SSHEngineSetLauncher.engines={{</span><span class="si">{}</span><span class="s2">}}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prof</span><span class="p">,</span> <span class="n">rem</span><span class="p">)</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">())</span></div>
+                  <span class="s2">&quot; --SSHEngineSetLauncher.engines={{</span><span class="si">{}</span><span class="s2">}}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prof</span><span class="p">,</span> <span class="n">rem</span><span class="p">)</span></div>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
 
 
 <div class="viewcode-block" id="remove_engines"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.remove_engines">[docs]</a><span class="k">def</span> <span class="nf">remove_engines</span><span class="p">(</span><span class="n">remotes</span><span class="p">):</span>
@@ -508,8 +507,8 @@
             <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;no pid found for remote: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pid</span><span class="p">:</span>
-                <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;kill&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">])</span></div>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pid</span><span class="p">:</span></div>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;kill&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="send_working_dir"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.send_working_dir">[docs]</a><span class="k">def</span> <span class="nf">send_working_dir</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span>
@@ -520,8 +519,8 @@
         <span class="n">scp</span> <span class="o">=</span> <span class="s2">&quot;rsync -av --exclude </span><span class="si">{3}</span><span class="s2"> </span><span class="si">{0}</span><span class="s2"> </span><span class="si">{1}</span><span class="s2">:</span><span class="si">{2}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">workdir</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span>
                                                            <span class="n">workf</span><span class="p">,</span> <span class="n">exclude</span><span class="p">)</span>
         <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">scp</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">scp</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-    <span class="k">return</span> <span class="n">workf</span></div>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">scp</span><span class="o">.</span><span class="n">split</span><span class="p">())</span></div>
+    <span class="k">return</span> <span class="n">workf</span>
 
 
 <div class="viewcode-block" id="get_cpu"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.get_cpu">[docs]</a><span class="k">def</span> <span class="nf">get_cpu</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="s2">&quot;ipcluster&quot;</span><span class="p">):</span>
@@ -553,8 +552,8 @@
             <span class="n">chk</span> <span class="o">=</span> <span class="s2">&quot;ssh -o ConnectTimeout=10 </span><span class="si">{}</span><span class="s2"> &#39;ls -l </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2"> | cut -c-100&#39;&quot;</span>\
                   <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">stat</span><span class="p">)</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">chk</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
-                <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span></div>
+                <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="check_farm"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.check_farm">[docs]</a><span class="k">def</span> <span class="nf">check_farm</span><span class="p">(</span><span class="n">profile</span><span class="p">):</span>
@@ -563,8 +562,8 @@
         <span class="n">clients</span> <span class="o">=</span> <span class="n">parallel</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">)</span>
         <span class="n">ids</span> <span class="o">=</span> <span class="n">clients</span><span class="o">.</span><span class="n">ids</span>
         <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span></div>
+        <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="gather_files"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.gather_files">[docs]</a><span class="k">def</span> <span class="nf">gather_files</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">get</span><span class="p">,</span> <span class="n">rsync</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="s2">&quot;ipcluster&quot;</span><span class="p">,</span> <span class="n">nocheck</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -580,8 +579,8 @@
         <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dash</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">nocheck</span> <span class="ow">or</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span><span class="s2">&quot;Proceed with rsync?&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">rem</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">:</span>
-            <span class="n">scp</span> <span class="o">=</span> <span class="s2">&quot;rsync -av </span><span class="si">{3}</span><span class="s2"> </span><span class="si">{0}</span><span class="s2">:</span><span class="si">{1}</span><span class="s2">/</span><span class="si">{2}</span><span class="s2"> ./&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rem</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">get</span><span class="p">,</span> <span class="n">rsync</span><span class="p">)</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">scp</span><span class="o">.</span><span class="n">split</span><span class="p">())</span></div>
+            <span class="n">scp</span> <span class="o">=</span> <span class="s2">&quot;rsync -av </span><span class="si">{3}</span><span class="s2"> </span><span class="si">{0}</span><span class="s2">:</span><span class="si">{1}</span><span class="s2">/</span><span class="si">{2}</span><span class="s2"> ./&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rem</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">get</span><span class="p">,</span> <span class="n">rsync</span><span class="p">)</span></div>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">scp</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
 
 
 <div class="viewcode-block" id="dist_command"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.dist_command">[docs]</a><span class="k">def</span> <span class="nf">dist_command</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
@@ -589,8 +588,8 @@
     <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">:</span>
         <span class="n">sshaux</span> <span class="o">=</span> <span class="s2">&quot;ssh -o ConnectTimeout=10 </span><span class="si">{}</span><span class="s2"> &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
-        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">sshaux</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-    <span class="k">return</span> <span class="n">output</span></div>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">sshaux</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span></div>
+    <span class="k">return</span> <span class="n">output</span>
 
 
 <div class="viewcode-block" id="get_cpu_log"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.get_cpu_log">[docs]</a><span class="k">def</span> <span class="nf">get_cpu_log</span><span class="p">(</span><span class="n">remotes</span><span class="p">):</span>
@@ -607,8 +606,8 @@
             <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="p">]</span>
             <span class="n">cpu</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
             <span class="n">bar</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">old_div</span><span class="p">(</span><span class="n">cpu</span><span class="p">,</span><span class="mi">800</span><span class="o">*</span><span class="mi">32</span><span class="p">))))</span>
-            <span class="n">cpus</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{: &lt;8}{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cpu</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="o">*</span><span class="n">bar</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="o">*</span><span class="p">(</span><span class="mi">32</span><span class="o">-</span><span class="n">bar</span><span class="p">)))</span>
-    <span class="k">return</span> <span class="n">cpus</span></div>
+            <span class="n">cpus</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{: &lt;8}{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cpu</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="o">*</span><span class="n">bar</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="o">*</span><span class="p">(</span><span class="mi">32</span><span class="o">-</span><span class="n">bar</span><span class="p">)))</span></div>
+    <span class="k">return</span> <span class="n">cpus</span>
 
 
 <div class="viewcode-block" id="farm_log"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.farm_log">[docs]</a><span class="k">def</span> <span class="nf">farm_log</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">outf</span><span class="o">=</span><span class="s2">&quot;farm_log.txt&quot;</span><span class="p">):</span>
@@ -621,8 +620,8 @@
         <span class="n">vals</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cpus</span><span class="p">)</span>
         <span class="n">ti</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%m/</span><span class="si">%d</span><span class="s2">/%y-%H:%M:%S&quot;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ti</span><span class="p">,</span> <span class="n">vals</span><span class="p">))</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">interval</span> <span class="o">-</span> <span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">stime</span><span class="p">)</span> <span class="o">%</span> <span class="n">interval</span><span class="p">))</span></div>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">interval</span> <span class="o">-</span> <span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">stime</span><span class="p">)</span> <span class="o">%</span> <span class="n">interval</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="read_epw"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_epw">[docs]</a><span class="k">def</span> <span class="nf">read_epw</span><span class="p">(</span><span class="n">epw</span><span class="p">):</span>
@@ -653,8 +652,8 @@
             <span class="n">hoff</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]]</span> <span class="o">+</span>
                     <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="n">hoff</span><span class="p">]</span> <span class="o">+</span>
-                    <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dp</span><span class="p">[</span><span class="mi">3</span><span class="p">:]])</span>
-    <span class="k">return</span> <span class="n">data</span></div>
+                    <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dp</span><span class="p">[</span><span class="mi">3</span><span class="p">:]])</span></div>
+    <span class="k">return</span> <span class="n">data</span>
 
 
 <div class="viewcode-block" id="isnum"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.isnum">[docs]</a><span class="k">def</span> <span class="nf">isnum</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -662,8 +661,8 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="kc">False</span>
 
 
 <div class="viewcode-block" id="try_float"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.try_float">[docs]</a><span class="k">def</span> <span class="nf">try_float</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -671,8 +670,8 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">a</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">s</span></div>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="n">s</span>
 
 
 <div class="viewcode-block" id="coerce_data"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.coerce_data">[docs]</a><span class="k">def</span> <span class="nf">coerce_data</span><span class="p">(</span><span class="n">datastr</span><span class="p">,</span> <span class="n">i_vals</span><span class="p">,</span> <span class="n">dataf</span><span class="p">,</span> <span class="n">coerce</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -695,8 +694,8 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;bad value or no data in file: </span><span class="si">{}</span><span class="s2">, try --no-coerce&quot;</span>\
                   <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataf</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">data</span></div>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">data</span>
 
 
 <div class="viewcode-block" id="get_i"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.get_i">[docs]</a><span class="k">def</span> <span class="nf">get_i</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">d_vals</span><span class="p">):</span>
@@ -709,8 +708,8 @@
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span> <span class="ow">and</span> <span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">:</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">tuple</span><span class="p">:</span>
-            <span class="n">ds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">ds</span></div>
+            <span class="n">ds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">ds</span>
 
 
 <div class="viewcode-block" id="read_data_file"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_data_file">[docs]</a><span class="k">def</span> <span class="nf">read_data_file</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">xheader</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
@@ -730,8 +729,8 @@
         <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;File: </span><span class="si">{}</span><span class="s2"> has no data&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataf</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
     <span class="n">datastr</span> <span class="o">=</span> <span class="p">[[</span><span class="n">j</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delim</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dl</span><span class="p">]</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">datastr</span></div>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">datastr</span>
 
 
 <div class="viewcode-block" id="read_data"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_data">[docs]</a><span class="k">def</span> <span class="nf">read_data</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="n">x_vals</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_vals</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">rows</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -822,8 +821,8 @@
     <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">datax</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">datay</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">datax</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">datax</span> <span class="o">+=</span> <span class="p">[</span><span class="n">datax</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">datax</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">datay</span><span class="p">):</span>
-        <span class="n">datax</span> <span class="o">=</span> <span class="n">datax</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">datay</span><span class="p">)]</span>
-    <span class="k">return</span> <span class="n">datax</span><span class="p">,</span> <span class="n">datay</span><span class="p">,</span> <span class="n">head</span></div>
+        <span class="n">datax</span> <span class="o">=</span> <span class="n">datax</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">datay</span><span class="p">)]</span></div>
+    <span class="k">return</span> <span class="n">datax</span><span class="p">,</span> <span class="n">datay</span><span class="p">,</span> <span class="n">head</span>
 
 
 <div class="viewcode-block" id="read_all_data"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_all_data">[docs]</a><span class="k">def</span> <span class="nf">read_all_data</span><span class="p">(</span><span class="n">datafs</span><span class="p">,</span> <span class="n">x_vals</span><span class="o">=</span><span class="p">[],</span> <span class="n">y_vals</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -874,8 +873,8 @@
                 <span class="n">yds</span> <span class="o">+=</span> <span class="n">yd</span>
                 <span class="n">labels</span> <span class="o">+=</span> <span class="n">label</span>
     <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">xds</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">yds</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">xds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">xds</span> <span class="o">+=</span> <span class="p">[</span><span class="n">xds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-    <span class="k">return</span> <span class="n">xds</span><span class="p">,</span> <span class="n">yds</span><span class="p">,</span> <span class="n">labels</span></div>
+        <span class="n">xds</span> <span class="o">+=</span> <span class="p">[</span><span class="n">xds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span></div>
+    <span class="k">return</span> <span class="n">xds</span><span class="p">,</span> <span class="n">yds</span><span class="p">,</span> <span class="n">labels</span>
 </pre></div>
 
           </div>
@@ -888,7 +887,7 @@
       &copy;2018, Stephen Wasilewski.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
