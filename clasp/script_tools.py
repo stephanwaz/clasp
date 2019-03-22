@@ -37,6 +37,7 @@ def try_mkdir(s):
 
 
 def arange(start, stop=None, step=1):
+    '''like numpy.arange for integers'''
     if stop is None:
         stop = start
         start = 0
@@ -225,6 +226,10 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
         except OSError:
             message = "invalid command / no such file: {}".format(commands[i])
             raise OSError(2, message)
+    try:
+        inp = inp.encode(sys.stdin.encoding)
+    except Exception:
+        pass
     if len(commands) == 1 and strin:
         out = pops[0].communicate(inp)[0]
     else:
@@ -232,6 +237,10 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
             pops[0].stdin.write(inp)
             pops[0].stdin.close()
         out = pops[-1].communicate()[0]
+    try:
+        out = out.decode(sys.stdout.encoding)
+    except Exception:
+        pass
     if close:
         outfile.close()
     for temp in temps:
