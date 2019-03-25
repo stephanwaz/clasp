@@ -1,6 +1,11 @@
+
 =======
 History
 =======
+
+0.2.2
+-----
+kwarg bug in read_all_data
 
 0.2.1
 -----
