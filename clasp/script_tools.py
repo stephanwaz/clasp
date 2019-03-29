@@ -9,6 +9,12 @@
 computing particulary w/ subprocess calls."""
 
 from __future__ import print_function
+from __future__ import division
+from builtins import map
+from builtins import zip
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import sys
 import shlex
 import subprocess
@@ -31,10 +37,11 @@ def try_mkdir(s):
 
 
 def arange(start, stop=None, step=1):
+    '''like numpy.arange for integers'''
     if stop is None:
         stop = start
         start = 0
-    n = int(math.ceil((stop - start)*1./step))
+    n = int(math.ceil(old_div((stop - start)*1.,step)))
     return [start + step*i for i in range(n)]
 
 
@@ -112,7 +119,7 @@ def crossref_all(l, followers=[]):
                 la = l[i]
         else:
             if i in followed:
-                lb = crossref(la, range(len(l[i])))
+                lb = crossref(la, list(range(len(l[i]))))
                 k = follows[followed.index(i)]
                 try:
                     la = [j[:-1] + [l[i][j[-1]], l[k][j[-1]]] for j in lb]
@@ -121,7 +128,7 @@ def crossref_all(l, followers=[]):
                     raise click.Abort()
             else:
                 la = crossref(la, l[i])
-    return zip(*la)
+    return list(zip(*la))
 
 
 def subpipe(commands):
@@ -219,6 +226,10 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
         except OSError:
             message = "invalid command / no such file: {}".format(commands[i])
             raise OSError(2, message)
+    try:
+        inp = inp.encode(sys.stdin.encoding)
+    except Exception:
+        pass
     if len(commands) == 1 and strin:
         out = pops[0].communicate(inp)[0]
     else:
@@ -226,6 +237,10 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
             pops[0].stdin.write(inp)
             pops[0].stdin.close()
         out = pops[-1].communicate()[0]
+    try:
+        out = out.decode(sys.stdout.encoding)
+    except Exception:
+        pass
     if close:
         outfile.close()
     for temp in temps:
@@ -290,12 +305,12 @@ def cluster_call(func, args, profile=None, kwargs=None, timeout=.1, cwd=None,
             output = view.map(*args2)
         else:
             print(message, file=sys.stderr)
-            output = map(*args2)
-    except Exception, ex:
+            output = list(map(*args2))
+    except Exception as ex:
         if debug:
             print(ex, file=sys.stderr)
         print(message, file=sys.stderr)
-        output = map(*args2)
+        output = list(map(*args2))
     return output
 
 
@@ -528,7 +543,7 @@ def get_cpu_log(remotes):
         else:
             out = [i.split(None, 10) for i in out]
             cpu = sum([float(j[2]) for j in out[1:]])
-            bar = min(32, int(round(cpu/800*32)))
+            bar = min(32, int(round(old_div(cpu,800*32))))
             cpus.append("{: <8}{}{}".format(cpu, "#"*bar, "."*(32-bar)))
     return cpus
 
@@ -555,7 +570,7 @@ def read_epw(epw):
     out: tuple
         (month, day, hour, dirnorn, difhoriz, globhoriz, skycover)
     '''
-    if type(epw) in [str, unicode]:
+    if type(epw) in [str, str]:
         f = open(epw, 'r')
     else:
         f = epw
@@ -608,7 +623,7 @@ def coerce_data(datastr, i_vals, dataf, coerce=True):
                                  "".format(dataf))
         else:
             data = [[try_float(j[i]) for j in datastr] for i in i_vals]
-    except ValueError, ex:
+    except ValueError as ex:
         raise ex
     except Exception:
         try:
@@ -716,7 +731,7 @@ def read_data(dataf, x_vals=[0], y_vals=[-1], rows=False, header=False,
         if reverse:
             datastr.reverse()
         if rows:
-            datastr = map(list, zip(*datastr))
+            datastr = list(map(list, list(zip(*datastr))))
     if drange is not None:
         datastr = [v for i, v in enumerate(datastr) if i in drange]
     if len(y_vals) > 0:
