@@ -396,6 +396,14 @@ def parse_file_list(ctx, s):
             i = os.path.expanduser(i)
         if i == '-':
             files.append(tmp_stdin(ctx))
+        elif i[0] == '@':
+            if os.path.exists(i[1:]):
+                f = open(i[1:],'r')
+                fi = [j.strip() for j in f.readlines()]
+                for l in fi:
+                    files += parse_file_list(ctx, l)
+            else:
+                raise ValueError(j)
         elif len(sglob(i)) > 0:
             for j in sglob(i):
                 if os.path.exists(j):
