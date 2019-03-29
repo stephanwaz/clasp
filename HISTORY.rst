@@ -3,6 +3,10 @@
 History
 =======
 
+0.2.3
+-----
+added @file parsing to parse_file_list each line handled as its own call to parse_file_list
+
 0.2.2
 -----
 kwarg bug in read_all_data
