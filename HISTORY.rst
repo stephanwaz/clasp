@@ -3,6 +3,10 @@
 History
 =======
 
+0.2.4
+-----
+python 3 beta
+
 0.2.3
 -----
 added @file parsing to parse_file_list each line handled as its own call to parse_file_list
