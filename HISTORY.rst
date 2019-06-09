@@ -3,7 +3,7 @@
 History
 =======
 
-0.2.5
+0.2.6
 -----
 python 3 beta
 
