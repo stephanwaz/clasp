@@ -27,6 +27,9 @@ import datetime
 from clasp import click
 import ipyparallel as parallel
 
+if sys.version[0] == '3':
+    inspect.getargspec = inspect.getfullargspec
+
 
 def try_mkdir(s):
     '''exception free mkdir'''
@@ -141,8 +144,8 @@ def subpipe(commands):
     '''
     temps = []
     for i, command in enumerate(commands):
-        if re.match('.*\$\(.+\).*', command):
-            subs = re.findall('\$\(.+\)', command)
+        if re.match(r'.*\$\(.+\).*', command):
+            subs = re.findall(r'\$\(.+\)', command)
             for sub in subs:
                 if "$((" in sub:
                     pt = sub[:]
@@ -576,7 +579,7 @@ def read_epw(epw):
         f = open(epw, 'r')
     lines = f.readlines()
     f.seek(0)
-    hours = [re.split('[ \t,]+', i) for i in lines if re.match("\d.*", i)]
+    hours = [re.split(r'[ \t,]+', i) for i in lines if re.match(r"\d.*", i)]
     data = []
     for h in hours:
         if len(h) > 23:
@@ -655,11 +658,11 @@ def read_data_file(dataf, header, xheader, comment, delim):
     if comment != "#":
         comment = "^[{}].*".format(comment)
     elif not header and coerce:
-        comment = "^[^\-\d\w].*"
+        comment = r"^[^\-\d\w].*"
     else:
         comment = "^[{}].*".format(comment)
     f = open(dataf, 'r')
-    dl = [i.strip() for i in re.split('[\n\r]+', f.read().strip())]
+    dl = [i.strip() for i in re.split(r'[\n\r]+', f.read().strip())]
     if xheader:
         dl = [re.split(delim, i.strip(), 1)[1] for i in dl]
     dl = [i for i in dl if not bool(re.match(comment, i))]
