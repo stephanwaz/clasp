@@ -38,7 +38,8 @@ setup(
         'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)',
         'Natural Language :: English',
-        'Programming Language :: Python :: 2.7'
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.7',
     ],
     description="clasp is  tools for command line and subprocess script development",
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",

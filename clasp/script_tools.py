@@ -570,10 +570,10 @@ def read_epw(epw):
     out: tuple
         (month, day, hour, dirnorn, difhoriz, globhoriz, skycover)
     '''
-    if type(epw) in [str, str]:
-        f = open(epw, 'r')
-    else:
+    if hasattr(epw, 'readlines'):
         f = epw
+    else:
+        f = open(epw, 'r')
     lines = f.readlines()
     f.seek(0)
     hours = [re.split('[ \t,]+', i) for i in lines if re.match("\d.*", i)]
