@@ -30,6 +30,10 @@ import ipyparallel as parallel
 if sys.version[0] == '3':
     inspect.getargspec = inspect.getfullargspec
 
+encoding = sys.stdin.encoding
+if encoding == None:
+    encoding = 'UTF-8'
+
 
 def try_mkdir(s):
     '''exception free mkdir'''
@@ -230,8 +234,8 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
             message = "invalid command / no such file: {}".format(commands[i])
             raise OSError(2, message)
     try:
-        inp = inp.encode(sys.stdin.encoding)
-    except Exception:
+        inp = inp.encode(encoding)
+    except Exception as e:
         pass
     if len(commands) == 1 and strin:
         out = pops[0].communicate(inp)[0]
@@ -241,7 +245,7 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
             pops[0].stdin.close()
         out = pops[-1].communicate()[0]
     try:
-        out = out.decode(sys.stdout.encoding)
+        out = out.decode(encoding)
     except Exception:
         pass
     if close:
