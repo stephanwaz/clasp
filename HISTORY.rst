@@ -3,6 +3,11 @@
 History
 =======
 
+0.2.7
+-----
+add @file parsing to split_str
+ensure encoding with detached terminal for stdin (for testing)
+
 0.2.6
 -----
 python 3 beta
