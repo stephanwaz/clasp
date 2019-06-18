@@ -73,7 +73,8 @@ import clasp.click_ext as clk
               help="check parsed options")
 @click.option('--debug/--no-debug', default=True,
               help="show traceback on exceptions")
-def main(arg1, **kwargs):
+@click.pass_context
+def main(ctx, arg1, **kwargs):
     """
     callbacks:
 
@@ -123,6 +124,10 @@ def main(arg1, **kwargs):
             raise
         except Exception as ex:
             clk.print_except(ex, kwargs['debug'])
+    try:
+        clk.tmp_clean(ctx)
+    except Exception:
+        pass
 
 if __name__ == '__main__':
     main()'''
@@ -407,7 +412,7 @@ def parse_file_list(ctx, s):
                 for l in fi:
                     files += parse_file_list(ctx, l)
             else:
-                raise ValueError(j)
+                raise ValueError(i[1:])
         elif len(sglob(i)) > 0:
             for j in sglob(i):
                 if os.path.exists(j):
@@ -593,10 +598,16 @@ def tup_float(ctx, param, s):
 
 def split_str(ctx, param, s):
     """splits space seperated string"""
-    if s is not None:
-        return shlex.split(s)
-    else:
+    if s is None:
         return None
+    elif s[0] == '@':
+        if os.path.exists(s[1:]):
+            f = open(s[1:],'r')
+            return shlex.split(f.read().strip())
+        else:
+            return shlex.split(s)
+    else:
+        return shlex.split(s)
 
 
 def tup_list(ctx, param, s):
