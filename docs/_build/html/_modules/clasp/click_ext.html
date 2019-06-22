@@ -374,17 +374,29 @@
 <span class="c1"># shared decorators for all main command groups</span>
 <div class="viewcode-block" id="main_decs"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.main_decs">[docs]</a><span class="k">def</span> <span class="nf">main_decs</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
     <span class="n">md</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--outconfig&#39;</span><span class="p">,</span> <span class="s1">&#39;-oc&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">file_okay</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--configalias&#39;</span><span class="p">,</span> <span class="s1">&#39;-ca&#39;</span><span class="p">,</span>
-                     <span class="n">help</span><span class="o">=</span><span class="s2">&quot;store config in alias section. use to store multiple&quot;</span>
-                     <span class="s2">&quot;settings for same command&quot;</span><span class="p">),</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--inputalias/--no-inputalias&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                     <span class="n">help</span><span class="o">=</span><span class="s2">&quot;if true uses -ca for loading settings&quot;</span><span class="p">),</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">version_option</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">v</span><span class="p">),</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">pass_context</span>
+          <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+          <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--outconfig&#39;</span><span class="p">,</span> <span class="s1">&#39;-oc&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">file_okay</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+          <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--configalias&#39;</span><span class="p">,</span> <span class="s1">&#39;-ca&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s2">&quot;store config in alias section. use to store &quot;</span>
+                       <span class="s2">&quot;multiple settings for same command&quot;</span><span class="p">),</span>
+          <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--inputalias/--no-inputalias&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s2">&quot;if true uses -ca for loading settings&quot;</span><span class="p">),</span>
+          <span class="n">click</span><span class="o">.</span><span class="n">version_option</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">v</span><span class="p">),</span>
+          <span class="n">click</span><span class="o">.</span><span class="n">pass_context</span>
     <span class="p">]</span></div>
     <span class="k">return</span> <span class="n">md</span>
+
+
+<div class="viewcode-block" id="command_decs"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.command_decs">[docs]</a><span class="k">def</span> <span class="nf">command_decs</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="n">cd</span> <span class="o">=</span> <span class="p">[</span>
+          <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--opts&#39;</span><span class="p">,</span> <span class="s1">&#39;-opts&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s2">&quot;check parsed options&quot;</span><span class="p">),</span>
+          <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--debug&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s2">&quot;show traceback on exceptions&quot;</span><span class="p">),</span>
+          <span class="n">click</span><span class="o">.</span><span class="n">version_option</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">v</span><span class="p">),</span>
+          <span class="n">click</span><span class="o">.</span><span class="n">pass_context</span>
+    <span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">cd</span>
 
 
 <div class="viewcode-block" id="shared_decs"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.shared_decs">[docs]</a><span class="k">def</span> <span class="nf">shared_decs</span><span class="p">(</span><span class="n">decs</span><span class="p">):</span>

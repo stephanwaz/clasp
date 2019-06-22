@@ -303,17 +303,29 @@ def click_ext(click):
 # shared decorators for all main command groups
 def main_decs(v):
     md = [
-        click.option('--config', '-c', type=click.Path(exists=True)),
-        click.option('--outconfig', '-oc', type=click.Path(file_okay=True)),
-        click.option('--configalias', '-ca',
-                     help="store config in alias section. use to store multiple"
-                     "settings for same command"),
-        click.option('--inputalias/--no-inputalias', default=True,
-                     help="if true uses -ca for loading settings"),
-        click.version_option(version=v),
-        click.pass_context
+          click.option('--config', '-c', type=click.Path(exists=True)),
+          click.option('--outconfig', '-oc', type=click.Path(file_okay=True)),
+          click.option('--configalias', '-ca',
+                       help="store config in alias section. use to store "
+                       "multiple settings for same command"),
+          click.option('--inputalias/--no-inputalias', default=True,
+                       help="if true uses -ca for loading settings"),
+          click.version_option(version=v),
+          click.pass_context
     ]
     return md
+
+
+def command_decs(v):
+    cd = [
+          click.option('--opts', '-opts', is_flag=True,
+                       help="check parsed options"),
+          click.option('--debug', is_flag=True,
+                       help="show traceback on exceptions"),
+          click.version_option(version=v),
+          click.pass_context
+    ]
+    return cd
 
 
 def shared_decs(decs):
