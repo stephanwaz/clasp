@@ -3,6 +3,10 @@
 History
 =======
 
+0.2.8
+-----
+small bugs
+
 0.2.7
 -----
 add @file parsing to split_str
