@@ -657,7 +657,7 @@ def get_i(i, d_vals):
     return ds
 
 
-def read_data_file(dataf, header, xheader, comment, delim):
+def read_data_file(dataf, header, xheader, comment, delim, coerce=True):
     delim = '[{}]+'.format(delim)
     if comment != "#":
         comment = "^[{}].*".format(comment)
@@ -729,7 +729,7 @@ def read_data(dataf, x_vals=[0], y_vals=[-1], rows=False, header=False,
                 'global horizontal', 'sky cover']
         head = [head[i] for i in y_vals]
     else:
-        datastr = read_data_file(dataf, header, xheader, comment, delim)
+        datastr = read_data_file(dataf, header, xheader, comment, delim, coerce=coerce)
         if header:
             head = [datastr[0][i] for i in y_vals]
             datastr = datastr[1:]

@@ -31,6 +31,11 @@ div.sphinxsidebar ul li.toctree-l1 > a {
 	
 }
 
+pre {
+	max-height: 500px;
+	overflow-y: auto
+}
+
 div.figure {
 	width: 50%;
 	float: left;
