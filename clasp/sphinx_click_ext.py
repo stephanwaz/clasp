@@ -19,7 +19,10 @@
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
 
-"""modify sphinx_click for more consistent behavior in html docs and --help"""
+"""modify sphinx_click for more consistent behavior in html docs and --help
+
+usage: in sphinx docs/conf.py add to extensions (list): 'clasp.sphinx_click_ext'
+"""
 
 import sphinx_click.ext as ext
 from clasp.click_ext import index_param, index_seps
