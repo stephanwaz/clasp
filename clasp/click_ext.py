@@ -573,7 +573,8 @@ def int_rng(s):
 
 
 def tup_int(ctx, param, s):
-    """parses integer tuples from comma/space seperated string"""
+    """parses integer or len 2 tuples from comma/space separated string
+    with range : notation"""
     if s is None:
         so = None
     else:
@@ -591,8 +592,23 @@ def tup_int(ctx, param, s):
     return so
 
 
+def int_tups(ctx, param, s):
+    """parses integer tuples from comma/space separated string"""
+    if s is None:
+        so = None
+    else:
+        try:
+            so = []
+            for x in s.split():
+                so.append(tuple(int(i) for i in x.split(",")))
+        except Exception:
+            callback_error(s, param, '0,1 0,3.6')
+    return so
+
+
+
 def tup_float(ctx, param, s):
-    """parses float tuples from comma/space seperated string"""
+    """parses float tuples from comma/space separated string"""
     if s is None:
         so = None
     else:
