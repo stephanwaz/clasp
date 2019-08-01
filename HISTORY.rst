@@ -3,6 +3,10 @@
 History
 =======
 
+0.2.9
+-----
+bugs and decorator type
+
 0.2.8
 -----
 small bugs
