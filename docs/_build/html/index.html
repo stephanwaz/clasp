@@ -1,18 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>clasp (0.2.9) &#8212; clasp (0.2.9) 0.2.9 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="click_ext" href="clasp.click_ext.html" />
@@ -50,13 +49,11 @@
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -91,14 +88,14 @@ programs to allow for organized development of suites of command line tools.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">pip</span> <span class="n">install</span> <span class="n">clasp</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">clasp</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <p>a command line program has the following structure:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;template file.&quot;&quot;&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;template file.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
@@ -114,30 +111,30 @@ programs to allow for organized development of suites of command line tools.</p>
     <span class="n">clk</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">outconfig</span><span class="p">,</span> <span class="n">configalias</span><span class="p">,</span> <span class="n">inputalias</span><span class="p">)</span>
 
 
-<span class="nd">@main</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s">&#39;XXX&#39;</span><span class="p">)</span>
-<span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s">&#39;arg1&#39;</span><span class="p">)</span>
-<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s">&#39;--opts&#39;</span><span class="p">,</span><span class="s">&#39;-opts&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="k">True</span><span class="p">,</span>
-              <span class="n">help</span><span class="o">=</span><span class="s">&quot;check parsed options&quot;</span><span class="p">)</span>
-<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s">&#39;--debug&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="k">True</span><span class="p">,</span>
-              <span class="n">help</span><span class="o">=</span><span class="s">&quot;show traceback on exceptions&quot;</span><span class="p">)</span>
+<span class="nd">@main</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;XXX&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s1">&#39;arg1&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--opts&#39;</span><span class="p">,</span><span class="s1">&#39;-opts&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;check parsed options&quot;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--debug&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;show traceback on exceptions&quot;</span><span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
 <span class="k">def</span> <span class="nf">XXX</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    docstring with full help text for command</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;opts&#39;</span><span class="p">]:</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;opts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">False</span>
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;opts&#39;</span><span class="p">]:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;opts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">clk</span><span class="o">.</span><span class="n">echo_args</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="c">##########</span>
-            <span class="c">#code body</span>
-            <span class="c">##########</span>
+            <span class="c1">##########</span>
+            <span class="c1">#code body</span>
+            <span class="c1">##########</span>
         <span class="k">except</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">:</span>
             <span class="k">raise</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-            <span class="n">clk</span><span class="o">.</span><span class="n">print_except</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;debug&#39;</span><span class="p">])</span>
-    <span class="k">return</span> <span class="s">&#39;XXX&#39;</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">ctx</span>
+            <span class="n">clk</span><span class="o">.</span><span class="n">print_except</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="s1">&#39;XXX&#39;</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">ctx</span>
 
 
 <span class="nd">@main</span><span class="o">.</span><span class="n">resultcallback</span><span class="p">()</span>
@@ -148,22 +145,22 @@ programs to allow for organized development of suites of command line tools.</p>
         <span class="n">clk</span><span class="o">.</span><span class="n">tmp_clean</span><span class="p">(</span><span class="n">opts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="k">pass</span>
-    <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;outconfig&#39;</span><span class="p">]:</span>
-        <span class="n">clk</span><span class="o">.</span><span class="n">print_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;outconfig&#39;</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;config&#39;</span><span class="p">],</span>
-                         <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;configalias&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;outconfig&#39;</span><span class="p">]:</span>
+        <span class="n">clk</span><span class="o">.</span><span class="n">print_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;outconfig&#39;</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">],</span>
+                         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;configalias&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>to make an entry point in setup:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">entry_points</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;console_scripts&quot;</span><span class="p">:</span><span class="s">&#39;program=package.program:main&#39;</span><span class="p">}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">entry_points</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;console_scripts&quot;</span><span class="p">:</span><span class="s1">&#39;program=package.program:main&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>and then to execute:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">program</span> <span class="n">XXX</span> <span class="n">arg1</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">program</span> <span class="n">XXX</span> <span class="n">arg1</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>to enable autocomple for options:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">_PROGRAM_COMPLETE</span><span class="o">=</span><span class="n">source</span> <span class="n">program</span> <span class="o">&gt;</span> <span class="n">bash_complete</span><span class="o">.</span><span class="n">sh</span>
-<span class="c"># put this in .bash_profile (with path)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_PROGRAM_COMPLETE</span><span class="o">=</span><span class="n">source</span> <span class="n">program</span> <span class="o">&gt;</span> <span class="n">bash_complete</span><span class="o">.</span><span class="n">sh</span>
+<span class="c1"># put this in .bash_profile (with path)</span>
 <span class="n">source</span> <span class="n">bash_complete</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
 </div>
@@ -184,22 +181,22 @@ callbacks are part of clasp which help with commonly used argument parsing</p>
 using glob plus the following:</p>
 <blockquote>
 <div><ul class="simple">
-<li>[abc] (one of a, b, or c)</li>
-<li>[!abc] (none of a, b or c)</li>
-<li>‘-‘ (hyphen) collect the stdin into a temporary file (clasp_tmp*)</li>
-<li>~ expands user</li>
+<li><p>[abc] (one of a, b, or c)</p></li>
+<li><p>[!abc] (none of a, b or c)</p></li>
+<li><p>‘-‘ (hyphen) collect the stdin into a temporary file (clasp_tmp*)</p></li>
+<li><p>~ expands user</p></li>
 </ul>
 </div></blockquote>
 <p>The file input callbacks are:</p>
 <blockquote>
 <div><ul class="simple">
-<li>parse_file_list: returns list of files (raise error if file not found)</li>
-<li>is_file: check if a single path exists (prompts for user input if file not found)</li>
-<li>are_files: recursively calls parse_file_list and prompts on error</li>
-<li>is_file_iter: use when multiple=True</li>
-<li>are_files_iter: use when mulitple=True</li>
-<li>are_files_or_str: tries to parse as files, then tries split_float, then split_int, then returns string</li>
-<li>are_files_or_str_iter: use when mulitple=True</li>
+<li><p>parse_file_list: returns list of files (raise error if file not found)</p></li>
+<li><p>is_file: check if a single path exists (prompts for user input if file not found)</p></li>
+<li><p>are_files: recursively calls parse_file_list and prompts on error</p></li>
+<li><p>is_file_iter: use when multiple=True</p></li>
+<li><p>are_files_iter: use when mulitple=True</p></li>
+<li><p>are_files_or_str: tries to parse as files, then tries split_float, then split_int, then returns string</p></li>
+<li><p>are_files_or_str_iter: use when mulitple=True</p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -207,9 +204,9 @@ using glob plus the following:</p>
 <h3>String parsing<a class="headerlink" href="#string-parsing" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>split_str: split with shlex.split</li>
-<li>split_str_iter: use when multiple=True</li>
-<li>color_inp: return alphastring, split on whitespace, convert floats and parse tuples on ,</li>
+<li><p>split_str: split with shlex.split</p></li>
+<li><p>split_str_iter: use when multiple=True</p></li>
+<li><p>color_inp: return alphastring, split on whitespace, convert floats and parse tuples on ,</p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -217,10 +214,10 @@ using glob plus the following:</p>
 <h3>Number parsing<a class="headerlink" href="#number-parsing" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>tup_int: parses integer tuples from comma/space seperated string</li>
-<li>tup_float: parses float tuples from comma/space seperated string</li>
-<li>split_float: splits list of floats and extends ranges based on : notation</li>
-<li>split_int: splits list of ints and extends ranges based on : notation</li>
+<li><p>tup_int: parses integer tuples from comma/space seperated string</p></li>
+<li><p>tup_float: parses float tuples from comma/space seperated string</p></li>
+<li><p>split_float: splits list of floats and extends ranges based on : notation</p></li>
+<li><p>split_int: splits list of ints and extends ranges based on : notation</p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -236,7 +233,7 @@ add ‘clasp.sphinx_click_ext’ to extensions in your conf.py</p>
 <div class="section" id="source-code">
 <h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>clasp: <a class="reference external" href="https://bitbucket.org/stephenwasilewski/clasp">https://bitbucket.org/stephenwasilewski/clasp</a></li>
+<li><p>clasp: <a class="reference external" href="https://bitbucket.org/stephenwasilewski/clasp">https://bitbucket.org/stephenwasilewski/clasp</a></p></li>
 </ul>
 </div>
 <div class="section" id="licence">
@@ -263,7 +260,7 @@ add ‘clasp.sphinx_click_ext’ to extensions in your conf.py</p>
       &copy;2018, Stephen Wasilewski.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -1,18 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>script_tools &#8212; clasp (0.2.9) 0.2.9 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="sphinx_click_ext" href="clasp.sphinx_click_ext.html" />
@@ -51,13 +50,11 @@
 
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -76,60 +73,60 @@
 computing particulary w/ subprocess calls.</p>
 <dl class="function">
 <dt id="clasp.script_tools.try_mkdir">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">try_mkdir</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#try_mkdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.try_mkdir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">try_mkdir</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#try_mkdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.try_mkdir" title="Permalink to this definition">¶</a></dt>
 <dd><p>exception free mkdir</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.arange">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">arange</code><span class="sig-paren">(</span><em>start</em>, <em>stop=None</em>, <em>step=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#arange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.arange" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">arange</code><span class="sig-paren">(</span><em class="sig-param">start</em>, <em class="sig-param">stop=None</em>, <em class="sig-param">step=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#arange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.arange" title="Permalink to this definition">¶</a></dt>
 <dd><p>like numpy.arange for integers</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.rm_dup">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">rm_dup</code><span class="sig-paren">(</span><em>seq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#rm_dup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.rm_dup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">rm_dup</code><span class="sig-paren">(</span><em class="sig-param">seq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#rm_dup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.rm_dup" title="Permalink to this definition">¶</a></dt>
 <dd><p>removes duplicates from list while preserving order</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.warn_match">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">warn_match</code><span class="sig-paren">(</span><em>kwargs</em>, <em>sargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#warn_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.warn_match" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">warn_match</code><span class="sig-paren">(</span><em class="sig-param">kwargs</em>, <em class="sig-param">sargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#warn_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.warn_match" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.kwarg_match">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">kwarg_match</code><span class="sig-paren">(</span><em>func</em>, <em>kwargs</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#kwarg_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.kwarg_match" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">kwarg_match</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">kwargs</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#kwarg_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.kwarg_match" title="Permalink to this definition">¶</a></dt>
 <dd><p>filters dict for keys used by func</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.arg_match">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">arg_match</code><span class="sig-paren">(</span><em>func</em>, <em>kwargs</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#arg_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.arg_match" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">arg_match</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">kwargs</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#arg_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.arg_match" title="Permalink to this definition">¶</a></dt>
 <dd><p>filters dict for positional arguments used by func</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.kwarg_arg">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">kwarg_arg</code><span class="sig-paren">(</span><em>func</em>, <em>kwargs</em>, <em>skip=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#kwarg_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.kwarg_arg" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">kwarg_arg</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">kwargs</em>, <em class="sig-param">skip=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#kwarg_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.kwarg_arg" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns ordered list of optional arg values</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.crossref">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">crossref</code><span class="sig-paren">(</span><em>l1</em>, <em>l2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#crossref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.crossref" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">crossref</code><span class="sig-paren">(</span><em class="sig-param">l1</em>, <em class="sig-param">l2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#crossref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.crossref" title="Permalink to this definition">¶</a></dt>
 <dd><p>return all possible pairs of 2 lists</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.crossref_all">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">crossref_all</code><span class="sig-paren">(</span><em>l</em>, <em>followers=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#crossref_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.crossref_all" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">crossref_all</code><span class="sig-paren">(</span><em class="sig-param">l</em>, <em class="sig-param">followers=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#crossref_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.crossref_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>return all possible combos of list of lists</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.subpipe">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">subpipe</code><span class="sig-paren">(</span><em>commands</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#subpipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.subpipe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">subpipe</code><span class="sig-paren">(</span><em class="sig-param">commands</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#subpipe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.subpipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>parses special syntax in pipe expressions</p>
 <div class="line-block">
 <div class="line">$(some command) executes to a temporary file whose path is inserted in</div>
@@ -140,252 +137,234 @@ computing particulary w/ subprocess calls.</p>
 
 <dl class="function">
 <dt id="clasp.script_tools.pipeline">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">pipeline</code><span class="sig-paren">(</span><em>commands</em>, <em>outfile=None</em>, <em>inp=None</em>, <em>close=False</em>, <em>cwd=None</em>, <em>writemode='w'</em>, <em>forceinpfile=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.pipeline" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">pipeline</code><span class="sig-paren">(</span><em class="sig-param">commands</em>, <em class="sig-param">outfile=None</em>, <em class="sig-param">inp=None</em>, <em class="sig-param">close=False</em>, <em class="sig-param">cwd=None</em>, <em class="sig-param">writemode='w'</em>, <em class="sig-param">forceinpfile=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.pipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>executes pipeline of shell commands (given as list of strings)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>commands</strong> (<em>list</em>) – list of commands to execute in order</li>
-<li><strong>outfile</strong> (<em>writeable file object</em>) – optional destination for stdout</li>
-<li><strong>inp</strong> (<em>str</em><em> or </em><em>filebuffer</em>) – string to feed to stdin at start of pipeline</li>
-<li><strong>close</strong> (<em>bool</em>) – if true closes file object before returning</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>commands</strong> (<em>list</em>) – list of commands to execute in order</p></li>
+<li><p><strong>outfile</strong> (<em>writeable file object</em>) – optional destination for stdout</p></li>
+<li><p><strong>inp</strong> (<em>str</em><em> or </em><em>filebuffer</em>) – string to feed to stdin at start of pipeline</p></li>
+<li><p><strong>close</strong> (<em>bool</em>) – if true closes file object before returning</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> – returns stdout of pipeline (will be None if outfile is given)</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – returns stdout of pipeline (will be None if outfile is given)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.flat_list">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">flat_list</code><span class="sig-paren">(</span><em>l</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#flat_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.flat_list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">flat_list</code><span class="sig-paren">(</span><em class="sig-param">l</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#flat_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.flat_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>flattens any depth list</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.cluster_call">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">cluster_call</code><span class="sig-paren">(</span><em>func</em>, <em>args</em>, <em>profile=None</em>, <em>kwargs=None</em>, <em>timeout=0.1</em>, <em>cwd=None</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#cluster_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.cluster_call" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">cluster_call</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">args</em>, <em class="sig-param">profile=None</em>, <em class="sig-param">kwargs=None</em>, <em class="sig-param">timeout=0.1</em>, <em class="sig-param">cwd=None</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#cluster_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.cluster_call" title="Permalink to this definition">¶</a></dt>
 <dd><p>execute func on ipcluster if available return output</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>func</strong> (<em>python function</em>) – function to execute</li>
-<li><strong>outfile</strong> (<em>list of args</em>) – each item is mapped to function</li>
-<li><strong>profile</strong> (<em>str</em>) – name of ipcluster profile to execute on</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>python function</em>) – function to execute</p></li>
+<li><p><strong>outfile</strong> (<em>list of args</em>) – each item is mapped to function</p></li>
+<li><p><strong>profile</strong> (<em>str</em>) – name of ipcluster profile to execute on</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> – returns stdout of each function call</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – returns stdout of each function call</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.cluster_command">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">cluster_command</code><span class="sig-paren">(</span><em>com</em>, <em>cwd</em>, <em>stdin=None</em>, <em>stdout=None</em>, <em>shell=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#cluster_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.cluster_command" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">cluster_command</code><span class="sig-paren">(</span><em class="sig-param">com</em>, <em class="sig-param">cwd</em>, <em class="sig-param">stdin=None</em>, <em class="sig-param">stdout=None</em>, <em class="sig-param">shell=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#cluster_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.cluster_command" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.get_results">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">get_results</code><span class="sig-paren">(</span><em>ar</em>, <em>stdout</em>, <em>coms</em>, <em>sh</em>, <em>i</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_results" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">get_results</code><span class="sig-paren">(</span><em class="sig-param">ar</em>, <em class="sig-param">stdout</em>, <em class="sig-param">coms</em>, <em class="sig-param">sh</em>, <em class="sig-param">i</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>get results from asyncronous results when ready use in while pending</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.run_sh">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">run_sh</code><span class="sig-paren">(</span><em>remotes</em>, <em>sh</em>, <em>prof</em>, <em>cwd</em>, <em>stdout=None</em>, <em>ordered=False</em>, <em>nodir=False</em>, <em>exclude='NOTRANSFER/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#run_sh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.run_sh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">run_sh</code><span class="sig-paren">(</span><em class="sig-param">remotes</em>, <em class="sig-param">sh</em>, <em class="sig-param">prof</em>, <em class="sig-param">cwd</em>, <em class="sig-param">stdout=None</em>, <em class="sig-param">ordered=False</em>, <em class="sig-param">nodir=False</em>, <em class="sig-param">exclude='NOTRANSFER/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#run_sh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.run_sh" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.start_farm">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">start_farm</code><span class="sig-paren">(</span><em>remotes</em>, <em>prof</em>, <em>thr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#start_farm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.start_farm" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">start_farm</code><span class="sig-paren">(</span><em class="sig-param">remotes</em>, <em class="sig-param">prof</em>, <em class="sig-param">thr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#start_farm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.start_farm" title="Permalink to this definition">¶</a></dt>
 <dd><p>output shell command for starting farm</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.stop_farm">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">stop_farm</code><span class="sig-paren">(</span><em>profile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#stop_farm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.stop_farm" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">stop_farm</code><span class="sig-paren">(</span><em class="sig-param">profile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#stop_farm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.stop_farm" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.add_engine">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">add_engine</code><span class="sig-paren">(</span><em>remotes</em>, <em>sh</em>, <em>prof</em>, <em>thr</em>, <em>nodir=False</em>, <em>exclude='NOTRANSFER/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#add_engine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.add_engine" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">add_engine</code><span class="sig-paren">(</span><em class="sig-param">remotes</em>, <em class="sig-param">sh</em>, <em class="sig-param">prof</em>, <em class="sig-param">thr</em>, <em class="sig-param">nodir=False</em>, <em class="sig-param">exclude='NOTRANSFER/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#add_engine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.add_engine" title="Permalink to this definition">¶</a></dt>
 <dd><p>call ipcluster to add additional engines to farm</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.remove_engines">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">remove_engines</code><span class="sig-paren">(</span><em>remotes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#remove_engines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.remove_engines" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">remove_engines</code><span class="sig-paren">(</span><em class="sig-param">remotes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#remove_engines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.remove_engines" title="Permalink to this definition">¶</a></dt>
 <dd><p>remove remote from ipcluster</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.send_working_dir">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">send_working_dir</code><span class="sig-paren">(</span><em>remotes</em>, <em>workdir</em>, <em>cwd='ipcluster'</em>, <em>exclude='NOTRANSFER/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#send_working_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.send_working_dir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">send_working_dir</code><span class="sig-paren">(</span><em class="sig-param">remotes</em>, <em class="sig-param">workdir</em>, <em class="sig-param">cwd='ipcluster'</em>, <em class="sig-param">exclude='NOTRANSFER/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#send_working_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.send_working_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>transfer file dependencies to remotes</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.get_cpu">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">get_cpu</code><span class="sig-paren">(</span><em>remotes</em>, <em>stat=None</em>, <em>cwd='ipcluster'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_cpu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_cpu" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">get_cpu</code><span class="sig-paren">(</span><em class="sig-param">remotes</em>, <em class="sig-param">stat=None</em>, <em class="sig-param">cwd='ipcluster'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_cpu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_cpu" title="Permalink to this definition">¶</a></dt>
 <dd><p>print top usage stats for remotes</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.check_farm">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">check_farm</code><span class="sig-paren">(</span><em>profile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#check_farm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.check_farm" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">check_farm</code><span class="sig-paren">(</span><em class="sig-param">profile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#check_farm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.check_farm" title="Permalink to this definition">¶</a></dt>
 <dd><p>output number of engines running on farm</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.gather_files">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">gather_files</code><span class="sig-paren">(</span><em>remotes</em>, <em>get</em>, <em>rsync</em>, <em>cwd='ipcluster'</em>, <em>nocheck=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#gather_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.gather_files" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">gather_files</code><span class="sig-paren">(</span><em class="sig-param">remotes</em>, <em class="sig-param">get</em>, <em class="sig-param">rsync</em>, <em class="sig-param">cwd='ipcluster'</em>, <em class="sig-param">nocheck=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#gather_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.gather_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>gather files from list of remotes via rsync and ssh</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.dist_command">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">dist_command</code><span class="sig-paren">(</span><em>remotes</em>, <em>command</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#dist_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.dist_command" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">dist_command</code><span class="sig-paren">(</span><em class="sig-param">remotes</em>, <em class="sig-param">command</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#dist_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.dist_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>run command once on each remote</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.get_cpu_log">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">get_cpu_log</code><span class="sig-paren">(</span><em>remotes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_cpu_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_cpu_log" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">get_cpu_log</code><span class="sig-paren">(</span><em class="sig-param">remotes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_cpu_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_cpu_log" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.farm_log">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">farm_log</code><span class="sig-paren">(</span><em>remotes</em>, <em>interval</em>, <em>outf='farm_log.txt'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#farm_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.farm_log" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">farm_log</code><span class="sig-paren">(</span><em class="sig-param">remotes</em>, <em class="sig-param">interval</em>, <em class="sig-param">outf='farm_log.txt'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#farm_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.farm_log" title="Permalink to this definition">¶</a></dt>
 <dd><p>record cpu usage of ssh remotes</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.read_epw">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">read_epw</code><span class="sig-paren">(</span><em>epw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_epw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_epw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">read_epw</code><span class="sig-paren">(</span><em class="sig-param">epw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_epw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_epw" title="Permalink to this definition">¶</a></dt>
 <dd><p>read daylight sky data from epw or wea file</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>out</strong> – (month, day, hour, dirnorn, difhoriz, globhoriz, skycover)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>out</strong> – (month, day, hour, dirnorn, difhoriz, globhoriz, skycover)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.isnum">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">isnum</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#isnum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.isnum" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">isnum</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#isnum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.isnum" title="Permalink to this definition">¶</a></dt>
 <dd><p>test if input can be converted to float</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.try_float">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">try_float</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#try_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.try_float" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">try_float</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#try_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.try_float" title="Permalink to this definition">¶</a></dt>
 <dd><p>attempt conversion to float</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.coerce_data">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">coerce_data</code><span class="sig-paren">(</span><em>datastr</em>, <em>i_vals</em>, <em>dataf</em>, <em>coerce=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#coerce_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.coerce_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">coerce_data</code><span class="sig-paren">(</span><em class="sig-param">datastr</em>, <em class="sig-param">i_vals</em>, <em class="sig-param">dataf</em>, <em class="sig-param">coerce=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#coerce_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.coerce_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>ensure all data points parsed are valid numbers</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.get_i">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">get_i</code><span class="sig-paren">(</span><em>i</em>, <em>d_vals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_i"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_i" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">get_i</code><span class="sig-paren">(</span><em class="sig-param">i</em>, <em class="sig-param">d_vals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#get_i"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.get_i" title="Permalink to this definition">¶</a></dt>
 <dd><p>if (x, y) return y if x == i
 if y return y</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.read_data_file">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">read_data_file</code><span class="sig-paren">(</span><em>dataf</em>, <em>header</em>, <em>xheader</em>, <em>comment</em>, <em>delim</em>, <em>coerce=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_data_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_data_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">read_data_file</code><span class="sig-paren">(</span><em class="sig-param">dataf</em>, <em class="sig-param">header</em>, <em class="sig-param">xheader</em>, <em class="sig-param">comment</em>, <em class="sig-param">delim</em>, <em class="sig-param">coerce=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_data_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_data_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.read_data">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">read_data</code><span class="sig-paren">(</span><em>dataf, x_vals=[0], y_vals=[-1], rows=False, header=False, weax=None, reverse=False, autox=None, comment='#', xheader=False, delim='\t, ', coerce=True, weatherfile=False, drange=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">read_data</code><span class="sig-paren">(</span><em class="sig-param">dataf, x_vals=[0], y_vals=[-1], rows=False, header=False, weax=None, reverse=False, autox=None, comment='#', xheader=False, delim='\t, ', coerce=True, weatherfile=False, drange=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>read generic csv/tsv data file</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>dataf</strong> (<em>str</em>) – file to read data from</li>
-<li><strong>x_vals</strong> (<em>list of ints</em>) – column (or row with rows=True) indices for x values</li>
-<li><strong>y_vals</strong> (<em>list of ints</em>) – column (or row with rows=True) indices for y values</li>
-<li><strong>rows</strong> (<em>Boolean</em>) – if True read data in rows</li>
-<li><strong>header</strong> (<em>Boolean</em>) – return first row (or column with rows=True) as series labels</li>
-<li><strong>weax</strong> (<em>2 item list of ints</em>) – idx for month and day to use day number as x_vals, if given ignores
-x_val</li>
-<li><strong>reverse</strong> (<em>Boolean</em>) – reverse order of data (use with autox)</li>
-<li><strong>autox</strong> (<em>Boolean</em>) – assigns integers (starting at 0) as x_vals</li>
-<li><strong>comment</strong> (<em>str</em>) – comment line signifiers (inserted in regex ^[comment].*)</li>
-<li><strong>delim</strong> (<em>str</em>) – delimeters for parsing data (inserted in regex [delim]+)</li>
-<li><strong>coerce</strong> (<em>Boolean</em>) – raise exception if all values are are not numbers</li>
-<li><strong>weatherfile</strong> (<em>str of file path</em>) – handles wea and epw file formates returning daylight parameters</li>
-<li><strong>drange</strong> (<em>list of ints</em>) – limit series output to given indices.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataf</strong> (<em>str</em>) – file to read data from</p></li>
+<li><p><strong>x_vals</strong> (<em>list of ints</em>) – column (or row with rows=True) indices for x values</p></li>
+<li><p><strong>y_vals</strong> (<em>list of ints</em>) – column (or row with rows=True) indices for y values</p></li>
+<li><p><strong>rows</strong> (<em>Boolean</em>) – if True read data in rows</p></li>
+<li><p><strong>header</strong> (<em>Boolean</em>) – return first row (or column with rows=True) as series labels</p></li>
+<li><p><strong>weax</strong> (<em>2 item list of ints</em>) – idx for month and day to use day number as x_vals, if given ignores
+x_val</p></li>
+<li><p><strong>reverse</strong> (<em>Boolean</em>) – reverse order of data (use with autox)</p></li>
+<li><p><strong>autox</strong> (<em>Boolean</em>) – assigns integers (starting at 0) as x_vals</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – comment line signifiers (inserted in regex ^[comment].*)</p></li>
+<li><p><strong>delim</strong> (<em>str</em>) – delimeters for parsing data (inserted in regex [delim]+)</p></li>
+<li><p><strong>coerce</strong> (<em>Boolean</em>) – raise exception if all values are are not numbers</p></li>
+<li><p><strong>weatherfile</strong> (<em>str of file path</em>) – handles wea and epw file formates returning daylight parameters</p></li>
+<li><p><strong>drange</strong> (<em>list of ints</em>) – limit series output to given indices.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>datax</strong> (<em>list</em>) – list of x_vals for each y_val (pads with last item if necessary)
-if there are more x_vals than y_vals does not return excess datax</li>
-<li><strong>datay</strong> (<em>list</em>) – list for each y_val</li>
-<li><strong>head</strong> (<em>list</em>) – if header=True list of labels for each y_val else []</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>datax</strong> (<em>list</em>) – list of x_vals for each y_val (pads with last item if necessary)
+if there are more x_vals than y_vals does not return excess datax</p></li>
+<li><p><strong>datay</strong> (<em>list</em>) – list for each y_val</p></li>
+<li><p><strong>head</strong> (<em>list</em>) – if header=True list of labels for each y_val else []</p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.script_tools.read_all_data">
-<code class="descclassname">clasp.script_tools.</code><code class="descname">read_all_data</code><span class="sig-paren">(</span><em>datafs</em>, <em>x_vals=[]</em>, <em>y_vals=[]</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_all_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_all_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">read_all_data</code><span class="sig-paren">(</span><em class="sig-param">datafs</em>, <em class="sig-param">x_vals=[]</em>, <em class="sig-param">y_vals=[]</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#read_all_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.read_all_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>read multiple data files and pair x and y data call read_data</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>datafs</strong> (<em>list of str</em>) – files to read data from</li>
-<li><strong>x_vals</strong> (<em>list of ints</em><em> or </em><em>tuple int pairs</em>) – (fileidx, colidx) or colidx to read from each file</li>
-<li><strong>y_vals</strong> (<em>list of ints</em><em> or </em><em>tuple int pairs</em>) – (fileidx, colidx) or colidx to read from each file</li>
-<li><strong>kwargs</strong> – optional arguments for read_data</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>datafs</strong> (<em>list of str</em>) – files to read data from</p></li>
+<li><p><strong>x_vals</strong> (<em>list of ints</em><em> or </em><em>tuple int pairs</em>) – (fileidx, colidx) or colidx to read from each file</p></li>
+<li><p><strong>y_vals</strong> (<em>list of ints</em><em> or </em><em>tuple int pairs</em>) – (fileidx, colidx) or colidx to read from each file</p></li>
+<li><p><strong>kwargs</strong> – optional arguments for read_data</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>datax</strong> (<em>list</em>) – list of x_vals for each y_val (pads with last item if necessary)</li>
-<li><strong>datay</strong> (<em>list</em>) – list for each y_val</li>
-<li><strong>head</strong> (<em>list</em>) – if header=True list of labels for each y_val else []</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>datax</strong> (<em>list</em>) – list of x_vals for each y_val (pads with last item if necessary)</p></li>
+<li><p><strong>datay</strong> (<em>list</em>) – list for each y_val</p></li>
+<li><p><strong>head</strong> (<em>list</em>) – if header=True list of labels for each y_val else []</p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -401,7 +380,7 @@ if there are more x_vals than y_vals does not return excess datax</li>
       &copy;2018, Stephen Wasilewski.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
