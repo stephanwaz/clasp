@@ -10,7 +10,7 @@ def test_pipeline():
     (["pcomb -x 100 -y 100 -e 'lo=1'","pfilt -1 -e 1 -x 200 -y 200"],open("test.hdr",'w'),None,True),
     (["rcalc -e '$1=$1*$2;$2=$2;$3=$1'"],None,"2 3"),
     (["rcalc -e '$1=$1*$2;$2=$2;$3=$1'","total"],None,"2 3")]
-    answer = ['9961\n',None,'6\t3\t2\n','6\t3\t2\n']
+    answer = ['10040\n',None,'6\t3\t2\n','6\t3\t2\n']
     for d,a in zip(data,answer):
         result = mgr.pipeline(*d)
         assert result == a
