@@ -37,6 +37,7 @@
 
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="clasp.click_ext.html">click_ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clasp.click_callbacks.html">click_callbacks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clasp.script_tools.html">script_tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clasp.sphinx_click_ext.html">sphinx_click_ext</a></li>
 </ul>
@@ -72,7 +73,6 @@
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
  | <a href="#C"><strong>C</strong></a>
- | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
@@ -89,21 +89,19 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.add_engine">add_engine() (in module clasp.script_tools)</a>
-</li>
       <li><a href="clasp.click_ext.html#clasp.click_ext.add_opt_comment">add_opt_comment() (in module clasp.click_ext)</a>
 </li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.arange">arange() (in module clasp.script_tools)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.are_files">are_files() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.are_files">are_files() (in module clasp.click_callbacks)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.are_files_iter">are_files_iter() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.are_files_iter">are_files_iter() (in module clasp.click_callbacks)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.are_files_or_str">are_files_or_str() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.are_files_or_str">are_files_or_str() (in module clasp.click_callbacks)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.are_files_or_str_iter">are_files_or_str_iter() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.are_files_or_str_iter">are_files_or_str_iter() (in module clasp.click_callbacks)</a>
 </li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.arg_match">arg_match() (in module clasp.script_tools)</a>
 </li>
@@ -113,9 +111,9 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.callback_error">callback_error() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.callback_error">callback_error() (in module clasp.click_callbacks)</a>
 </li>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.check_farm">check_farm() (in module clasp.script_tools)</a>
+      <li><a href="clasp.click_callbacks.html#module-clasp.click_callbacks">clasp.click_callbacks (module)</a>
 </li>
       <li><a href="clasp.click_ext.html#module-clasp.click_ext">clasp.click_ext (module)</a>
 </li>
@@ -131,13 +129,13 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.cluster_command">cluster_command() (in module clasp.script_tools)</a>
-</li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.coerce_data">coerce_data() (in module clasp.script_tools)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.color_inp">color_inp() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.color_inp">color_inp() (in module clasp.click_callbacks)</a>
 </li>
       <li><a href="clasp.click_ext.html#clasp.click_ext.command_decs">command_decs() (in module clasp.click_ext)</a>
+</li>
+      <li><a href="clasp.click_ext.html#clasp.click_ext.COMPLETION_SCRIPT_BASH">COMPLETION_SCRIPT_BASH (in module clasp.click_ext)</a>
 </li>
       <li><a href="clasp.click_ext.html#clasp.click_ext.config_comments">config_comments() (in module clasp.click_ext)</a>
 </li>
@@ -150,14 +148,6 @@
   </ul></td>
 </tr></table>
 
-<h2 id="D">D</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.dist_command">dist_command() (in module clasp.script_tools)</a>
-</li>
-  </ul></td>
-</tr></table>
-
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -165,7 +155,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.expandpat">expandpat() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.expandpat">expandpat() (in module clasp.click_callbacks)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -173,8 +163,6 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.farm_log">farm_log() (in module clasp.script_tools)</a>
-</li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.flat_list">flat_list() (in module clasp.script_tools)</a>
 </li>
       <li><a href="clasp.click_ext.html#clasp.click_ext.format_depth">format_depth() (in module clasp.click_ext)</a>
@@ -193,19 +181,11 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.gather_files">gather_files() (in module clasp.script_tools)</a>
-</li>
       <li><a href="clasp.click_ext.html#clasp.click_ext.get_config">get_config() (in module clasp.click_ext)</a>
-</li>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.get_cpu">get_cpu() (in module clasp.script_tools)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.get_cpu_log">get_cpu_log() (in module clasp.script_tools)</a>
-</li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.get_i">get_i() (in module clasp.script_tools)</a>
-</li>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.get_results">get_results() (in module clasp.script_tools)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -217,15 +197,15 @@
 </li>
       <li><a href="clasp.click_ext.html#clasp.click_ext.index_seps">index_seps() (in module clasp.click_ext)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.int_rng">int_rng() (in module clasp.click_ext)</a>
+      <li><a href="clasp.script_tools.html#clasp.script_tools.int_rng">int_rng() (in module clasp.script_tools)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.int_tups">int_tups() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.int_tups">int_tups() (in module clasp.click_callbacks)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.is_file">is_file() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.is_file">is_file() (in module clasp.click_callbacks)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.is_files_iter">is_files_iter() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.is_files_iter">is_files_iter() (in module clasp.click_callbacks)</a>
 </li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.isnum">isnum() (in module clasp.script_tools)</a>
 </li>
@@ -259,12 +239,14 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.parse_file_list">parse_file_list() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.parse_file_list">parse_file_list() (in module clasp.click_callbacks)</a>
 </li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.pipeline">pipeline() (in module clasp.script_tools)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="clasp.script_tools.html#clasp.script_tools.pool_call">pool_call() (in module clasp.script_tools)</a>
+</li>
       <li><a href="clasp.click_ext.html#clasp.click_ext.print_config">print_config() (in module clasp.click_ext)</a>
 </li>
       <li><a href="clasp.click_ext.html#clasp.click_ext.print_except">print_except() (in module clasp.click_ext)</a>
@@ -279,17 +261,13 @@
 </li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.read_data">read_data() (in module clasp.script_tools)</a>
 </li>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.read_data_file">read_data_file() (in module clasp.script_tools)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="clasp.script_tools.html#clasp.script_tools.read_data_file">read_data_file() (in module clasp.script_tools)</a>
+</li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.read_epw">read_epw() (in module clasp.script_tools)</a>
 </li>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.remove_engines">remove_engines() (in module clasp.script_tools)</a>
-</li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.rm_dup">rm_dup() (in module clasp.script_tools)</a>
-</li>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.run_sh">run_sh() (in module clasp.script_tools)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -297,29 +275,27 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.send_working_dir">send_working_dir() (in module clasp.script_tools)</a>
+      <li><a href="clasp.click_ext.html#clasp.click_ext.script_template">script_template (in module clasp.click_ext)</a>
+</li>
+      <li><a href="clasp.click_ext.html#clasp.click_ext.script_template2">script_template2 (in module clasp.click_ext)</a>
 </li>
       <li><a href="clasp.click_ext.html#clasp.click_ext.setargs">setargs() (in module clasp.click_ext)</a>
 </li>
       <li><a href="clasp.sphinx_click_ext.html#clasp.sphinx_click_ext.setup">setup() (in module clasp.sphinx_click_ext)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.sglob">sglob() (in module clasp.click_ext)</a>
-</li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.shared_decs">shared_decs() (in module clasp.click_ext)</a>
-</li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.split_float">split_float() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.sglob">sglob() (in module clasp.click_callbacks)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.split_int">split_int() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_ext.html#clasp.click_ext.shared_decs">shared_decs() (in module clasp.click_ext)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.split_str">split_str() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.split_float">split_float() (in module clasp.click_callbacks)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.split_str_iter">split_str_iter() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.split_int">split_int() (in module clasp.click_callbacks)</a>
 </li>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.start_farm">start_farm() (in module clasp.script_tools)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.split_str">split_str() (in module clasp.click_callbacks)</a>
 </li>
-      <li><a href="clasp.script_tools.html#clasp.script_tools.stop_farm">stop_farm() (in module clasp.script_tools)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.split_str_iter">split_str_iter() (in module clasp.click_callbacks)</a>
 </li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.subpipe">subpipe() (in module clasp.script_tools)</a>
 </li>
@@ -331,7 +307,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="clasp.click_ext.html#clasp.click_ext.tmp_clean">tmp_clean() (in module clasp.click_ext)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.tmp_stdin">tmp_stdin() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.tmp_stdin">tmp_stdin() (in module clasp.click_callbacks)</a>
 </li>
       <li><a href="clasp.script_tools.html#clasp.script_tools.try_float">try_float() (in module clasp.script_tools)</a>
 </li>
@@ -339,11 +315,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="clasp.script_tools.html#clasp.script_tools.try_mkdir">try_mkdir() (in module clasp.script_tools)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.tup_float">tup_float() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.tup_float">tup_float() (in module clasp.click_callbacks)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.tup_int">tup_int() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.tup_int">tup_int() (in module clasp.click_callbacks)</a>
 </li>
-      <li><a href="clasp.click_ext.html#clasp.click_ext.tup_list">tup_list() (in module clasp.click_ext)</a>
+      <li><a href="clasp.click_callbacks.html#clasp.click_callbacks.tup_list">tup_list() (in module clasp.click_callbacks)</a>
 </li>
   </ul></td>
 </tr></table>

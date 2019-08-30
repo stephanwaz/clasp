@@ -14,7 +14,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="script_tools" href="clasp.script_tools.html" />
+    <link rel="next" title="click_callbacks" href="clasp.click_callbacks.html" />
     <link rel="prev" title="clasp (0.2.10)" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -38,6 +38,7 @@
 
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">click_ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clasp.click_callbacks.html">click_callbacks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clasp.script_tools.html">script_tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clasp.sphinx_click_ext.html">sphinx_click_ext</a></li>
 </ul>
@@ -69,7 +70,26 @@
             
   <div class="section" id="module-clasp.click_ext">
 <span id="click-ext"></span><h1>click_ext<a class="headerlink" href="#module-clasp.click_ext" title="Permalink to this headline">¶</a></h1>
-<p>extension, callbacks and interface for parsing with click and configparse</p>
+<p>extension and interface for parsing with click and configparse</p>
+<p>imports callbacks into namespace for convenience</p>
+<dl class="data">
+<dt id="clasp.click_ext.COMPLETION_SCRIPT_BASH">
+<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">COMPLETION_SCRIPT_BASH</code><em class="property"> = '\n%(complete_func)s() {\n    local cw=&quot;${COMP_WORDS[*]}&quot;\n    if [[ $cw != *&quot;&gt;&quot;* ]]; then\n    if [[ ${COMP_WORDS[$COMP_CWORD]} != -* ]] &amp;&amp; [[ ${COMP_WORDS[$COMP_CWORD-1]} == -* ]]; then\n        :\n    else\n        local IFS=$\'\n\'\n        COMPREPLY=( $( env COMP_WORDS=&quot;${COMP_WORDS[*]}&quot; \\\n                    COMP_CWORD=$COMP_CWORD \\\n                    %(autocomplete_var)s=complete $1 ) )\n    fi\n    fi\n    return 0\n}\n\n%(complete_func)setup() {\n    local COMPLETION_OPTIONS=&quot;&quot;\n    local BASH_VERSION_ARR=(${BASH_VERSION//./ })\n    # Only BASH version 4.4 and later have the nosort option.\n    if [ ${BASH_VERSION_ARR[0]} -gt 4 ] || ([ ${BASH_VERSION_ARR[0]} -eq 4 ] &amp;&amp; [ ${BASH_VERSION_ARR[1]} -ge 4 ]); then\n        COMPLETION_OPTIONS=&quot;-o nosort&quot;\n    fi\n\n    complete $COMPLETION_OPTIONS -o default -F %(complete_func)s %(script_names)s\n}\n\n%(complete_func)setup\n'</em><a class="headerlink" href="#clasp.click_ext.COMPLETION_SCRIPT_BASH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edited from click completion script to avoid running out of turn (faster)</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="clasp.click_ext.script_template">
+<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">script_template</code><em class="property"> = '#!/usr/bin/env python\nfrom clasp import click\nimport clasp.click_ext as clk\n\n&#64;click.command()\n&#64;click.argument(\'arg1\')\n&#64;clk.shared_decs(clk.command_decs(\'0.1\'))\n&#64;click.pass_context\ndef main(ctx, arg1, **kwargs):\n    &quot;&quot;&quot;docstring&quot;&quot;&quot;\n    if kwargs[\'opts\']:\n        kwargs[\'opts\'] = False\n        clk.echo_args(arg1, **kwargs)\n    else:\n        try:\n            pass\n        except click.Abort:\n            raise\n        except Exception as ex:\n            clk.print_except(ex, kwargs[\'debug\'])\n    try:\n        clk.tmp_clean(ctx)\n    except Exception:\n        pass\n\nif __name__ == \'__main__\':\n    main()'</em><a class="headerlink" href="#clasp.click_ext.script_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>basic script template for one offs</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="clasp.click_ext.script_template2">
+<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">script_template2</code><em class="property"> = '#!/usr/bin/env python\nfrom clasp import click\nimport clasp.click_ext as clk\n\n&#64;click.group()\n&#64;clk.shared_decs(clk.main_decs(\'0.1\'))\ndef main(ctx, config, outconfig, configalias, inputalias):\n    &quot;&quot;&quot;docstring&quot;&quot;&quot;\n    clk.get_config(ctx, config, outconfig, configalias, inputalias)\n\n\n&#64;main.command()\n&#64;click.argument(\'arg1\')\n&#64;clk.shared_decs(clk.command_decs(\'0.1\'))\n&#64;click.pass_context\ndef XXX(ctx, arg1, **kwargs):\n    &quot;&quot;&quot;docstring&quot;&quot;&quot;\n    if kwargs[\'opts\']:\n        kwargs[\'opts\'] = False\n        clk.echo_args(arg1, **kwargs)\n    else:\n        try:\n            pass\n        except click.Abort:\n            raise\n        except Exception as ex:\n            clk.print_except(ex, kwargs[\'debug\'])\n    return \'XXX\', kwargs, ctx\n\n\n&#64;main.resultcallback()\n&#64;click.pass_context\ndef printconfig(ctx, opts, **kwargs):\n    &quot;&quot;&quot;callback to save config file&quot;&quot;&quot;\n    try:\n        clk.tmp_clean(opts[2])\n    except Exception:\n        pass\n    if kwargs[\'outconfig\']:\n        clk.print_config(ctx, opts, kwargs[\'outconfig\'], kwargs[\'config\'],\n                         kwargs[\'configalias\'])\n\n\nif __name__ == \'__main__\':\n    main()'</em><a class="headerlink" href="#clasp.click_ext.script_template2" title="Permalink to this definition">¶</a></dt>
+<dd><p>basic script template for command subcommand structure (using config files)</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="clasp.click_ext.click_ext">
 <code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">click_ext</code><span class="sig-paren">(</span><em class="sig-param">click</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#click_ext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.click_ext" title="Permalink to this definition">¶</a></dt>
@@ -79,160 +99,59 @@
 <dl class="function">
 <dt id="clasp.click_ext.main_decs">
 <code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">main_decs</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#main_decs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.main_decs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.command_decs">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">command_decs</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#command_decs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.command_decs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.shared_decs">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">shared_decs</code><span class="sig-paren">(</span><em class="sig-param">decs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#shared_decs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.shared_decs" title="Permalink to this definition">¶</a></dt>
-<dd><p>decorator to add decs to function</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.callback_error">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">callback_error</code><span class="sig-paren">(</span><em class="sig-param">s</em>, <em class="sig-param">param</em>, <em class="sig-param">example</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#callback_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.callback_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>standard error message for exceptions raised during argument parsing</p>
-<p>used by custom callback functions raises ClickException</p>
+<dd><p>set of shared decorators for all main command groups</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>s</strong> (<em>value</em>) – </p></li>
-<li><p><strong>param</strong> (<em>click.core.Option</em>) – </p></li>
-<li><p><strong>example</strong> (<em>example of valid entry format</em>) – </p></li>
-</ul>
+<dd class="field-odd"><p><strong>v</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>md</strong> – decorator list for main command to manage config file usage</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
-<dt id="clasp.click_ext.expandpat">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">expandpat</code><span class="sig-paren">(</span><em class="sig-param">pat</em>, <em class="sig-param">s</em>, <em class="sig-param">mark=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#expandpat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.expandpat" title="Permalink to this definition">¶</a></dt>
-<dd><p>expand sglob pattern for each character option</p>
+<dt id="clasp.click_ext.command_decs">
+<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">command_decs</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#command_decs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.command_decs" title="Permalink to this definition">¶</a></dt>
+<dd><p>set of shared decorators for all sub commands</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>cd</strong> – decorator list for sub command</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
-<dt id="clasp.click_ext.sglob">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">sglob</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#sglob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.sglob" title="Permalink to this definition">¶</a></dt>
-<dd><p>super glob includes [abc] notation + [!abc] exclude notation</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.tmp_stdin">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">tmp_stdin</code><span class="sig-paren">(</span><em class="sig-param">ctx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#tmp_stdin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.tmp_stdin" title="Permalink to this definition">¶</a></dt>
-<dd><p>read stdin into temporary file</p>
+<dt id="clasp.click_ext.shared_decs">
+<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">shared_decs</code><span class="sig-paren">(</span><em class="sig-param">decs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#shared_decs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.shared_decs" title="Permalink to this definition">¶</a></dt>
+<dd><p>decorator to add decs to function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decs</strong> (<em>list of decorator functions to add to function</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>decorator</strong> – a function that decorates function with list of decorators</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>func</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="clasp.click_ext.tmp_clean">
 <code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">tmp_clean</code><span class="sig-paren">(</span><em class="sig-param">ctx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#tmp_clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.tmp_clean" title="Permalink to this definition">¶</a></dt>
-<dd><p>reomve files placed int temps context object
+<dd><p>remove files placed int temps context object
 (called at end of scripts)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.parse_file_list">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">parse_file_list</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#parse_file_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.parse_file_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>parses list of files using glob expansion</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.is_file">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">is_file</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#is_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.is_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks input file string with recursive prompt</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.are_files">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">are_files</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em>, <em class="sig-param">prompt=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#are_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.are_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks input file list string with recursive prompt</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.is_files_iter">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">is_files_iter</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#is_files_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.is_files_iter" title="Permalink to this definition">¶</a></dt>
-<dd><p>calls are_files for each item in iterable s</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.are_files_iter">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">are_files_iter</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em>, <em class="sig-param">prompt=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#are_files_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.are_files_iter" title="Permalink to this definition">¶</a></dt>
-<dd><p>calls are_files for each item in iterable s</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.are_files_or_str">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">are_files_or_str</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#are_files_or_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.are_files_or_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>tries are_files for each item then split_str</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.are_files_or_str_iter">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">are_files_or_str_iter</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#are_files_or_str_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.are_files_or_str_iter" title="Permalink to this definition">¶</a></dt>
-<dd><p>tries are_files then split_str</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.split_str_iter">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">split_str_iter</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#split_str_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.split_str_iter" title="Permalink to this definition">¶</a></dt>
-<dd><p>calls are_files for each item in iterable s</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.color_inp">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">color_inp</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#color_inp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.color_inp" title="Permalink to this definition">¶</a></dt>
-<dd><p>parses color tuple from comma/space seperated string or cmap name</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.int_rng">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">int_rng</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#int_rng"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.int_rng" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.tup_int">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">tup_int</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#tup_int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.tup_int" title="Permalink to this definition">¶</a></dt>
-<dd><p>parses integer or len 2 tuples from comma/space separated string
-with range : notation</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.int_tups">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">int_tups</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#int_tups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.int_tups" title="Permalink to this definition">¶</a></dt>
-<dd><p>parses integer tuples from comma/space separated string</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.tup_float">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">tup_float</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#tup_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.tup_float" title="Permalink to this definition">¶</a></dt>
-<dd><p>parses float tuples from comma/space separated string</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.split_str">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">split_str</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#split_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.split_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>splits space seperated string</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.tup_list">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">tup_list</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#tup_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.tup_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>convert tuple to list</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.split_float">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">split_float</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#split_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.split_float" title="Permalink to this definition">¶</a></dt>
-<dd><p>splits list of floats and extends ranges based on : notation</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="clasp.click_ext.split_int">
-<code class="sig-prename descclassname">clasp.click_ext.</code><code class="sig-name descname">split_int</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_ext.html#split_int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_ext.split_int" title="Permalink to this definition">¶</a></dt>
-<dd><p>splits list of ints and extends ranges based on : notation</p>
 </dd></dl>
 
 <dl class="function">

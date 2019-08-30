@@ -36,6 +36,7 @@
 
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../clasp.click_ext.html">click_ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../clasp.click_callbacks.html">click_callbacks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../clasp.script_tools.html">script_tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../clasp.sphinx_click_ext.html">sphinx_click_ext</a></li>
 </ul>
@@ -82,7 +83,6 @@
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">zip</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">range</span>
-<span class="kn">from</span> <span class="nn">past.utils</span> <span class="k">import</span> <span class="n">old_div</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">shlex</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
@@ -91,20 +91,17 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="n">ProcessPoolExecutor</span><span class="p">,</span> <span class="n">as_completed</span>
 <span class="kn">from</span> <span class="nn">clasp</span> <span class="k">import</span> <span class="n">click</span>
 <span class="kn">import</span> <span class="nn">ipyparallel</span> <span class="k">as</span> <span class="nn">parallel</span>
 
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
-    <span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span>
-
 <span class="n">encoding</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">encoding</span>
-<span class="k">if</span> <span class="n">encoding</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;UTF-8&#39;</span>
 
 
 <div class="viewcode-block" id="try_mkdir"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.try_mkdir">[docs]</a><span class="k">def</span> <span class="nf">try_mkdir</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;exception free mkdir&#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39;silently ignore exceptions on mkdir&#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -116,8 +113,23 @@
     <span class="k">if</span> <span class="n">stop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">stop</span> <span class="o">=</span> <span class="n">start</span>
         <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">old_div</span><span class="p">((</span><span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">*</span><span class="mf">1.</span><span class="p">,</span><span class="n">step</span><span class="p">)))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">/</span><span class="n">step</span><span class="p">))</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="int_rng"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.int_rng">[docs]</a><span class="k">def</span> <span class="nf">int_rng</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;expand start:end:inc notation into range&quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">part</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">))</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">mgr</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="k">return</span> <span class="n">result</span></div>
 
 
 <div class="viewcode-block" id="rm_dup"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.rm_dup">[docs]</a><span class="k">def</span> <span class="nf">rm_dup</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
@@ -135,7 +147,7 @@
 
 <div class="viewcode-block" id="kwarg_match"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.kwarg_match">[docs]</a><span class="k">def</span> <span class="nf">kwarg_match</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;filters dict for keys used by func&quot;&quot;&quot;</span>
-    <span class="n">sargs</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">args</span>
+    <span class="n">sargs</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">args</span>
     <span class="n">argsc</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sargs</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
         <span class="n">warn_match</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">sargs</span><span class="p">)</span>
@@ -144,14 +156,14 @@
 
 <div class="viewcode-block" id="arg_match"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.arg_match">[docs]</a><span class="k">def</span> <span class="nf">arg_match</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;filters dict for positional arguments used by func&quot;&quot;&quot;</span>
-    <span class="n">sargs</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):]</span>
+    <span class="n">sargs</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):]</span>
     <span class="n">argsc</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sargs</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">argsc</span></div>
 
 
 <div class="viewcode-block" id="kwarg_arg"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.kwarg_arg">[docs]</a><span class="k">def</span> <span class="nf">kwarg_arg</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;returns ordered list of optional arg values&quot;&quot;&quot;</span>
-    <span class="n">spec</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">skip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">oargs</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">skip</span><span class="p">:]</span>
     <span class="k">else</span><span class="p">:</span>
@@ -186,9 +198,9 @@
             <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">followed</span><span class="p">:</span>
                 <span class="n">k</span> <span class="o">=</span> <span class="n">follows</span><span class="p">[</span><span class="n">followed</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">la</span> <span class="o">=</span> <span class="p">[[</span><span class="n">lb</span><span class="p">,</span> <span class="n">l</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]]</span> <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">lb</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span>
-                <span class="k">except</span><span class="p">:</span>
-                    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;length of follower must match leader&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">la</span> <span class="o">=</span> <span class="p">[[</span><span class="n">lb</span><span class="p">,</span> <span class="n">l</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]]</span> <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">lb</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;length of follower must match lead&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                     <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">la</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -199,7 +211,7 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">la</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">l</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">lb</span><span class="p">]</span>
                 <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-                    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;length of follower must match leader&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;length of follower must match lead&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                     <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">la</span> <span class="o">=</span> <span class="n">crossref</span><span class="p">(</span><span class="n">la</span><span class="p">,</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
@@ -252,6 +264,12 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    executes pipeline of shell commands (given as list of strings)</span>
 
+<span class="sd">    special syntax:</span>
+
+<span class="sd">    | $(some command) executes to a temporary file whose path is inserted in</span>
+<span class="sd">    | the command.</span>
+<span class="sd">    | $((expression)) evaluates a arithmetic expression in place +-*/()</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    commands: list</span>
@@ -262,6 +280,12 @@
 <span class="sd">        string to feed to stdin at start of pipeline</span>
 <span class="sd">    close: bool</span>
 <span class="sd">        if true closes file object before returning</span>
+<span class="sd">    cwd: str</span>
+<span class="sd">        directory to execute pipeline (temp files and Popen cwd)</span>
+<span class="sd">    writemode: str</span>
+<span class="sd">        passed to open() for outfile (&#39;w&#39;, &#39;wb&#39; for write or &#39;a&#39; for append)</span>
+<span class="sd">    forceinpfile: bool</span>
+<span class="sd">        always treat inp as a file, if a string, open the path for reading</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -337,304 +361,37 @@
     <span class="k">return</span> <span class="n">a</span></div>
 
 
-<div class="viewcode-block" id="cluster_call"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.cluster_call">[docs]</a><span class="k">def</span> <span class="nf">cluster_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=.</span><span class="mi">1</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="pool_call"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.pool_call">[docs]</a><span class="k">def</span> <span class="nf">pool_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    execute func on ipcluster if available return output</span>
+<span class="sd">    execute func with concurrent.futures return output</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    func: python function</span>
 <span class="sd">        function to execute</span>
-<span class="sd">    outfile: list of args</span>
-<span class="sd">        each item is mapped to function</span>
-<span class="sd">    profile: str</span>
-<span class="sd">        name of ipcluster profile to execute on</span>
-
+<span class="sd">    args: list of tuples</span>
+<span class="sd">        each set is mapped to function</span>
+<span class="sd">    kwargs: dict</span>
+<span class="sd">        constant keyword args for func</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    out: list</span>
-<span class="sd">        returns stdout of each function call</span>
+<span class="sd">    generator of results</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">dirfunc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;set directory for func with file dependencies&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">cwd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-
-    <span class="n">args2</span> <span class="o">=</span> <span class="p">(</span><span class="n">dirfunc</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span>
-    <span class="k">if</span> <span class="n">kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">largs</span> <span class="o">=</span> <span class="n">kwarg_arg</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
-        <span class="n">args2</span> <span class="o">+=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">largs</span><span class="p">)</span>
-    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;start ipcluster for faster calculations (&quot;</span>\
-              <span class="s2">&quot;&#39;ru_start cluster&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">pidf</span> <span class="o">=</span> <span class="s1">&#39;~/.ipython/profile_</span><span class="si">{}</span><span class="s1">/pid/ipcluster.pid&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">pidf</span><span class="p">)):</span>
-            <span class="n">clients</span> <span class="o">=</span> <span class="n">parallel</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
-            <span class="n">dview</span> <span class="o">=</span> <span class="n">clients</span><span class="p">[:]</span>
-            <span class="n">dview</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="n">dirfunc</span><span class="o">=</span><span class="n">dirfunc</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">))</span>
-            <span class="n">clients</span><span class="o">.</span><span class="n">block</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># use synchronous computations</span>
-            <span class="n">view</span> <span class="o">=</span> <span class="n">clients</span><span class="o">.</span><span class="n">load_balanced_view</span><span class="p">()</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="n">view</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">*</span><span class="n">args2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cwd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+        <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">order</span><span class="p">:</span>
+            <span class="n">it</span> <span class="o">=</span> <span class="n">futures</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="o">*</span><span class="n">args2</span><span class="p">))</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="o">*</span><span class="n">args2</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">output</span></div>
+            <span class="n">it</span> <span class="o">=</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">it</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="cluster_command"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.cluster_command">[docs]</a><span class="k">def</span> <span class="nf">cluster_command</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">subprocess</span>
-    <span class="k">if</span> <span class="n">stdin</span><span class="p">:</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">cwd</span> <span class="o">+</span> <span class="n">stdin</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">stdout</span><span class="p">:</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">cwd</span> <span class="o">+</span> <span class="n">stdout</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">h</span><span class="p">,</span>
-                         <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="n">shell</span><span class="p">)</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">f</span></div>
-
-
-<div class="viewcode-block" id="get_results"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.get_results">[docs]</a><span class="k">def</span> <span class="nf">get_results</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">coms</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;get results from asyncronous results when ready use in while pending&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">stdout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ar</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
-            <span class="n">g</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sh</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.sh&quot;</span><span class="p">,</span> <span class="s2">&quot;_completed.txt&quot;</span><span class="p">),</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
-            <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-            <span class="n">ts</span> <span class="o">=</span> <span class="s2">&quot;Completed @ {:%b </span><span class="si">%d</span><span class="s2">, %Y, %H:%M:%S}: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span><span class="p">,</span> <span class="n">coms</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>
-            <span class="n">g</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sh</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.sh&quot;</span><span class="p">,</span> <span class="s2">&quot;_error.txt&quot;</span><span class="p">),</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">coms</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">file</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>
-        <span class="n">g</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;####MISSING DATA CHECK ERROR.TXT#### &quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;command: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
-        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">stdout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">i</span></div>
-
-
-<div class="viewcode-block" id="run_sh"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.run_sh">[docs]</a><span class="k">def</span> <span class="nf">run_sh</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">prof</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span>
-           <span class="n">stdout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nodir</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="s2">&quot;NOTRANSFER/&quot;</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">clients</span> <span class="o">=</span> <span class="n">parallel</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">prof</span><span class="p">)</span>
-        <span class="n">clients</span><span class="o">.</span><span class="n">block</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">abspath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">sh</span><span class="p">)</span>
-        <span class="n">workdir</span> <span class="o">=</span> <span class="n">abspath</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">workdir</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">nodir</span><span class="p">:</span>
-            <span class="n">cwd</span> <span class="o">=</span> <span class="n">send_working_dir</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">)</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">cwd</span> <span class="o">=</span> <span class="n">cwd</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">workdir</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sh</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">coms</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;#&quot;</span><span class="p">)]</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">cwds</span> <span class="o">=</span> <span class="p">[</span><span class="n">cwd</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">coms</span><span class="p">)</span>
-        <span class="n">view</span> <span class="o">=</span> <span class="n">clients</span><span class="o">.</span><span class="n">load_balanced_view</span><span class="p">()</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">view</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">cluster_command</span><span class="p">,</span> <span class="n">coms</span><span class="p">,</span> <span class="n">cwds</span><span class="p">,</span>
-                          <span class="n">ordered</span><span class="o">=</span><span class="n">ordered</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="n">stdout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">pending</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">msg_ids</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sh</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.sh&quot;</span><span class="p">,</span> <span class="s2">&quot;_completed.txt&quot;</span><span class="p">),</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="n">ts</span> <span class="o">=</span> <span class="s2">&quot;Run Began @ {:%b </span><span class="si">%d</span><span class="s2">, %Y, %H:%M:%S}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>
-        <span class="n">g</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">while</span> <span class="n">pending</span><span class="p">:</span>
-            <span class="n">msg_id</span> <span class="o">=</span> <span class="n">pending</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">clients</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">msg_id</span><span class="p">)</span>
-            <span class="n">pending</span> <span class="o">=</span> <span class="n">pending</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="n">ar</span> <span class="o">=</span> <span class="n">clients</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="n">msg_id</span><span class="p">)</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="n">get_results</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">coms</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="start_farm"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.start_farm">[docs]</a><span class="k">def</span> <span class="nf">start_farm</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">prof</span><span class="p">,</span> <span class="n">thr</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;output shell command for starting farm&quot;&quot;&quot;</span>
-    <span class="n">rem</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s1">:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">thr</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">])</span>
-    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;ipcluster start --profile=</span><span class="si">{}</span><span class="s2"> &quot;</span>
-               <span class="s2">&quot;--SSHEngineSetLauncher.engines=&#39;{{</span><span class="si">{}</span><span class="s2">}}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prof</span><span class="p">,</span> <span class="n">rem</span><span class="p">),</span>
-               <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="stop_farm"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.stop_farm">[docs]</a><span class="k">def</span> <span class="nf">stop_farm</span><span class="p">(</span><span class="n">profile</span><span class="p">):</span>
-    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Are you sure you want to shutdown </span><span class="si">{}</span><span class="s2">?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">clients</span> <span class="o">=</span> <span class="n">parallel</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">)</span>
-            <span class="n">clients</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="add_engine"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.add_engine">[docs]</a><span class="k">def</span> <span class="nf">add_engine</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">prof</span><span class="p">,</span> <span class="n">thr</span><span class="p">,</span>
-               <span class="n">nodir</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="s2">&quot;NOTRANSFER/&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;call ipcluster to add additional engines to farm&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">nodir</span><span class="p">:</span>
-        <span class="n">abspath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">sh</span><span class="p">)</span>
-        <span class="n">workdir</span> <span class="o">=</span> <span class="n">abspath</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">workdir</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
-        <span class="n">send_working_dir</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">:</span>
-        <span class="n">rem</span> <span class="o">=</span> <span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot;:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">thr</span><span class="p">)</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;ipcluster engines --daemonize  --profile=</span><span class="si">{}</span><span class="s2">&quot;</span>\
-                  <span class="s2">&quot; --SSHEngineSetLauncher.engines={{</span><span class="si">{}</span><span class="s2">}}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prof</span><span class="p">,</span> <span class="n">rem</span><span class="p">)</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">())</span></div>
-
-
-<div class="viewcode-block" id="remove_engines"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.remove_engines">[docs]</a><span class="k">def</span> <span class="nf">remove_engines</span><span class="p">(</span><span class="n">remotes</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;remove remote from ipcluster&quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">pgrep</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pgrep&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh -tt </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="p">)]</span>
-            <span class="n">pid</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">pgrep</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;no pid found for remote: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
-            <span class="k">pass</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pid</span><span class="p">:</span>
-                <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;kill&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">])</span></div>
-
-
-<div class="viewcode-block" id="send_working_dir"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.send_working_dir">[docs]</a><span class="k">def</span> <span class="nf">send_working_dir</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span>
-                     <span class="n">cwd</span><span class="o">=</span><span class="s2">&quot;ipcluster&quot;</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="s2">&quot;NOTRANSFER/&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;transfer file dependencies to remotes&quot;&quot;&quot;</span>
-    <span class="n">workf</span> <span class="o">=</span> <span class="n">cwd</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">workdir</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">:</span>
-        <span class="n">scp</span> <span class="o">=</span> <span class="s2">&quot;rsync -av --exclude </span><span class="si">{3}</span><span class="s2"> </span><span class="si">{0}</span><span class="s2"> </span><span class="si">{1}</span><span class="s2">:</span><span class="si">{2}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">workdir</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span>
-                                                           <span class="n">workf</span><span class="p">,</span> <span class="n">exclude</span><span class="p">)</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">scp</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">scp</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-    <span class="k">return</span> <span class="n">workf</span></div>
-
-
-<div class="viewcode-block" id="get_cpu"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.get_cpu">[docs]</a><span class="k">def</span> <span class="nf">get_cpu</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="s2">&quot;ipcluster&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;print top usage stats for remotes&quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">data_line</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;format for usage stats&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{: &lt;20}{: &lt;8}{: &lt;8}{: &lt;10}{: &lt;10}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-                                                            <span class="n">l</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
-
-    <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s2">&quot;ssh -o ConnectTimeout=10 </span><span class="si">{}</span><span class="s2"> &quot;</span>
-                                             <span class="s2">&quot;&#39;ps aux&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="p">),</span>
-                                             <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;unable to connect to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">output</span><span class="p">]</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">li</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">data_line</span><span class="p">(</span><span class="n">li</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">output</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-                <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;root&quot;</span><span class="p">:</span>
-                    <span class="n">li</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="mi">30</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
-                    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">data_line</span><span class="p">(</span><span class="n">li</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">cpus</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">output</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">CPU:</span><span class="si">{}</span><span class="s2">/800</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cpus</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
-            <span class="n">chk</span> <span class="o">=</span> <span class="s2">&quot;ssh -o ConnectTimeout=10 </span><span class="si">{}</span><span class="s2"> &#39;ls -l </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2"> | cut -c-100&#39;&quot;</span>\
-                  <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">stat</span><span class="p">)</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">chk</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
-                <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="check_farm"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.check_farm">[docs]</a><span class="k">def</span> <span class="nf">check_farm</span><span class="p">(</span><span class="n">profile</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;output number of engines running on farm&quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">clients</span> <span class="o">=</span> <span class="n">parallel</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">)</span>
-        <span class="n">ids</span> <span class="o">=</span> <span class="n">clients</span><span class="o">.</span><span class="n">ids</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="gather_files"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.gather_files">[docs]</a><span class="k">def</span> <span class="nf">gather_files</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">get</span><span class="p">,</span> <span class="n">rsync</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="s2">&quot;ipcluster&quot;</span><span class="p">,</span> <span class="n">nocheck</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;gather files from list of remotes via rsync and ssh&quot;&quot;&quot;</span>
-    <span class="n">dash</span> <span class="o">=</span> <span class="s2">&quot;________________________&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">nocheck</span><span class="p">:</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="se">\n\n</span><span class="s2">rsync --dry-run results:</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dash</span><span class="p">),</span>
-                   <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">rem</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">:</span>
-            <span class="n">scp</span> <span class="o">=</span> <span class="s2">&quot;rsync -av </span><span class="si">{3}</span><span class="s2"> </span><span class="si">{0}</span><span class="s2">:</span><span class="si">{1}</span><span class="s2">/</span><span class="si">{2}</span><span class="s2"> ./ --dry-run&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rem</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span>
-                                                                  <span class="n">get</span><span class="p">,</span> <span class="n">rsync</span><span class="p">)</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">scp</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-        <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dash</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">nocheck</span> <span class="ow">or</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span><span class="s2">&quot;Proceed with rsync?&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">rem</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">:</span>
-            <span class="n">scp</span> <span class="o">=</span> <span class="s2">&quot;rsync -av </span><span class="si">{3}</span><span class="s2"> </span><span class="si">{0}</span><span class="s2">:</span><span class="si">{1}</span><span class="s2">/</span><span class="si">{2}</span><span class="s2"> ./&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rem</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">get</span><span class="p">,</span> <span class="n">rsync</span><span class="p">)</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">scp</span><span class="o">.</span><span class="n">split</span><span class="p">())</span></div>
-
-
-<div class="viewcode-block" id="dist_command"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.dist_command">[docs]</a><span class="k">def</span> <span class="nf">dist_command</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;run command once on each remote&quot;&quot;&quot;</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">:</span>
-        <span class="n">sshaux</span> <span class="o">=</span> <span class="s2">&quot;ssh -o ConnectTimeout=10 </span><span class="si">{}</span><span class="s2"> &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
-        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">sshaux</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-    <span class="k">return</span> <span class="n">output</span></div>
-
-
-<div class="viewcode-block" id="get_cpu_log"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.get_cpu_log">[docs]</a><span class="k">def</span> <span class="nf">get_cpu_log</span><span class="p">(</span><span class="n">remotes</span><span class="p">):</span>
-    <span class="n">cpus</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">remotes</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">sshaux</span> <span class="o">=</span> <span class="s2">&quot;ssh -o ConnectTimeout=10 </span><span class="si">{}</span><span class="s2"> &#39;ps aux&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">sshaux</span><span class="p">,</span>
-                                          <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;unable to connect to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
-            <span class="n">cpus</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;XXXXX   &quot;</span> <span class="o">+</span> <span class="s2">&quot;X&quot;</span><span class="o">*</span><span class="mi">32</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="p">]</span>
-            <span class="n">cpu</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
-            <span class="n">bar</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">old_div</span><span class="p">(</span><span class="n">cpu</span><span class="p">,</span><span class="mi">800</span><span class="o">*</span><span class="mi">32</span><span class="p">))))</span>
-            <span class="n">cpus</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{: &lt;8}{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cpu</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="o">*</span><span class="n">bar</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="o">*</span><span class="p">(</span><span class="mi">32</span><span class="o">-</span><span class="n">bar</span><span class="p">)))</span>
-    <span class="k">return</span> <span class="n">cpus</span></div>
-
-
-<div class="viewcode-block" id="farm_log"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.farm_log">[docs]</a><span class="k">def</span> <span class="nf">farm_log</span><span class="p">(</span><span class="n">remotes</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">outf</span><span class="o">=</span><span class="s2">&quot;farm_log.txt&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;record cpu usage of ssh remotes&quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">time</span>
-    <span class="n">stime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">cpus</span> <span class="o">=</span> <span class="n">get_cpu_log</span><span class="p">(</span><span class="n">remotes</span><span class="p">)</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outf</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
-        <span class="n">vals</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cpus</span><span class="p">)</span>
-        <span class="n">ti</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%m/</span><span class="si">%d</span><span class="s2">/%y-%H:%M:%S&quot;</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ti</span><span class="p">,</span> <span class="n">vals</span><span class="p">))</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">interval</span> <span class="o">-</span> <span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">stime</span><span class="p">)</span> <span class="o">%</span> <span class="n">interval</span><span class="p">))</span></div>
+<div class="viewcode-block" id="cluster_call"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.cluster_call">[docs]</a><span class="k">def</span> <span class="nf">cluster_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">timeout</span><span class="o">=.</span><span class="mi">1</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;for backwards compatibility only&#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">pool_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="read_epw"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_epw">[docs]</a><span class="k">def</span> <span class="nf">read_epw</span><span class="p">(</span><span class="n">epw</span><span class="p">):</span>
@@ -690,6 +447,7 @@
 <div class="viewcode-block" id="coerce_data"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.coerce_data">[docs]</a><span class="k">def</span> <span class="nf">coerce_data</span><span class="p">(</span><span class="n">datastr</span><span class="p">,</span> <span class="n">i_vals</span><span class="p">,</span> <span class="n">dataf</span><span class="p">,</span> <span class="n">coerce</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;ensure all data points parsed are valid numbers&#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">coerce</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">datastr</span> <span class="k">if</span> <span class="n">isnum</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">i_vals</span><span class="p">]</span>
@@ -704,8 +462,8 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;list index out of range index: </span><span class="si">{}</span><span class="s2"> in file: </span><span class="si">{}</span><span class="s2">&quot;</span>\
                   <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">dataf</span><span class="p">)</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;bad value or no data in file: </span><span class="si">{}</span><span class="s2">, try --no-coerce&quot;</span>\
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;bad value or no data in file: </span><span class="si">{}</span><span class="s2">, try coerce=False&quot;</span>\
                   <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataf</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
@@ -725,12 +483,13 @@
     <span class="k">return</span> <span class="n">ds</span></div>
 
 
-<div class="viewcode-block" id="read_data_file"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_data_file">[docs]</a><span class="k">def</span> <span class="nf">read_data_file</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">xheader</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">delim</span><span class="p">,</span> <span class="n">coerce</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="read_data_file"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_data_file">[docs]</a><span class="k">def</span> <span class="nf">read_data_file</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xheader</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;#&quot;</span><span class="p">,</span>
+                   <span class="n">delim</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">, &quot;</span><span class="p">,</span> <span class="n">coerce</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="n">delim</span> <span class="o">=</span> <span class="s1">&#39;[</span><span class="si">{}</span><span class="s1">]+&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">delim</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">comment</span> <span class="o">!=</span> <span class="s2">&quot;#&quot;</span><span class="p">:</span>
         <span class="n">comment</span> <span class="o">=</span> <span class="s2">&quot;^[</span><span class="si">{}</span><span class="s2">].*&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">header</span> <span class="ow">and</span> <span class="n">coerce</span><span class="p">:</span>
-        <span class="n">comment</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^[^\-\d\w].*&quot;</span>
+        <span class="n">comment</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^[^\-\d\w\.].*&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">comment</span> <span class="o">=</span> <span class="s2">&quot;^[</span><span class="si">{}</span><span class="s2">].*&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
@@ -797,7 +556,8 @@
                 <span class="s1">&#39;global horizontal&#39;</span><span class="p">,</span> <span class="s1">&#39;sky cover&#39;</span><span class="p">]</span>
         <span class="n">head</span> <span class="o">=</span> <span class="p">[</span><span class="n">head</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">y_vals</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">datastr</span> <span class="o">=</span> <span class="n">read_data_file</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">xheader</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">delim</span><span class="p">,</span> <span class="n">coerce</span><span class="o">=</span><span class="n">coerce</span><span class="p">)</span>
+        <span class="n">datastr</span> <span class="o">=</span> <span class="n">read_data_file</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">xheader</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">delim</span><span class="p">,</span>
+                                 <span class="n">coerce</span><span class="o">=</span><span class="n">coerce</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
             <span class="n">head</span> <span class="o">=</span> <span class="p">[</span><span class="n">datastr</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">y_vals</span><span class="p">]</span>
             <span class="n">datastr</span> <span class="o">=</span> <span class="n">datastr</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>

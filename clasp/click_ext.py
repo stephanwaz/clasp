@@ -5,33 +5,34 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 # =======================================================================
 
-"""extension, callbacks and interface for parsing with click and configparse"""
+"""extension and interface for parsing with click and configparse
+
+imports callbacks into namespace for convenience
+"""
 
 from __future__ import print_function
 from future import standard_library
-standard_library.install_aliases()
+
 from builtins import str
-from builtins import zip
 import click
 import configparser
 import re
-import tempfile
 import sys
 import os
-import shlex
 import collections
 import traceback
-from glob import glob
 
-import clasp.script_tools as mgr
+from clasp.click_callbacks import *
 
+standard_library.install_aliases()
 
-# Edited from click completion script to avoid running out of turn (faster)
+#: Edited from click completion script to avoid running out of turn (faster)
 COMPLETION_SCRIPT_BASH = '''
 %(complete_func)s() {
     local cw="${COMP_WORDS[*]}"
     if [[ $cw != *">"* ]]; then
-    if [[ ${COMP_WORDS[$COMP_CWORD]} != -* ]] && [[ ${COMP_WORDS[$COMP_CWORD-1]} == -* ]]; then
+    if [[ ${COMP_WORDS[$COMP_CWORD]} != -* ]] && [[ '''\
+'''${COMP_WORDS[$COMP_CWORD-1]} == -* ]]; then
         :
     else
         local IFS=$'\n'
@@ -59,61 +60,17 @@ COMPLETION_SCRIPT_BASH = '''
 %(complete_func)setup
 '''
 
-# basic script template for one offs, docstring contains available callback
-# descriptions
+#: basic script template for one offs
 script_template = '''#!/usr/bin/env python
-from __future__ import print_function
-
 from clasp import click
 import clasp.click_ext as clk
 
 @click.command()
 @click.argument('arg1')
-@click.option('--opts','-opts', is_flag=True,
-              help="check parsed options")
-@click.option('--debug/--no-debug', default=True,
-              help="show traceback on exceptions")
+@clk.shared_decs(clk.command_decs('0.1'))
 @click.pass_context
 def main(ctx, arg1, **kwargs):
-    """
-    callbacks:
-
-    File input
-    ~~~~~~~~~~
-
-    file inputs can be given with wildcard expansion (in quotes so that the callback handles)
-    using glob plus the following:
-
-        * [abc] (one of a, b, or c) 
-        * [!abc] (none of a, b or c)
-        * '-' (hyphen) collect the stdin into a temporary file (clasp_tmp*)
-        * ~ expands user
-
-    The file input callbacks are:
-
-        * parse_file_list: returns list of files (raise error if file not found)
-        * is_file: check if a single path exists (prompts for user input if file not found)
-        * are_files: recursively calls parse_file_list and prompts on error
-        * is_file_iter: use when multiple=True
-        * are_files_iter: use when mulitple=True
-        * are_files_or_str: tries to parse as files, then tries split_float, then split_int, then returns string
-        * are_files_or_str_iter: use when mulitple=True
-
-    String parsing
-    ~~~~~~~~~~~~~~
-
-        * split_str: split with shlex.split
-        * split_str_iter: use when multiple=True
-        * color_inp: return alphastring, split on whitespace, convert floats and parse tuples on ,
-
-    Number parsing
-    ~~~~~~~~~~~~~~
-
-        * tup_int: parses integer tuples from comma/space seperated string
-        * tup_float: parses float tuples from comma/space seperated string
-        * split_float: splits list of floats and extends ranges based on : notation
-        * split_int: splits list of ints and extends ranges based on : notation
-    """
+    """docstring"""
     if kwargs['opts']:
         kwargs['opts'] = False
         clk.echo_args(arg1, **kwargs)
@@ -133,66 +90,24 @@ if __name__ == '__main__':
     main()'''
 
 
+#: basic script template for command subcommand structure (using config files)
 script_template2 = '''#!/usr/bin/env python
-from __future__ import print_function
-
 from clasp import click
 import clasp.click_ext as clk
 
 @click.group()
-@clk.shared_decs(clk.main_decs)
+@clk.shared_decs(clk.main_decs('0.1'))
 def main(ctx, config, outconfig, configalias, inputalias):
-    """help configuration and process management commands."""
+    """docstring"""
     clk.get_config(ctx, config, outconfig, configalias, inputalias)
 
 
 @main.command()
 @click.argument('arg1')
-@click.option('--opts','-opts', is_flag=True,
-              help="check parsed options")
-@click.option('--debug/--no-debug', default=True,
-              help="show traceback on exceptions")
+@clk.shared_decs(clk.command_decs('0.1'))
 @click.pass_context
 def XXX(ctx, arg1, **kwargs):
-    """
-    callbacks:
-
-    File input
-    ~~~~~~~~~~
-
-    file inputs can be given with wildcard expansion (in quotes so that the callback handles)
-    using glob plus the following:
-
-        * [abc] (one of a, b, or c) 
-        * [!abc] (none of a, b or c)
-        * '-' (hyphen) collect the stdin into a temporary file (clasp_tmp*)
-        * ~ expands user
-
-    The file input callbacks are:
-
-        * parse_file_list: returns list of files (raise error if file not found)
-        * is_file: check if a single path exists (prompts for user input if file not found)
-        * are_files: recursively calls parse_file_list and prompts on error
-        * is_file_iter: use when multiple=True
-        * are_files_iter: use when mulitple=True
-        * are_files_or_str: tries to parse as files, then tries split_float, then split_int, then returns string
-        * are_files_or_str_iter: use when mulitple=True
-
-    String parsing
-    ~~~~~~~~~~~~~~
-
-        * split_str: split with shlex.split
-        * split_str_iter: use when multiple=True
-        * color_inp: return alphastring, split on whitespace, convert floats and parse tuples on ,
-
-    Number parsing
-    ~~~~~~~~~~~~~~
-
-        * tup_int: parses integer tuples from comma/space seperated string
-        * tup_float: parses float tuples from comma/space seperated string
-        * split_float: splits list of floats and extends ranges based on : notation
-        * split_int: splits list of ints and extends ranges based on : notation
-    """
+    """docstring"""
     if kwargs['opts']:
         kwargs['opts'] = False
         clk.echo_args(arg1, **kwargs)
@@ -300,8 +215,18 @@ def click_ext(click):
     return click
 
 
-# shared decorators for all main command groups
 def main_decs(v):
+    """set of shared decorators for all main command groups
+
+    Parameters
+    ----------
+    v: str
+
+    Returns
+    -------
+    md: list
+        decorator list for main command to manage config file usage
+    """
     md = [
           click.option('--config', '-c', type=click.Path(exists=True)),
           click.option('--outconfig', '-oc', type=click.Path(file_okay=True)),
@@ -317,6 +242,17 @@ def main_decs(v):
 
 
 def command_decs(v):
+    """set of shared decorators for all sub commands
+
+    Parameters
+    ----------
+    v: str
+
+    Returns
+    -------
+    cd: list
+        decorator list for sub command
+    """
     cd = [
           click.option('--opts', '-opts', is_flag=True,
                        help="check parsed options"),
@@ -329,7 +265,17 @@ def command_decs(v):
 
 
 def shared_decs(decs):
-    '''decorator to add decs to function'''
+    """decorator to add decs to function
+
+    Parameters
+    ----------
+    decs: list of decorator functions to add to function
+
+    Returns
+    -------
+    decorator: func
+        a function that decorates function with list of decorators
+    """
     def decorate(f):
         for dec in reversed(decs):
             f = dec(f)
@@ -337,354 +283,14 @@ def shared_decs(decs):
     return decorate
 
 
-def callback_error(s, param, example):
-    """standard error message for exceptions raised during argument parsing
-
-    used by custom callback functions raises ClickException
-
-    Parameters
-    ----------
-    s: value
-    param: click.core.Option
-    example: example of valid entry format
-    """
-    message = "\ncan't parse: {}\nexpected input "\
-              "format: '{}'".format(s, example)
-    raise click.BadParameter(message)
-
-
-def expandpat(pat, s, mark=0):
-    '''expand sglob pattern for each character option'''
-    if re.search(pat, s):
-        parts = re.split(pat, s)
-        marks = re.findall(pat, s)
-        patm = []
-        for i, ma in enumerate(marks):
-            part = [parts[i]] * (len(ma) - (2 + mark))
-            for j, mai in enumerate(ma[1 + mark:-1]):
-                part[j] += mai
-            patm.append(part)
-        patm.append([parts[-1]])
-        allpat = [''.join(i) for i in zip(*mgr.crossref_all(patm))]
-        return allpat
-    else:
-        return []
-
-
-def sglob(s):
-    '''super glob includes [abc] notation + [!abc] exclude notation'''
-    inre = '\[[\w\d\-\_\.]+\]'
-    exre = '\[\![\w\d\-\_\.]+\]'
-    inpat = expandpat(inre, s) + [s]
-    exglob = mgr.flat_list([expandpat(exre, i, 1) for i in inpat])
-    inglob = [re.sub(exre, '*', i) for i in inpat]
-    infiles = set(mgr.flat_list([glob(i) for i in inglob]))
-    exfiles = set(mgr.flat_list([glob(i) for i in exglob]))
-    return sorted(list(infiles.difference(exfiles)))
-
-
-def tmp_stdin(ctx):
-    '''read stdin into temporary file'''
-    if not ctx.resilient_parsing:
-        f, path = tempfile.mkstemp(dir="./", prefix='clasp_tmp')
-        f = open(path, 'w')
-        f.write(sys.stdin.read())
-        f.close()
-        if ctx.obj is None:
-            ctx.obj = dict(temps=[path])
-        else:
-            ctx.obj['temps'].append(path)
-        return path
-    else:
-        return "-"
-
-
 def tmp_clean(ctx):
-    '''reomve files placed int temps context object
+    '''remove files placed int temps context object
     (called at end of scripts)'''
     for i in ctx.obj['temps']:
         try:
             os.remove(i)
         except Exception:
             pass
-
-
-def parse_file_list(ctx, s):
-    """parses list of files using glob expansion"""
-    files = []
-    for i in shlex.split(s):
-        if "~" in i:
-            i = os.path.expanduser(i)
-        if i == '-':
-            files.append(tmp_stdin(ctx))
-        elif i[0] == '@':
-            if os.path.exists(i[1:]):
-                f = open(i[1:],'r')
-                fi = [j.strip() for j in f.readlines()]
-                for l in fi:
-                    files += parse_file_list(ctx, l)
-            else:
-                raise ValueError(i[1:])
-        elif len(sglob(i)) > 0:
-            for j in sglob(i):
-                if os.path.exists(j):
-                    files.append(j)
-                else:
-                    raise ValueError(j)
-        else:
-            if os.path.exists(i):
-                files.append(i)
-            else:
-                raise ValueError(i)
-    return files
-
-
-def is_file(ctx, param, s):
-    """checks input file string with recursive prompt"""
-    if s == '-':
-        return tmp_stdin(ctx)
-    if s is None:
-        return None
-    command = ctx.info_name
-    name = param.name
-    try:
-        if os.path.exists(s):
-            return s
-        else:
-            raise ValueError(s)
-    except ValueError as e:
-        try:
-            # use os.environ['CLASP_PIPE'] = '1' in parent script
-            # or set CLASP_PIPE=1
-            # to disable prompt and avoid hanging process
-            nopipe = os.environ['CLASP_PIPE'] != '1'
-        except KeyError:
-            nopipe = True
-        click.echo("{} not an existing file".format(e), err=True)
-        if nopipe and not ctx.resilient_parsing:
-            s2 = click.prompt("{} for {}".format(name, command))
-            return is_file(ctx, param, s2)
-        else:
-            raise click.Abort()
-
-
-def are_files(ctx, param, s, prompt=True):
-    """checks input file list string with recursive prompt"""
-    if s is None:
-        return None
-    command = ctx.info_name
-    name = param.name
-    try:
-        return parse_file_list(ctx, s)
-    except ValueError as e:
-        if prompt and not ctx.resilient_parsing:
-            try:
-                # use os.environ['CLASP_PIPE'] = '1' in parent script
-                # or set CLASP_PIPE=1
-                # to disable prompt
-                nopipe = os.environ['CLASP_PIPE'] != '1'
-            except KeyError:
-                nopipe = True
-            click.echo("{} not an existing file".format(e), err=True)
-            if nopipe and ctx.resilient_parsing:
-                s2 = click.prompt("{} for {}".format(name, command))
-            else:
-                raise click.Abort()
-        else:
-            raise ValueError(e)
-        return are_files(ctx, param, s2)
-
-
-def is_files_iter(ctx, param, s):
-    """calls are_files for each item in iterable s"""
-    files = []
-    for s2 in s:
-        files.append(is_file(ctx, param, s2))
-    return files
-
-
-def are_files_iter(ctx, param, s, prompt=True):
-    """calls are_files for each item in iterable s"""
-    files = []
-    for s2 in s:
-        files.append(are_files(ctx, param, s2, prompt))
-    return files
-
-
-def are_files_or_str(ctx, param, s):
-    """tries are_files for each item then split_str"""
-    try:
-        return are_files(ctx, param, s, False)
-    except ValueError:
-        pass
-    try:
-        return [str(i) for i in split_int(ctx, param, s)]
-    except Exception:
-        pass
-    try:
-        return [str(i) for i in split_float(ctx, param, s)]
-    except Exception:
-        pass
-    return split_str(ctx, param, s)
-
-
-def are_files_or_str_iter(ctx, param, s):
-    """tries are_files then split_str"""
-    files = []
-    for s2 in s:
-        files.append(are_files_or_str(ctx, param, s2))
-    return files
-
-
-def split_str_iter(ctx, param, s):
-    """calls are_files for each item in iterable s"""
-    args = []
-    for s2 in s:
-        args.append(split_str(ctx, param, s2))
-    return args
-
-
-def color_inp(ctx, param, s):
-    """parses color tuple from comma/space seperated string or cmap name"""
-    if re.match("^([\d\.]+[, \t]+)+[\d\.]+$", s):
-        so = []
-        for x in s.split():
-            if "," in x:
-                so.append(tuple(float(i) for i in x.split(",")))
-            else:
-                so.append(float(x))
-        return so
-    else:
-        return s
-
-
-def int_rng(s):
-    result = []
-    for part in s.split():
-        if ':' in part:
-            a = (int(i) for i in part.split(':'))
-            result.extend(mgr.arange(*a))
-        else:
-            a = int(part)
-            result.append(a)
-    if len(result) == 1:
-        result = [int(result[0])]
-    return result
-
-
-def tup_int(ctx, param, s):
-    """parses integer or len 2 tuples from comma/space separated string
-    with range : notation"""
-    if s is None:
-        so = None
-    else:
-        try:
-            so = []
-            for x in s.split():
-                if "," in x:
-                    for fis in int_rng(x.split(",")[0]):
-                        for col in int_rng(x.split(",")[1]):
-                            so.append((fis, col))
-                else:
-                    so.extend(int_rng(x))
-        except Exception:
-            callback_error(s, param, '0 0,1 0,3')
-    return so
-
-
-def int_tups(ctx, param, s):
-    """parses integer tuples from comma/space separated string"""
-    if s is None:
-        so = None
-    else:
-        try:
-            so = []
-            for x in s.split():
-                so.append(tuple(int(i) for i in x.split(",")))
-        except Exception:
-            callback_error(s, param, '0,1 0,3.6')
-    return so
-
-
-
-def tup_float(ctx, param, s):
-    """parses float tuples from comma/space separated string"""
-    if s is None:
-        so = None
-    else:
-        try:
-            so = []
-            for x in s.split():
-                if "," in x:
-                    so.append(tuple(float(i) for i in x.split(",")))
-                else:
-                    so.append(float(x))
-        except Exception:
-            callback_error(s, param, '0 0,1 0,3.6')
-    return so
-
-
-def split_str(ctx, param, s):
-    """splits space seperated string"""
-    if s is None:
-        return None
-    elif s[0] == '@':
-        if os.path.exists(s[1:]):
-            f = open(s[1:],'r')
-            return shlex.split(f.read().strip())
-        else:
-            return shlex.split(s)
-    else:
-        return shlex.split(s)
-
-
-def tup_list(ctx, param, s):
-    """convert tuple to list"""
-    if s is not None:
-        return list(s)
-    else:
-        return None
-
-
-def split_float(ctx, param, s):
-    """splits list of floats and extends ranges based on : notation"""
-    if s is None:
-        result = None
-    else:
-        try:
-            result = []
-            for part in s.split():
-                if ':' in part:
-                    a = (float(i) for i in part.split(':'))
-                    result.extend(mgr.arange(*a))
-                else:
-                    a = float(part)
-                    result.append(a)
-            result = [round(i, 6) for i in result]
-        except Exception:
-            callback_error(s, param, '0 30.5 40')
-    return result
-
-
-def split_int(ctx, param, s):
-    """splits list of ints and extends ranges based on : notation"""
-    if s is None:
-        result = None
-    else:
-        try:
-            result = []
-            for part in s.split():
-                if ':' in part:
-                    a = (int(i) for i in part.split(':'))
-                    result.extend(mgr.arange(*a))
-                else:
-                    a = int(part)
-                    result.append(a)
-            if len(result) == 1:
-                result = [int(result[0])]
-        except Exception:
-            callback_error(s, param, '0 30 40')
-    return result
 
 
 def ConfigSectionMap(Config, section):

@@ -34,6 +34,7 @@ import clasp
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.extlinks', 'sphinxcontrib.programoutput', 'sphinx.ext.autodoc', 'sphinx.ext.viewcode', 'sphinx.ext.napoleon', 'clasp.sphinx_click_ext', 'sphinx.ext.todo']
 autodoc_member_order = 'bysource'
+autodoc_default_options = {'special-members': '__str__, __init__, __new__', 'members': True, 'show-inheritance': True, 'undoc-members': True}
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 

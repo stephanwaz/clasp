@@ -32,7 +32,7 @@ if encoding is None:
 
 
 def try_mkdir(s):
-    '''exception free mkdir'''
+    '''silently ignore exceptions on mkdir'''
     try:
         os.mkdir(s)
     except Exception:
@@ -46,6 +46,21 @@ def arange(start, stop=None, step=1):
         start = 0
     n = int(math.ceil((stop - start)/step))
     return [start + step*i for i in range(n)]
+
+
+def int_rng(s):
+    """expand start:end:inc notation into range"""
+    result = []
+    for part in s.split():
+        if ':' in part:
+            a = (int(i) for i in part.split(':'))
+            result.extend(mgr.arange(*a))
+        else:
+            a = int(part)
+            result.append(a)
+    if len(result) == 1:
+        result = [int(result[0])]
+    return result
 
 
 def rm_dup(seq):
@@ -180,6 +195,12 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
     """
     executes pipeline of shell commands (given as list of strings)
 
+    special syntax:
+
+    | $(some command) executes to a temporary file whose path is inserted in
+    | the command.
+    | $((expression)) evaluates a arithmetic expression in place +-*/()
+
     Parameters
     ----------
     commands: list
@@ -190,6 +211,12 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
         string to feed to stdin at start of pipeline
     close: bool
         if true closes file object before returning
+    cwd: str
+        directory to execute pipeline (temp files and Popen cwd)
+    writemode: str
+        passed to open() for outfile ('w', 'wb' for write or 'a' for append)
+    forceinpfile: bool
+        always treat inp as a file, if a string, open the path for reading
 
     Returns
     -------
@@ -267,7 +294,7 @@ def flat_list(l):
 
 def pool_call(func, args, kwargs={}, cwd=None, order=True):
     """
-    execute func with conncurrent futures return output
+    execute func with concurrent.futures return output
 
     Parameters
     ----------
@@ -292,56 +319,10 @@ def pool_call(func, args, kwargs={}, cwd=None, order=True):
         return [future.result() for future in it]
 
 
-def cluster_call(func, args, profile=None, kwargs=None, timeout=.1, cwd=None,
+def cluster_call(func, args, profile=None, kwargs={}, timeout=.1, cwd=None,
                  debug=False):
-    """
-    execute func on ipcluster if available return output
-
-    Parameters
-    ----------
-    func: python function
-        function to execute
-    outfile: list of args
-        each item is mapped to function
-    profile: str
-        name of ipcluster profile to execute on
-
-    Returns
-    -------
-    out: list
-        returns stdout of each function call
-    """
-
-    def dirfunc(*args):
-        """set directory for func with file dependencies"""
-        if cwd is not None:
-            os.chdir(cwd)
-        return func(*args)
-
-    args2 = (dirfunc,) + args
-    if kwargs is not None:
-        largs = kwarg_arg(func, kwargs, len(args))
-        args2 += tuple([i]*len(args[0]) for i in largs)
-    message = "start ipcluster for faster calculations ("\
-              "'ru_start cluster')".format(profile)
-    try:
-        pidf = '~/.ipython/profile_{}/pid/ipcluster.pid'.format(profile)
-        if os.path.isfile(os.path.expanduser(pidf)):
-            clients = parallel.Client(profile=profile, timeout=timeout)
-            dview = clients[:]
-            dview.push(dict(func=func, dirfunc=dirfunc, cwd=cwd))
-            clients.block = True  # use synchronous computations
-            view = clients.load_balanced_view()
-            output = view.map(*args2)
-        else:
-            print(message, file=sys.stderr)
-            output = list(map(*args2))
-    except Exception as ex:
-        if debug:
-            print(ex, file=sys.stderr)
-        print(message, file=sys.stderr)
-        output = list(map(*args2))
-    return output
+    '''for backwards compatibility only'''
+    return pool_call(func, args, kwargs=kwargs, cwd=cwd, order=True)
 
 
 def read_epw(epw):
@@ -413,7 +394,7 @@ def coerce_data(datastr, i_vals, dataf, coerce=True):
             err = "list index out of range index: {} in file: {}"\
                   "".format(i, dataf)
         except Exception:
-            err = "bad value or no data in file: {}, try --no-coerce"\
+            err = "bad value or no data in file: {}, try coerce=False"\
                   "".format(dataf)
         raise IndexError(err)
     return data
@@ -433,12 +414,13 @@ def get_i(i, d_vals):
     return ds
 
 
-def read_data_file(dataf, header, xheader, comment, delim, coerce=True):
+def read_data_file(dataf, header=False, xheader=False, comment="#",
+                   delim="\t, ", coerce=True):
     delim = '[{}]+'.format(delim)
     if comment != "#":
         comment = "^[{}].*".format(comment)
     elif not header and coerce:
-        comment = r"^[^\-\d\w].*"
+        comment = r"^[^\-\d\w\.].*"
     else:
         comment = "^[{}].*".format(comment)
     f = open(dataf, 'r')
