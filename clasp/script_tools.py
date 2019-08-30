@@ -14,7 +14,6 @@ from builtins import map
 from builtins import zip
 from builtins import str
 from builtins import range
-from past.utils import old_div
 import sys
 import shlex
 import subprocess
@@ -23,15 +22,12 @@ import tempfile
 import os
 import re
 import math
-import datetime
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from clasp import click
 import ipyparallel as parallel
 
-if sys.version[0] == '3':
-    inspect.getargspec = inspect.getfullargspec
-
 encoding = sys.stdin.encoding
-if encoding == None:
+if encoding is None:
     encoding = 'UTF-8'
 
 
@@ -48,7 +44,7 @@ def arange(start, stop=None, step=1):
     if stop is None:
         stop = start
         start = 0
-    n = int(math.ceil(old_div((stop - start)*1.,step)))
+    n = int(math.ceil((stop - start)/step))
     return [start + step*i for i in range(n)]
 
 
@@ -67,7 +63,7 @@ def warn_match(kwargs, sargs):
 
 def kwarg_match(func, kwargs, debug=False):
     """filters dict for keys used by func"""
-    sargs = inspect.getargspec(func).args
+    sargs = inspect.getfullargspec(func).args
     argsc = {i: kwargs[i] for i in sargs if i in kwargs}
     if debug:
         warn_match(kwargs, sargs)
@@ -76,14 +72,14 @@ def kwarg_match(func, kwargs, debug=False):
 
 def arg_match(func, kwargs, *args):
     """filters dict for positional arguments used by func"""
-    sargs = inspect.getargspec(func).args[len(args):]
+    sargs = inspect.getfullargspec(func).args[len(args):]
     argsc = list(args) + [kwargs[i] if i in kwargs else None for i in sargs]
     return argsc
 
 
 def kwarg_arg(func, kwargs, skip=None):
     """returns ordered list of optional arg values"""
-    spec = inspect.getargspec(func)
+    spec = inspect.getfullargspec(func)
     if skip is not None:
         oargs = spec.args[skip:]
     else:
@@ -118,9 +114,9 @@ def crossref_all(l, followers=[]):
             if i in followed:
                 k = follows[followed.index(i)]
                 try:
-                    la = [[lb, l[k][j]] for j,lb in enumerate(l[i])]
-                except:
-                    click.echo('length of follower must match leader', err=True)
+                    la = [[lb, l[k][j]] for j, lb in enumerate(l[i])]
+                except Exception:
+                    click.echo('length of follower must match lead', err=True)
                     raise click.Abort()
             else:
                 la = l[i]
@@ -131,7 +127,7 @@ def crossref_all(l, followers=[]):
                 try:
                     la = [j[:-1] + [l[i][j[-1]], l[k][j[-1]]] for j in lb]
                 except IndexError:
-                    click.echo('length of follower must match leader', err=True)
+                    click.echo('length of follower must match lead', err=True)
                     raise click.Abort()
             else:
                 la = crossref(la, l[i])
@@ -269,6 +265,33 @@ def flat_list(l):
     return a
 
 
+def pool_call(func, args, kwargs={}, cwd=None, order=True):
+    """
+    execute func with conncurrent futures return output
+
+    Parameters
+    ----------
+    func: python function
+        function to execute
+    args: list of tuples
+        each set is mapped to function
+    kwargs: dict
+        constant keyword args for func
+    Returns
+    -------
+    generator of results
+    """
+    if cwd is not None:
+        os.chdir(cwd)
+    with ProcessPoolExecutor() as executor:
+        futures = [executor.submit(func, *arg, **kwargs) for arg in args]
+        if order:
+            it = futures
+        else:
+            it = as_completed(futures)
+        return [future.result() for future in it]
+
+
 def cluster_call(func, args, profile=None, kwargs=None, timeout=.1, cwd=None,
                  debug=False):
     """
@@ -319,254 +342,6 @@ def cluster_call(func, args, profile=None, kwargs=None, timeout=.1, cwd=None,
         print(message, file=sys.stderr)
         output = list(map(*args2))
     return output
-
-
-def cluster_command(com, cwd, stdin=None, stdout=None, shell=True):
-    import subprocess
-    if stdin:
-        d = open(cwd + stdin, 'r')
-    else:
-        d = None
-    if stdout:
-        g = open(cwd + stdout, 'w')
-        h = subprocess.PIPE
-    else:
-        g = subprocess.PIPE
-        h = subprocess.PIPE
-    f = subprocess.Popen(com, stdin=d, stdout=g, stderr=h,
-                         cwd=cwd, shell=shell).communicate()
-    return f
-
-
-def get_results(ar, stdout, coms, sh, i):
-    """get results from asyncronous results when ready use in while pending"""
-    if stdout is not None:
-        f = open(stdout, 'a')
-    else:
-        f = sys.stdout
-    try:
-        for r in ar.get():
-            click.echo("{}:".format(coms[i].strip()), err=True)
-            click.echo(r[1], err=True)
-            print(r[0].strip(), file=f)
-            g = open(sh.replace(".sh", "_completed.txt"), 'a')
-            now = datetime.datetime.now()
-            ts = "Completed @ {:%b %d, %Y, %H:%M:%S}: {}".format(now, coms[i])
-            print(ts, file=g)
-            g.close()
-            i += 1
-    except Exception:
-        g = open(sh.replace(".sh", "_error.txt"), 'a')
-        print(coms[i], file=g)
-        g.close()
-        print("####MISSING DATA CHECK ERROR.TXT#### ", file=f, end="")
-        print("command: {}".format(coms[i].strip()), file=f)
-        i += 1
-    if stdout is not None:
-        f.close()
-    return i
-
-
-def run_sh(remotes, sh, prof, cwd,
-           stdout=None, ordered=False, nodir=False, exclude="NOTRANSFER/"):
-    try:
-        clients = parallel.Client(profile=prof)
-        clients.block = False
-    except Exception as inst:
-        print(inst.args[0], file=sys.stderr)
-    else:
-        abspath = os.path.abspath(sh)
-        workdir = abspath.rsplit("/", 1)[0] + "/"
-        click.echo(workdir, err=True)
-        if not nodir:
-            cwd = send_working_dir(remotes, workdir, cwd, exclude=exclude)
-            click.echo(cwd, err=True)
-        else:
-            cwd = cwd + "/" + workdir.strip("/").split("/")[-1]
-        f = open(sh, 'r')
-        coms = [i for i in f.read().strip().split("\n")
-                if (i.strip() is not "" and i.strip()[0] != "#")]
-        f.close()
-        cwds = [cwd]*len(coms)
-        view = clients.load_balanced_view()
-        output = view.map(cluster_command, coms, cwds,
-                          ordered=ordered, chunksize=1)
-        i = 0
-        if stdout is not None:
-            f = open(stdout, 'w')
-            f.close()
-        pending = output.msg_ids
-        g = open(sh.replace(".sh", "_completed.txt"), 'a')
-        now = datetime.datetime.now()
-        ts = "Run Began @ {:%b %d, %Y, %H:%M:%S}".format(now)
-        print(ts, file=g)
-        g.close()
-        while pending:
-            msg_id = pending[0]
-            clients.wait(msg_id)
-            pending = pending[1:]
-            ar = clients.get_result(msg_id)
-            i = get_results(ar, stdout, coms, sh, i)
-
-
-def start_farm(remotes, prof, thr):
-    """output shell command for starting farm"""
-    rem = ", ".join(['\"{}\":{}'.format(i, thr) for i in remotes])
-    click.echo("ipcluster start --profile={} "
-               "--SSHEngineSetLauncher.engines='{{{}}}'".format(prof, rem),
-               err=True)
-
-
-def stop_farm(profile):
-    msg = "Are you sure you want to shutdown {}?".format(profile)
-    if click.confirm(msg, default=True):
-        try:
-            clients = parallel.Client(profile=profile)
-            clients.shutdown(hub=True)
-        except Exception as inst:
-            print(inst.args[0], file=sys.stderr)
-
-
-def add_engine(remotes, sh, prof, thr,
-               nodir=False, exclude="NOTRANSFER/"):
-    """call ipcluster to add additional engines to farm"""
-    if not nodir:
-        abspath = os.path.abspath(sh)
-        workdir = abspath.rsplit("/", 1)[0] + "/"
-        print(workdir, file=sys.stdout)
-        send_working_dir(remotes, workdir, exclude=exclude)
-    for remote in remotes:
-        rem = '"{}":{}'.format(remote, thr)
-        command = "ipcluster engines --daemonize  --profile={}"\
-                  " --SSHEngineSetLauncher.engines={{{}}}".format(prof, rem)
-        subprocess.call(command.split())
-
-
-def remove_engines(remotes):
-    """remove remote from ipcluster"""
-    for r in remotes:
-        try:
-            pgrep = ['pgrep', '-f', 'ssh -tt {}'.format(r)]
-            pid = subprocess.check_output(pgrep).split()
-        except Exception:
-            click.echo("no pid found for remote: {}".format(r))
-            pass
-        else:
-            for p in pid:
-                subprocess.call(['kill', p])
-
-
-def send_working_dir(remotes, workdir,
-                     cwd="ipcluster", exclude="NOTRANSFER/"):
-    """transfer file dependencies to remotes"""
-    workf = cwd + "/" + workdir.strip("/").split("/")[-1]
-    for remote in remotes:
-        scp = "rsync -av --exclude {3} {0} {1}:{2}".format(workdir, remote,
-                                                           workf, exclude)
-        click.echo(scp, err=True)
-        subprocess.call(scp.split())
-    return workf
-
-
-def get_cpu(remotes, stat=None, cwd="ipcluster"):
-    """print top usage stats for remotes"""
-
-    def data_line(l):
-        """format for usage stats"""
-        return "{: <20}{: <8}{: <8}{: <10}{: <10}{}".format(l[0], l[2], l[3],
-                                                            l[8], l[9], l[10])
-
-    for remote in remotes:
-        try:
-            output = subprocess.check_output("ssh -o ConnectTimeout=10 {} "
-                                             "'ps aux'".format(remote),
-                                             shell=True).strip().split("\n")
-        except Exception:
-            click.echo("unable to connect to {}".format(remote), err=True)
-        else:
-            output = [i.split(None, 10) for i in output]
-            click.echo("{}:\n".format(remote), err=True)
-            li = [j.split("/")[-1] for j in output[0]]
-            click.echo(data_line(li), err=True)
-            for i in output[1:]:
-                if float(i[2]) > 5 and i[0] != "root":
-                    li = [j.split("/")[-1][:30] for j in i]
-                    click.echo(data_line(li), err=True)
-            cpus = sum([float(j[2]) for j in output[1:]])
-            print("\nCPU:{}/800\n".format(cpus), file=sys.stderr)
-            chk = "ssh -o ConnectTimeout=10 {} 'ls -l {}/{} | cut -c-100'"\
-                  "".format(remote, cwd, stat)
-            output = subprocess.check_output(chk, shell=True).strip()
-            for i in output.split("\n"):
-                click.echo(i, err=True)
-
-
-def check_farm(profile):
-    """output number of engines running on farm"""
-    try:
-        clients = parallel.Client(profile=profile)
-        ids = clients.ids
-        click.echo(ids, err=True)
-    except Exception as inst:
-        click.echo(inst.args[0], err=True)
-
-
-def gather_files(remotes, get, rsync, cwd="ipcluster", nocheck=False):
-    """gather files from list of remotes via rsync and ssh"""
-    dash = "________________________"
-    if not nocheck:
-        click.echo("{0}\n\nrsync --dry-run results:\n{0}\n".format(dash),
-                   err=True)
-        for rem in remotes:
-            scp = "rsync -av {3} {0}:{1}/{2} ./ --dry-run".format(rem, cwd,
-                                                                  get, rsync)
-            subprocess.call(scp.split())
-        click.echo("{0}\n{0}\n".format(dash), err=True)
-    if nocheck or click.confirm("Proceed with rsync?", default=True):
-        for rem in remotes:
-            scp = "rsync -av {3} {0}:{1}/{2} ./".format(rem, cwd, get, rsync)
-            subprocess.call(scp.split())
-
-
-def dist_command(remotes, command):
-    """run command once on each remote"""
-    output = []
-    for remote in remotes:
-        sshaux = "ssh -o ConnectTimeout=10 {} '{}'".format(remote, command)
-        output.append(subprocess.check_output(sshaux, shell=True).strip())
-    return output
-
-
-def get_cpu_log(remotes):
-    cpus = []
-    for remote in remotes:
-        try:
-            sshaux = "ssh -o ConnectTimeout=10 {} 'ps aux'".format(remote)
-            out = subprocess.check_output(sshaux,
-                                          shell=True).strip().split("\n")
-        except Exception:
-            print("unable to connect to {}".format(remote), file=sys.stderr)
-            cpus.append("XXXXX   " + "X"*32)
-        else:
-            out = [i.split(None, 10) for i in out]
-            cpu = sum([float(j[2]) for j in out[1:]])
-            bar = min(32, int(round(old_div(cpu,800*32))))
-            cpus.append("{: <8}{}{}".format(cpu, "#"*bar, "."*(32-bar)))
-    return cpus
-
-
-def farm_log(remotes, interval, outf="farm_log.txt"):
-    """record cpu usage of ssh remotes"""
-    import time
-    stime = time.time()
-    while True:
-        cpus = get_cpu_log(remotes)
-        f = open(outf, 'a')
-        vals = "\t".join(cpus)
-        ti = time.strftime("%m/%d/%y-%H:%M:%S")
-        f.write("{}\t{}\n".format(ti, vals))
-        f.close()
-        time.sleep(interval - ((time.time() - stime) % interval))
 
 
 def read_epw(epw):
@@ -622,6 +397,7 @@ def try_float(s):
 def coerce_data(datastr, i_vals, dataf, coerce=True):
     '''ensure all data points parsed are valid numbers'''
     try:
+        i = None
         if coerce:
             data = [[float(j[i]) for j in datastr if isnum(j[i])]
                     for i in i_vals]
@@ -636,7 +412,7 @@ def coerce_data(datastr, i_vals, dataf, coerce=True):
         try:
             err = "list index out of range index: {} in file: {}"\
                   "".format(i, dataf)
-        except:
+        except Exception:
             err = "bad value or no data in file: {}, try --no-coerce"\
                   "".format(dataf)
         raise IndexError(err)
@@ -729,7 +505,8 @@ def read_data(dataf, x_vals=[0], y_vals=[-1], rows=False, header=False,
                 'global horizontal', 'sky cover']
         head = [head[i] for i in y_vals]
     else:
-        datastr = read_data_file(dataf, header, xheader, comment, delim, coerce=coerce)
+        datastr = read_data_file(dataf, header, xheader, comment, delim,
+                                 coerce=coerce)
         if header:
             head = [datastr[0][i] for i in y_vals]
             datastr = datastr[1:]
