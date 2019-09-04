@@ -158,6 +158,7 @@ def subpipe(commands):
     | $((expression)) evaluates a arithmetic expression in place +-*/()
     '''
     temps = []
+    commands = flat_list([i.split("|") for i in commands])
     for i, command in enumerate(commands):
         if re.match(r'.*\$\(.+\).*', command):
             subs = re.findall(r'\$\(.+\)', command)
@@ -292,7 +293,7 @@ def flat_list(l):
     return a
 
 
-def pool_call(func, args, kwargs={}, cwd=None, order=True):
+def pool_call(func, args, kwargs={}, cwd=None, order=True, expand=False):
     """
     execute func with concurrent.futures return output
 
@@ -304,14 +305,23 @@ def pool_call(func, args, kwargs={}, cwd=None, order=True):
         each set is mapped to function
     kwargs: dict
         constant keyword args for func
+    cwd: str
+        directory in which to execute function calls
+    order: bool
+        whether to maintain order of input
+    expand: bool
+        whether to expand items in args to map to function args
     Returns
     -------
-    generator of results
+    list of results
     """
     if cwd is not None:
         os.chdir(cwd)
     with ProcessPoolExecutor() as executor:
-        futures = [executor.submit(func, *arg, **kwargs) for arg in args]
+        if expand:
+            futures = [executor.submit(func, *arg, **kwargs) for arg in args]
+        else:
+            futures = [executor.submit(func, arg, **kwargs) for arg in args]
         if order:
             it = futures
         else:
@@ -322,7 +332,8 @@ def pool_call(func, args, kwargs={}, cwd=None, order=True):
 def cluster_call(func, args, profile=None, kwargs={}, timeout=.1, cwd=None,
                  debug=False):
     '''for backwards compatibility only'''
-    return pool_call(func, args, kwargs=kwargs, cwd=cwd, order=True)
+    args = zip(*args)
+    return pool_call(func, args, kwargs=kwargs, cwd=cwd, order=True, expand=True)
 
 
 def read_epw(epw):

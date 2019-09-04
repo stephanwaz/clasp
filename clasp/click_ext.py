@@ -64,11 +64,11 @@ COMPLETION_SCRIPT_BASH = '''
 script_template = '''#!/usr/bin/env python
 from clasp import click
 import clasp.click_ext as clk
+import clasp.script_tools as cst
 
 @click.command()
 @click.argument('arg1')
 @clk.shared_decs(clk.command_decs('0.1'))
-@click.pass_context
 def main(ctx, arg1, **kwargs):
     """docstring"""
     if kwargs['opts']:
@@ -94,6 +94,7 @@ if __name__ == '__main__':
 script_template2 = '''#!/usr/bin/env python
 from clasp import click
 import clasp.click_ext as clk
+import clasp.script_tools as cst
 
 @click.group()
 @clk.shared_decs(clk.main_decs('0.1'))
@@ -105,7 +106,6 @@ def main(ctx, config, outconfig, configalias, inputalias):
 @main.command()
 @click.argument('arg1')
 @clk.shared_decs(clk.command_decs('0.1'))
-@click.pass_context
 def XXX(ctx, arg1, **kwargs):
     """docstring"""
     if kwargs['opts']:
