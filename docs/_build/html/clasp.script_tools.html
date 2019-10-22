@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>script_tools &#8212; clasp (0.2.10) 0.2.10 documentation</title>
+    <title>script_tools &#8212; clasp (1.0.0) 1.0.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -27,7 +27,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">clasp (0.2.10)</a></h1>
+<h1 class="logo"><a href="index.html">clasp (1.0.0)</a></h1>
 
 
 
@@ -181,7 +181,7 @@ computing particulary w/ subprocess calls.</p>
 
 <dl class="function">
 <dt id="clasp.script_tools.pool_call">
-<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">pool_call</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">args</em>, <em class="sig-param">kwargs={}</em>, <em class="sig-param">cwd=None</em>, <em class="sig-param">order=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#pool_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.pool_call" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clasp.script_tools.</code><code class="sig-name descname">pool_call</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">args</em>, <em class="sig-param">kwargs={}</em>, <em class="sig-param">cwd=None</em>, <em class="sig-param">order=True</em>, <em class="sig-param">expand=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/script_tools.html#pool_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.script_tools.pool_call" title="Permalink to this definition">¶</a></dt>
 <dd><p>execute func with concurrent.futures return output</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -189,13 +189,16 @@ computing particulary w/ subprocess calls.</p>
 <li><p><strong>func</strong> (<em>python function</em>) – function to execute</p></li>
 <li><p><strong>args</strong> (<em>list of tuples</em>) – each set is mapped to function</p></li>
 <li><p><strong>kwargs</strong> (<em>dict</em>) – constant keyword args for func</p></li>
+<li><p><strong>cwd</strong> (<em>str</em>) – directory in which to execute function calls</p></li>
+<li><p><strong>order</strong> (<em>bool</em>) – whether to maintain order of input</p></li>
+<li><p><strong>expand</strong> (<em>bool</em>) – whether to expand items in args to map to function args</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>generator of results</p>
+<dd class="field-odd"><p>list of results</p>
 </dd>
 </dl>
 </dd></dl>

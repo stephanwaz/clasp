@@ -3,6 +3,10 @@
 History
 =======
 
+1.0.0
+-----
+python 3 only, concurrent futures and direct template scripts
+
 0.2.9
 -----
 bugs and decorator type

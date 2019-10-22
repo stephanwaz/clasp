@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>clasp.script_tools &#8212; clasp (0.2.10) 0.2.10 documentation</title>
+    <title>clasp.script_tools &#8212; clasp (1.0.0) 1.0.0 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">clasp (0.2.10)</a></h1>
+<h1 class="logo"><a href="../../index.html">clasp (1.0.0)</a></h1>
 
 
 
@@ -227,6 +227,7 @@
 <span class="sd">    | $((expression)) evaluates a arithmetic expression in place +-*/()</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">temps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="n">flat_list</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">commands</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">command</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">commands</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;.*\$\(.+\).*&#39;</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
             <span class="n">subs</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\$\(.+\)&#39;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
@@ -361,7 +362,7 @@
     <span class="k">return</span> <span class="n">a</span></div>
 
 
-<div class="viewcode-block" id="pool_call"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.pool_call">[docs]</a><span class="k">def</span> <span class="nf">pool_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="pool_call"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.pool_call">[docs]</a><span class="k">def</span> <span class="nf">pool_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    execute func with concurrent.futures return output</span>
 
@@ -373,14 +374,23 @@
 <span class="sd">        each set is mapped to function</span>
 <span class="sd">    kwargs: dict</span>
 <span class="sd">        constant keyword args for func</span>
+<span class="sd">    cwd: str</span>
+<span class="sd">        directory in which to execute function calls</span>
+<span class="sd">    order: bool</span>
+<span class="sd">        whether to maintain order of input</span>
+<span class="sd">    expand: bool</span>
+<span class="sd">        whether to expand items in args to map to function args</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    generator of results</span>
+<span class="sd">    list of results</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">cwd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
-        <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">expand</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">order</span><span class="p">:</span>
             <span class="n">it</span> <span class="o">=</span> <span class="n">futures</span>
         <span class="k">else</span><span class="p">:</span>
@@ -391,7 +401,8 @@
 <div class="viewcode-block" id="cluster_call"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.cluster_call">[docs]</a><span class="k">def</span> <span class="nf">cluster_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">timeout</span><span class="o">=.</span><span class="mi">1</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;for backwards compatibility only&#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">pool_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pool_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="read_epw"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_epw">[docs]</a><span class="k">def</span> <span class="nf">read_epw</span><span class="p">(</span><span class="n">epw</span><span class="p">):</span>
