@@ -22,6 +22,7 @@ import os
 import collections
 import traceback
 
+import clasp.click_callbacks
 from clasp.click_callbacks import *
 
 standard_library.install_aliases()
@@ -61,7 +62,7 @@ COMPLETION_SCRIPT_BASH = '''
 '''
 
 #: basic script template for one offs
-script_template = '''#!/usr/bin/env python
+script_template = f'''#!/usr/bin/env python
 from clasp import click
 import clasp.click_ext as clk
 import clasp.script_tools as cst
@@ -70,7 +71,7 @@ import clasp.script_tools as cst
 @click.argument('arg1')
 @clk.shared_decs(clk.command_decs('0.1'))
 def main(ctx, arg1, **kwargs):
-    """docstring"""
+    """{clasp.click_callbacks.__doc__}"""
     if kwargs['opts']:
         kwargs['opts'] = False
         clk.echo_args(arg1, **kwargs)
@@ -91,7 +92,7 @@ if __name__ == '__main__':
 
 
 #: basic script template for command subcommand structure (using config files)
-script_template2 = '''#!/usr/bin/env python
+script_template2 = f'''#!/usr/bin/env python
 from clasp import click
 import clasp.click_ext as clk
 import clasp.script_tools as cst
@@ -107,7 +108,7 @@ def main(ctx, config, outconfig, configalias, inputalias):
 @click.argument('arg1')
 @clk.shared_decs(clk.command_decs('0.1'))
 def XXX(ctx, arg1, **kwargs):
-    """docstring"""
+    """{clasp.click_callbacks.__doc__}"""
     if kwargs['opts']:
         kwargs['opts'] = False
         clk.echo_args(arg1, **kwargs)

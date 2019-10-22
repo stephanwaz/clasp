@@ -5,7 +5,7 @@
 __author__ = """Stephen Wasilewski"""
 __email__ = 'stephanwaz@gmail.com'
 __version__ = '0.2.10'
-__all__ = ['script_tools', 'click_ext', 'sphinx_click_ext']
+__all__ = ['script_tools', 'click_ext', 'sphinx_click_ext', 'templates']
 
 import click
 import clasp.click_ext

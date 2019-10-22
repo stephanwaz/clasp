@@ -30,11 +30,7 @@ then
 			git tag v$new_version
 			git push --tags
 		fi
-		git checkout master
-		git merge develop
-		git checkout develop
-		git push origin master
-		git push origin develop
+		git push origin dev3
 	fi
 	read -p "build? " -n 1 -r
 	echo
