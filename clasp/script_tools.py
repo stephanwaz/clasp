@@ -293,7 +293,8 @@ def flat_list(l):
     return a
 
 
-def pool_call(func, args, kwargs={}, cwd=None, order=True, expand=False):
+def pool_call(func, args, kwargs={}, cwd=None, order=True, expand=False,
+              handle=False):
     """
     execute func with concurrent.futures return output
 
@@ -311,9 +312,11 @@ def pool_call(func, args, kwargs={}, cwd=None, order=True, expand=False):
         whether to maintain order of input
     expand: bool
         whether to expand items in args to map to function args
+    handle: bool
+        whether to return future objects or results
     Returns
     -------
-    list of results
+    list of results unless handle=True then returns iterable of futures
     """
     if cwd is not None:
         os.chdir(cwd)
@@ -322,10 +325,13 @@ def pool_call(func, args, kwargs={}, cwd=None, order=True, expand=False):
             futures = [executor.submit(func, *arg, **kwargs) for arg in args]
         else:
             futures = [executor.submit(func, arg, **kwargs) for arg in args]
-        if order:
-            it = futures
-        else:
-            it = as_completed(futures)
+    if order:
+        it = futures
+    else:
+        it = as_completed(futures)
+    if handle:
+        return it
+    else:
         return [future.result() for future in it]
 
 
