@@ -231,7 +231,7 @@ def tup_int(ctx, param, s):
                             so.append((fis, col))
                 else:
                     so.extend(cst.int_rng(x))
-        except Exception:
+        except Exception as ex:
             callback_error(s, param, '0 0,1 0,3')
     return so
 

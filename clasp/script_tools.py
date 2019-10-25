@@ -54,7 +54,7 @@ def int_rng(s):
     for part in s.split():
         if ':' in part:
             a = (int(i) for i in part.split(':'))
-            result.extend(mgr.arange(*a))
+            result.extend(arange(*a))
         else:
             a = int(part)
             result.append(a)
