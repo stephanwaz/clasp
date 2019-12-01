@@ -339,7 +339,8 @@ def cluster_call(func, args, profile=None, kwargs={}, timeout=.1, cwd=None,
                  debug=False):
     '''for backwards compatibility only'''
     args = zip(*args)
-    return pool_call(func, args, kwargs=kwargs, cwd=cwd, order=True, expand=True)
+    largs = kwarg_match(func, kwargs)
+    return pool_call(func, args, kwargs=largs, cwd=cwd, order=True, expand=True)
 
 
 def read_epw(epw):
