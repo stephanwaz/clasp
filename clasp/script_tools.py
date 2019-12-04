@@ -24,7 +24,7 @@ import re
 import math
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from clasp import click
-import ipyparallel as parallel
+
 
 encoding = sys.stdin.encoding
 if encoding is None:
@@ -335,7 +335,7 @@ def pool_call(func, args, kwargs={}, cwd=None, order=True, expand=False,
         return [future.result() for future in it]
 
 
-def cluster_call(func, args, profile=None, kwargs={}, timeout=.1, cwd=None,
+def cluster_call(func, args, kwargs={}, timeout=.1, cwd=None,
                  debug=False):
     '''for backwards compatibility only'''
     args = zip(*args)

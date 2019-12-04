@@ -136,6 +136,19 @@ def are_files(ctx, param, s, prompt=True):
         return are_files(ctx, param, s2)
 
 
+def are_valid_paths(ctx, param, s):
+    """checks input file list
+    """
+    if s is None:
+        return None
+    try:
+        return parse_file_list(ctx, s, valid=True)
+    except ValueError as e:
+        raise ValueError(e)
+
+
+
+
 def is_files_iter(ctx, param, s):
     """calls are_files for each item in iterable s use with multiple=True"""
     files = []
@@ -381,7 +394,7 @@ def tmp_stdin(ctx):
         return "-"
 
 
-def parse_file_list(ctx, s):
+def parse_file_list(ctx, s, valid=False):
     """parses list of files using glob expansion"""
     files = []
     for i in shlex.split(s):
@@ -405,6 +418,8 @@ def parse_file_list(ctx, s):
                     raise ValueError(j)
         else:
             if os.path.exists(i):
+                files.append(i)
+            elif valid and os.path.isdir(os.path.dirname(i)):
                 files.append(i)
             else:
                 raise ValueError(i)

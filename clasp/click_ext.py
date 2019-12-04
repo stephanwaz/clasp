@@ -14,11 +14,7 @@ from __future__ import print_function
 from future import standard_library
 
 from builtins import str
-import click
 import configparser
-import re
-import sys
-import os
 import collections
 import traceback
 
