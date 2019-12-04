@@ -24,7 +24,7 @@ import re
 import math
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from clasp import click
-import ipyparallel as parallel
+
 
 encoding = sys.stdin.encoding
 if encoding is None:
