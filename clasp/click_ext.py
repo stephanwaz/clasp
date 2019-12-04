@@ -161,6 +161,14 @@ def click_ext(click):
             rv = param.get_help_record(ctx)
             if rv is not None:
                 a, name, _ = index_param(ctx, param)
+                try:
+                    callback = pretty_callback_names[param.callback.__name__]
+                except (AttributeError, KeyError):
+                    pass
+                else:
+                    rv0 = re.split(r'(\W)', rv[0])
+                    rv0[-1] = callback.upper()
+                    rv = (''.join(rv0),) + rv[1:]
                 opts.append((a, name, rv))
         seps = [(i[0], ("\n" + i[1] + "\n", '')) for i in index_seps(opts)]
         opts = [i[-1] for i in sorted(opts + seps, key=lambda x: (x[0], x[1]))]

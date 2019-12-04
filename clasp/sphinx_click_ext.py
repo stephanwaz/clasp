@@ -23,10 +23,10 @@
 
 usage: in sphinx docs/conf.py add to extensions (list): 'clasp.sphinx_click_ext'
 """
-
+import re
 import sphinx_click.ext as ext
 from clasp.click_ext import index_param, index_seps
-
+from clasp.click_callbacks import pretty_callback_names as pcn
 
 def _format_options(ctx):
     """Format all `click.Option` for a `click.Command`."""
@@ -44,6 +44,18 @@ def _format_options(ctx):
             yield ''
         else:
             for line in ext._format_option(param[-1]):
+                if re.match(r'^\.\. option::.*<.+>', line):
+                    try:
+                        # click_callbacks.pretty_callback_names
+                        name = pcn[param[2].callback.__name__]
+                    except (AttributeError, KeyError):
+                        try:
+                            name = param[2].type.name.upper()
+                        except AttributeError:
+                            name = str(param[2].type).upper()
+                    if name == '':
+                        name = 'TEXT'
+                    line = re.sub(r'<.+>', f'<{name}>', line)
                 yield line
             yield ''
 
