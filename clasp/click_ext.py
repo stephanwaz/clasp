@@ -11,7 +11,7 @@ imports callbacks into namespace for convenience
 """
 
 from __future__ import print_function
-from future import standard_library
+# from future import standard_library
 
 from builtins import str
 import configparser
@@ -21,7 +21,7 @@ import traceback
 import clasp.click_callbacks
 from clasp.click_callbacks import *
 
-standard_library.install_aliases()
+# standard_library.install_aliases()
 
 #: Edited from click completion script to avoid running out of turn (faster)
 COMPLETION_SCRIPT_BASH = '''
@@ -303,7 +303,7 @@ def ConfigSectionMap(Config, section):
     for option in options:
         try:
             opt = Config.get(section, option)
-            if re.match('.+_\d+', option):
+            if re.match(r'.+_\d+', option):
                 opto = option.rsplit("_", 1)[0]
                 try:
                     dict1[opto].append(opt)
@@ -437,7 +437,7 @@ def config_comments(*args):
             pass
         else:
             cm = [i.strip() for i in f.readlines()
-                  if re.match("^#", i.strip())]
+                  if re.match(r'^#', i.strip())]
             f.close()
             for c in cm:
                 if c not in comments:

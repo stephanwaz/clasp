@@ -329,6 +329,19 @@ def split_int(ctx, param, s):
     return result
 
 
+def data_stream(ctx, param, s):
+    if s is None:
+        result = None
+    elif s == '-':
+        result = sys.stdin.buffer
+    else:
+        try:
+            result = open(s, 'rb')
+        except Exception:
+            callback_error(s, param, 'should be an existing file')
+    return result
+
+
 def expandpat(pat, s, mark=0):
     """expand sglob pattern for each character option
 
