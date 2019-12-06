@@ -235,7 +235,7 @@ def split_str_iter(ctx, param, s):
 
 def color_inp(ctx, param, s):
     """parses color tuple from comma/space seperated string or cmap name"""
-    if re.match("^([\d\.]+[, \t]+)+[\d\.]+$", s):
+    if re.match(r"^([\d\.]+[, \t]+)+[\d\.]+$", s):
         so = []
         for x in s.split():
             if "," in x:
@@ -396,8 +396,8 @@ def expandpat(pat, s, mark=0):
 
 def sglob(s):
     '''super glob includes [abc] notation + [!abc] exclude notation'''
-    inre = '\[[\w\d\-\_\.]+\]'
-    exre = '\[\![\w\d\-\_\.]+\]'
+    inre = r'\[[\w\d\-\_\.]+\]'
+    exre = r'\[\![\w\d\-\_\.]+\]'
     inpat = expandpat(inre, s) + [s]
     exglob = cst.flat_list([expandpat(exre, i, 1) for i in inpat])
     inglob = [re.sub(exre, '*', i) for i in inpat]

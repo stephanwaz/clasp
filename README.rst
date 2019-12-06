@@ -25,8 +25,6 @@ a command line program has the following structure::
 
     """template file."""
     
-    from __future__ import print_function
-    
     import clasp.click as click
     import clasp.click_ext as clk
 

@@ -7,13 +7,6 @@
 
 """library of functions helpful for cli script development and parallel
 computing particulary w/ subprocess calls."""
-
-from __future__ import print_function
-from __future__ import division
-from builtins import map
-from builtins import zip
-from builtins import str
-from builtins import range
 import sys
 import shlex
 import subprocess
@@ -32,7 +25,7 @@ if encoding is None:
 
 
 def try_mkdir(s):
-    '''silently ignore exceptions on mkdir'''
+    """silently ignore exceptions on mkdir"""
     try:
         os.mkdir(s)
     except Exception:
@@ -40,7 +33,7 @@ def try_mkdir(s):
 
 
 def arange(start, stop=None, step=1):
-    '''like numpy.arange for integers'''
+    """like numpy.arange for integers"""
     if stop is None:
         stop = start
         start = 0

@@ -28,6 +28,7 @@ import sphinx_click.ext as ext
 from clasp.click_ext import index_param, index_seps
 from clasp.click_callbacks import pretty_callback_names as pcn
 
+
 def _format_options(ctx):
     """Format all `click.Option` for a `click.Command`."""
     # the hidden attribute is part of click 7.x only hence use of getattr

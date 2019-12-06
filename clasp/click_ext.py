@@ -10,9 +10,6 @@
 imports callbacks into namespace for convenience
 """
 
-from __future__ import print_function
-# from future import standard_library
-
 from builtins import str
 import configparser
 import collections
@@ -21,7 +18,6 @@ import traceback
 import clasp.click_callbacks
 from clasp.click_callbacks import *
 
-# standard_library.install_aliases()
 
 #: Edited from click completion script to avoid running out of turn (faster)
 COMPLETION_SCRIPT_BASH = '''
@@ -136,7 +132,7 @@ if __name__ == '__main__':
 
 
 def click_ext(click):
-    '''customize click help messages and bash complete'''
+    """customize click help messages and bash complete"""
     orig_init = click.core.Option.__init__
 
     def new_init(self, *args, **kwargs):
@@ -289,8 +285,8 @@ def shared_decs(decs):
 
 
 def tmp_clean(ctx):
-    '''remove files placed int temps context object
-    (called at end of scripts)'''
+    """remove files placed int temps context object
+    (called at end of scripts)"""
     for i in ctx.obj['temps']:
         try:
             os.remove(i)
@@ -428,7 +424,7 @@ def get_config(ctx, config, outconfig, configalias, inputalias, template=None):
 
 
 def match_multiple(ctx, subc):
-    '''identify params with multiple=True for config file parsing'''
+    """identify params with multiple=True for config file parsing"""
     ismultiple = {}
     for opt in ctx.command.commands[subc].params:
         ismultiple[opt.human_readable_name] = opt.multiple
@@ -436,7 +432,7 @@ def match_multiple(ctx, subc):
 
 
 def config_comments(*args):
-    '''read in comments from config files'''
+    """read in comments from config files"""
     comments = ['# Usage:']
     for arg in args:
         try:
@@ -454,7 +450,7 @@ def config_comments(*args):
 
 
 def add_opt_comment(comments, opts):
-    '''add comment lines for opts unless present'''
+    """add comment lines for opts unless present"""
     comments = comments.strip()
     for opt in opts:
         if not re.search(r'#\s*\[{}\]'.format(opt), comments):
@@ -501,7 +497,7 @@ def print_config(ctx, opts, outconfig, config, configalias):
 
 
 def print_except(ex, debug=False):
-    '''general human readable exception message'''
+    """general human readable exception message"""
     if debug:
         traceback.print_exc()
     click.echo("\n**************\n**************", err=True)
@@ -511,7 +507,7 @@ def print_except(ex, debug=False):
 
 
 def formatarg_line(v, i=None, idx=None):
-    '''reduce output of long lists subroutine'''
+    """reduce output of long lists subroutine"""
     if len(v) > 30 or len("".join(["{}".format(j) for j in v])) > 100:
         sv = ""
         k = 0
@@ -529,7 +525,7 @@ def formatarg_line(v, i=None, idx=None):
 
 
 def formatarg_stdout(v, i=None):
-    '''reduce output of long lists'''
+    """reduce output of long lists"""
     if type(v) == tuple or type(v) == list:
         if len(v) > 0 and type(v[0]) == list:
             a = []
