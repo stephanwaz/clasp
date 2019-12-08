@@ -215,6 +215,8 @@ def split_str(ctx, param, s):
     """splits space seperated string"""
     if s is None:
         return None
+    elif len(s) == 0:
+        return ''
     elif s[0] == '@':
         if os.path.exists(s[1:]):
             f = open(s[1:], 'r')

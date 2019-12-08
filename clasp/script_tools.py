@@ -287,7 +287,7 @@ def flat_list(l):
 
 
 def pool_call(func, args, kwargs={}, cwd=None, order=True, expand=False,
-              handle=False):
+              handle=False, test=False):
     """
     execute func with concurrent.futures return output
 
@@ -313,6 +313,9 @@ def pool_call(func, args, kwargs={}, cwd=None, order=True, expand=False,
     """
     if cwd is not None:
         os.chdir(cwd)
+    if test:
+        return [func(*arg, **kwargs) for arg in args]
+
     with ProcessPoolExecutor() as executor:
         if expand:
             futures = [executor.submit(func, *arg, **kwargs) for arg in args]
@@ -333,7 +336,11 @@ def cluster_call(func, args, kwargs={}, timeout=.1, cwd=None,
     '''for backwards compatibility only'''
     args = zip(*args)
     largs = kwarg_match(func, kwargs)
-    return pool_call(func, args, kwargs=largs, cwd=cwd, order=True, expand=True)
+    if 'debug' in kwargs:
+        test = kwargs['debug'] or debug
+    else:
+        test = False or debug
+    return pool_call(func, args, kwargs=largs, cwd=cwd, order=True, expand=True, test=test)
 
 
 def read_epw(epw):
@@ -593,3 +600,12 @@ def read_all_data(datafs, x_vals=[], y_vals=[], **kwargs):
     while len(xds) < len(yds) and len(xds) > 0:
         xds += [xds[-1]]
     return xds, yds, labels
+
+
+def clean_tmp(ctx):
+    f, path = tempfile.mkstemp(dir="./", prefix='clasp_tmp')
+    if ctx.obj is None:
+        ctx.obj = dict(temps=[path])
+    else:
+        ctx.obj['temps'].append(path)
+    return path

@@ -508,10 +508,10 @@ def print_except(ex, debug=False):
 
 def formatarg_line(v, i=None, idx=None):
     """reduce output of long lists subroutine"""
-    if len(v) > 30 or len("".join(["{}".format(j) for j in v])) > 100:
+    if len(v) > 2 and len("{}".format(v)) > 80:
         sv = ""
         k = 0
-        while (len(sv) <= 30 and k < 10) or k < 3:
+        while len(sv) <= 30 and k < 10:
             sv += "{}, ".format(v[k])
             k += 1
         a = "list of length: {} [ {}... , {} ]".format(len(v), sv, v[-1])
