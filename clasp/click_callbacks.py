@@ -415,8 +415,8 @@ def tmp_stdin(ctx):
     '''
     if not ctx.resilient_parsing:
         f, path = tempfile.mkstemp(dir="./", prefix='clasp_tmp')
-        f = open(path, 'w')
-        f.write(sys.stdin.read())
+        f = open(path, 'wb')
+        f.write(sys.stdin.buffer.read())
         f.close()
         if ctx.obj is None:
             ctx.obj = dict(temps=[path])
