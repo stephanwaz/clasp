@@ -185,7 +185,7 @@ def subpipe(commands):
 
 
 def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
-             writemode='w', forceinpfile=False):
+             writemode='w', forceinpfile=False, caperr=False):
     """
     executes pipeline of shell commands (given as list of strings)
 
@@ -245,8 +245,13 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
         else:
             stdout = subprocess.PIPE
         try:
-            pops[i] = subprocess.Popen(shlex.split(commands[i]),
-                                       stdin=stdin, stdout=stdout, cwd=cwd)
+            if caperr:
+                pops[i] = subprocess.Popen(shlex.split(commands[i]),
+                                           stdin=stdin, stdout=stdout, cwd=cwd,
+                                           stderr=subprocess.PIPE)
+            else:
+                pops[i] = subprocess.Popen(shlex.split(commands[i]),
+                                           stdin=stdin, stdout=stdout, cwd=cwd)
         except OSError:
             message = "invalid command / no such file: {}".format(commands[i])
             raise OSError(2, message)
@@ -255,21 +260,25 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
     except Exception as e:
         pass
     if len(commands) == 1 and strin:
-        out = pops[0].communicate(inp)[0]
+        out = pops[0].communicate(inp)
     else:
         if inp is not None and strin:
             pops[0].stdin.write(inp)
             pops[0].stdin.close()
-        out = pops[-1].communicate()[0]
+        out = pops[-1].communicate()
     try:
-        out = out.decode(encoding)
+        output = out[0].decode(encoding)
     except Exception:
+        output = out[0]
         pass
     if close:
         outfile.close()
     for temp in temps:
         os.remove(temp)
-    return out
+    if caperr:
+        return output, out[1]
+    else:
+        return output
 
 
 def flat_list(l):
@@ -395,14 +404,16 @@ def try_float(s):
 
 def coerce_data(datastr, i_vals, dataf, coerce=True):
     '''ensure all data points parsed are valid numbers'''
+    if datastr == [['']]:
+        return [[]]
     try:
         i = None
         if coerce:
             data = [[float(j[i]) for j in datastr if isnum(j[i])]
                     for i in i_vals]
             if len(data[0]) == 0:
-                raise ValueError("check if data file {} has xheaders"
-                                 "".format(dataf))
+                raise ValueError("check if data file {} has xheaders {}"
+                                 "".format(dataf, datastr))
         else:
             data = [[try_float(j[i]) for j in datastr] for i in i_vals]
     except ValueError as ex:
