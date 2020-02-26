@@ -1,0 +1,713 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>clasp.script_tools &#8212; clasp (1.0.3) 1.0.3 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">clasp (1.0.3)</a></h1>
+
+
+
+
+
+
+
+
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../clasp.click_ext.html">click_ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../clasp.click_callbacks.html">click_callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../clasp.script_tools.html">script_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../clasp.sphinx_click_ext.html">sphinx_click_ext</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../search.html">Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../todo.html">Todo</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for clasp.script_tools</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2018 Stephen Wasilewski</span>
+<span class="c1"># =======================================================================</span>
+<span class="c1"># This Source Code Form is subject to the terms of the Mozilla Public</span>
+<span class="c1"># License, v. 2.0. If a copy of the MPL was not distributed with this</span>
+<span class="c1"># file, You can obtain one at http://mozilla.org/MPL/2.0/.</span>
+<span class="c1"># =======================================================================</span>
+
+<span class="sd">&quot;&quot;&quot;library of functions helpful for cli script development and parallel</span>
+<span class="sd">computing particulary w/ subprocess calls.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">shlex</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="n">ProcessPoolExecutor</span><span class="p">,</span> <span class="n">as_completed</span>
+<span class="kn">from</span> <span class="nn">clasp</span> <span class="k">import</span> <span class="n">click</span>
+
+
+<span class="n">encoding</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">encoding</span>
+<span class="k">if</span> <span class="n">encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;UTF-8&#39;</span>
+
+
+<div class="viewcode-block" id="try_mkdir"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.try_mkdir">[docs]</a><span class="k">def</span> <span class="nf">try_mkdir</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;silently ignore exceptions on mkdir&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="arange"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.arange">[docs]</a><span class="k">def</span> <span class="nf">arange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;like numpy.arange for integers&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">stop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">/</span><span class="n">step</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="int_rng"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.int_rng">[docs]</a><span class="k">def</span> <span class="nf">int_rng</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;expand start:end:inc notation into range&quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">part</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">))</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">arange</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="rm_dup"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.rm_dup">[docs]</a><span class="k">def</span> <span class="nf">rm_dup</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;removes duplicates from list while preserving order&quot;&quot;&quot;</span>
+    <span class="n">mark</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">mark_add</span> <span class="o">=</span> <span class="n">mark</span><span class="o">.</span><span class="n">add</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">seq</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">mark</span> <span class="ow">or</span> <span class="n">mark_add</span><span class="p">(</span><span class="n">x</span><span class="p">))]</span></div>
+
+
+<div class="viewcode-block" id="warn_match"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.warn_match">[docs]</a><span class="k">def</span> <span class="nf">warn_match</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">sargs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sargs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;WARNING: </span><span class="si">{}</span><span class="s1"> not set&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="kwarg_match"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.kwarg_match">[docs]</a><span class="k">def</span> <span class="nf">kwarg_match</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;filters dict for keys used by func&quot;&quot;&quot;</span>
+    <span class="n">sargs</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">args</span>
+    <span class="n">argsc</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sargs</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="n">warn_match</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">sargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">argsc</span></div>
+
+
+<div class="viewcode-block" id="arg_match"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.arg_match">[docs]</a><span class="k">def</span> <span class="nf">arg_match</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;filters dict for positional arguments used by func&quot;&quot;&quot;</span>
+    <span class="n">sargs</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):]</span>
+    <span class="n">argsc</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sargs</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">argsc</span></div>
+
+
+<div class="viewcode-block" id="kwarg_arg"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.kwarg_arg">[docs]</a><span class="k">def</span> <span class="nf">kwarg_arg</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;returns ordered list of optional arg values&quot;&quot;&quot;</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">skip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">oargs</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">skip</span><span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">oargs</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">defaults</span><span class="p">):]</span>
+    <span class="n">largs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">oarg</span><span class="p">,</span> <span class="n">default</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">oargs</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">defaults</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">largs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="n">oarg</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">largs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">largs</span></div>
+
+
+<div class="viewcode-block" id="crossref"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.crossref">[docs]</a><span class="k">def</span> <span class="nf">crossref</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;return all possible pairs of 2 lists&#39;&#39;&#39;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">l2</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">l1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">l2</span><span class="p">):</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">l2</span><span class="p">)</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">m</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">flat_list</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="crossref_all"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.crossref_all">[docs]</a><span class="k">def</span> <span class="nf">crossref_all</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">followers</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&#39;&#39;&#39;return all possible combos of list of lists&#39;&#39;&#39;</span>
+    <span class="n">la</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">followed</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">followers</span><span class="p">]</span>
+    <span class="n">follows</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">followers</span><span class="p">]</span>
+    <span class="n">leaders</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">))</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">follows</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">leaders</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">followed</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">follows</span><span class="p">[</span><span class="n">followed</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">la</span> <span class="o">=</span> <span class="p">[[</span><span class="n">lb</span><span class="p">,</span> <span class="n">l</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]]</span> <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">lb</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;length of follower must match lead&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">la</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">followed</span><span class="p">:</span>
+                <span class="n">lb</span> <span class="o">=</span> <span class="n">crossref</span><span class="p">(</span><span class="n">la</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]))))</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">follows</span><span class="p">[</span><span class="n">followed</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">la</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">l</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">lb</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;length of follower must match lead&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">la</span> <span class="o">=</span> <span class="n">crossref</span><span class="p">(</span><span class="n">la</span><span class="p">,</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">la</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="subpipe"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.subpipe">[docs]</a><span class="k">def</span> <span class="nf">subpipe</span><span class="p">(</span><span class="n">commands</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    parses special syntax in pipe expressions</span>
+
+<span class="sd">    | $(some command) executes to a temporary file whose path is inserted in</span>
+<span class="sd">    | the command.</span>
+<span class="sd">    | $((expression)) evaluates a arithmetic expression in place +-*/()</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">temps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="n">flat_list</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">commands</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">command</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">commands</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;.*\$\(.+\).*&#39;</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+            <span class="n">subs</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\$\(.+\)&#39;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">subs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;$((&quot;</span> <span class="ow">in</span> <span class="n">sub</span><span class="p">:</span>
+                    <span class="n">pt</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[:]</span>
+                    <span class="k">while</span> <span class="s2">&quot;$((&quot;</span> <span class="ow">in</span> <span class="n">pt</span><span class="p">:</span>
+                        <span class="n">si</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;$((&quot;</span><span class="p">)</span>
+                        <span class="n">op</span> <span class="o">=</span> <span class="mi">2</span>
+                        <span class="n">sj</span> <span class="o">=</span> <span class="n">si</span><span class="o">+</span><span class="mi">3</span>
+                        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">pt</span><span class="p">[</span><span class="n">sj</span><span class="p">:]:</span>
+                            <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="k">break</span>
+                            <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;(&quot;</span><span class="p">:</span>
+                                <span class="n">op</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;)&quot;</span><span class="p">:</span>
+                                <span class="n">op</span> <span class="o">-=</span> <span class="mi">1</span>
+                            <span class="n">sj</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">exp</span> <span class="o">=</span> <span class="n">pt</span><span class="p">[</span><span class="n">si</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">sj</span><span class="p">]</span>
+                            <span class="n">pt</span> <span class="o">=</span> <span class="n">pt</span><span class="p">[:</span><span class="n">si</span><span class="p">]</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}))</span> <span class="o">+</span> <span class="n">pt</span><span class="p">[</span><span class="n">sj</span><span class="p">:]</span>
+                        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;bad expression: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exp</span><span class="p">))</span>
+                            <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">f</span><span class="p">,</span> <span class="n">pt</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;clasp_tmp&#39;</span><span class="p">)</span>
+                    <span class="n">temps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                    <span class="n">pipeline</span><span class="p">([</span><span class="n">sub</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;$()&#39;</span><span class="p">)],</span> <span class="n">outfile</span><span class="o">=</span><span class="n">pt</span><span class="p">)</span>
+                <span class="n">commands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">pt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">temps</span><span class="p">,</span> <span class="n">commands</span></div>
+
+
+<div class="viewcode-block" id="pipeline"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.pipeline">[docs]</a><span class="k">def</span> <span class="nf">pipeline</span><span class="p">(</span><span class="n">commands</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">writemode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">forceinpfile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caperr</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    executes pipeline of shell commands (given as list of strings)</span>
+
+<span class="sd">    special syntax:</span>
+
+<span class="sd">    | $(some command) executes to a temporary file whose path is inserted in</span>
+<span class="sd">    | the command.</span>
+<span class="sd">    | $((expression)) evaluates a arithmetic expression in place +-*/()</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    commands: list</span>
+<span class="sd">        list of commands to execute in order</span>
+<span class="sd">    outfile: writeable file object</span>
+<span class="sd">        optional destination for stdout</span>
+<span class="sd">    inp: str or filebuffer</span>
+<span class="sd">        string to feed to stdin at start of pipeline</span>
+<span class="sd">    close: bool</span>
+<span class="sd">        if true closes file object before returning</span>
+<span class="sd">    cwd: str</span>
+<span class="sd">        directory to execute pipeline (temp files and Popen cwd)</span>
+<span class="sd">    writemode: str</span>
+<span class="sd">        passed to open() for outfile (&#39;w&#39;, &#39;wb&#39; for write or &#39;a&#39; for append)</span>
+<span class="sd">    forceinpfile: bool</span>
+<span class="sd">        always treat inp as a file, if a string, open the path for reading</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out: str</span>
+<span class="sd">        returns stdout of pipeline (will be None if outfile is given)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">temps</span><span class="p">,</span> <span class="n">commands</span> <span class="o">=</span> <span class="n">subpipe</span><span class="p">(</span><span class="n">commands</span><span class="p">)</span>
+    <span class="n">pops</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">commands</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outfile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;read&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cwd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">cwd</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">writemode</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">writemode</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">commands</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="s1">&#39;read&#39;</span><span class="p">):</span>
+                <span class="n">strin</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">stdin</span> <span class="o">=</span> <span class="n">inp</span>
+            <span class="k">elif</span> <span class="n">forceinpfile</span> <span class="ow">and</span> <span class="n">inp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">strin</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">stdin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">inp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">strin</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">stdin</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">strin</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">stdin</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stdin</span> <span class="o">=</span> <span class="n">pops</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">commands</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">outfile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">stdout</span> <span class="o">=</span> <span class="n">outfile</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stdout</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">caperr</span><span class="p">:</span>
+                <span class="n">pops</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">commands</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                                           <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span>
+                                           <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pops</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">commands</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                                           <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;invalid command / no such file: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">commands</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">inp</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">commands</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">strin</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">pops</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">inp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">strin</span><span class="p">:</span>
+            <span class="n">pops</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+            <span class="n">pops</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">pops</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">pass</span>
+    <span class="k">if</span> <span class="n">close</span><span class="p">:</span>
+        <span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">temps</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">caperr</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="flat_list"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.flat_list">[docs]</a><span class="k">def</span> <span class="nf">flat_list</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;flattens any depth list&quot;&quot;&quot;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                <span class="n">a</span> <span class="o">+=</span> <span class="n">flat_list</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span></div>
+
+
+<div class="viewcode-block" id="pool_call"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.pool_call">[docs]</a><span class="k">def</span> <span class="nf">pool_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">handle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    execute func with concurrent.futures return output</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func: python function</span>
+<span class="sd">        function to execute</span>
+<span class="sd">    args: list of tuples</span>
+<span class="sd">        each set is mapped to function</span>
+<span class="sd">    kwargs: dict</span>
+<span class="sd">        constant keyword args for func</span>
+<span class="sd">    cwd: str</span>
+<span class="sd">        directory in which to execute function calls</span>
+<span class="sd">    order: bool</span>
+<span class="sd">        whether to maintain order of input</span>
+<span class="sd">    expand: bool</span>
+<span class="sd">        whether to expand items in args to map to function args</span>
+<span class="sd">    handle: bool</span>
+<span class="sd">        whether to return future objects or results</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of results unless handle=True then returns iterable of futures</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">cwd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">test</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+
+    <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">expand</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">order</span><span class="p">:</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="n">futures</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">it</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">it</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="cluster_call"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.cluster_call">[docs]</a><span class="k">def</span> <span class="nf">cluster_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">timeout</span><span class="o">=.</span><span class="mi">1</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;for backwards compatibility only&#39;&#39;&#39;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">largs</span> <span class="o">=</span> <span class="n">kwarg_match</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;debug&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">test</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">debug</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">test</span> <span class="o">=</span> <span class="kc">False</span> <span class="ow">or</span> <span class="n">debug</span>
+    <span class="k">return</span> <span class="n">pool_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">largs</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="read_epw"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_epw">[docs]</a><span class="k">def</span> <span class="nf">read_epw</span><span class="p">(</span><span class="n">epw</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;read daylight sky data from epw or wea file</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out: tuple</span>
+<span class="sd">        (month, day, hour, dirnorn, difhoriz, globhoriz, skycover)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">epw</span><span class="p">,</span> <span class="s1">&#39;readlines&#39;</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">epw</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">epw</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">hours</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[ \t,]+&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d.*&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">)]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hours</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">23</span><span class="p">:</span>
+            <span class="n">dp</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">23</span><span class="p">]]</span>
+            <span class="n">hoff</span> <span class="o">=</span> <span class="o">.</span><span class="mi">5</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">dp</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">6</span><span class="p">]]</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="n">dp</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">]</span>
+            <span class="n">hoff</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]]</span> <span class="o">+</span>
+                    <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="n">hoff</span><span class="p">]</span> <span class="o">+</span>
+                    <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dp</span><span class="p">[</span><span class="mi">3</span><span class="p">:]])</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="isnum"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.isnum">[docs]</a><span class="k">def</span> <span class="nf">isnum</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;test if input can be converted to float&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="try_float"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.try_float">[docs]</a><span class="k">def</span> <span class="nf">try_float</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;attempt conversion to float&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">a</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+
+<div class="viewcode-block" id="coerce_data"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.coerce_data">[docs]</a><span class="k">def</span> <span class="nf">coerce_data</span><span class="p">(</span><span class="n">datastr</span><span class="p">,</span> <span class="n">i_vals</span><span class="p">,</span> <span class="n">dataf</span><span class="p">,</span> <span class="n">coerce</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;ensure all data points parsed are valid numbers&#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">datastr</span> <span class="o">==</span> <span class="p">[[</span><span class="s1">&#39;&#39;</span><span class="p">]]:</span>
+        <span class="k">return</span> <span class="p">[[]]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">coerce</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">datastr</span> <span class="k">if</span> <span class="n">isnum</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">i_vals</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;check if data file </span><span class="si">{}</span><span class="s2"> has xheaders </span><span class="si">{}</span><span class="s2">&quot;</span>
+                                 <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="n">datastr</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="n">try_float</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">datastr</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">i_vals</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ex</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;list index out of range index: </span><span class="si">{}</span><span class="s2"> in file: </span><span class="si">{}</span><span class="s2">&quot;</span>\
+                  <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">dataf</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;bad value or no data in file: </span><span class="si">{}</span><span class="s2">, try coerce=False&quot;</span>\
+                  <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataf</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="get_i"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.get_i">[docs]</a><span class="k">def</span> <span class="nf">get_i</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">d_vals</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    if (x, y) return y if x == i</span>
+<span class="sd">    if y return y</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">d_vals</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span> <span class="ow">and</span> <span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">tuple</span><span class="p">:</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ds</span></div>
+
+
+<div class="viewcode-block" id="read_data_file"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_data_file">[docs]</a><span class="k">def</span> <span class="nf">read_data_file</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xheader</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;#&quot;</span><span class="p">,</span>
+                   <span class="n">delim</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">, &quot;</span><span class="p">,</span> <span class="n">coerce</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">delim</span> <span class="o">=</span> <span class="s1">&#39;[</span><span class="si">{}</span><span class="s1">]+&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">delim</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">comment</span> <span class="o">!=</span> <span class="s2">&quot;#&quot;</span><span class="p">:</span>
+        <span class="n">comment</span> <span class="o">=</span> <span class="s2">&quot;^[</span><span class="si">{}</span><span class="s2">].*&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">header</span> <span class="ow">and</span> <span class="n">coerce</span><span class="p">:</span>
+        <span class="n">comment</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^[^\-\d\w\.].*&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">comment</span> <span class="o">=</span> <span class="s2">&quot;^[</span><span class="si">{}</span><span class="s2">].*&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">dl</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[\n\r]+&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">())]</span>
+    <span class="k">if</span> <span class="n">xheader</span><span class="p">:</span>
+        <span class="n">dl</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delim</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dl</span><span class="p">]</span>
+    <span class="n">dl</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dl</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">comment</span><span class="p">,</span> <span class="n">i</span><span class="p">))]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;File: </span><span class="si">{}</span><span class="s2"> has no data&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataf</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
+    <span class="n">datastr</span> <span class="o">=</span> <span class="p">[[</span><span class="n">j</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delim</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dl</span><span class="p">]</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">datastr</span></div>
+
+
+<div class="viewcode-block" id="read_data"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_data">[docs]</a><span class="k">def</span> <span class="nf">read_data</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="n">x_vals</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_vals</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">rows</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">weax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">autox</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="n">xheader</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">delim</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">, &quot;</span><span class="p">,</span> <span class="n">coerce</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">weatherfile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drange</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;read generic csv/tsv data file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataf: str</span>
+<span class="sd">        file to read data from</span>
+<span class="sd">    x_vals: list of ints</span>
+<span class="sd">        column (or row with rows=True) indices for x values</span>
+<span class="sd">    y_vals: list of ints</span>
+<span class="sd">        column (or row with rows=True) indices for y values</span>
+<span class="sd">    rows: Boolean</span>
+<span class="sd">        if True read data in rows</span>
+<span class="sd">    header: Boolean</span>
+<span class="sd">        return first row (or column with rows=True) as series labels</span>
+<span class="sd">    weax: 2 item list of ints</span>
+<span class="sd">        idx for month and day to use day number as x_vals, if given ignores</span>
+<span class="sd">        x_val</span>
+<span class="sd">    reverse: Boolean</span>
+<span class="sd">        reverse order of data (use with autox)</span>
+<span class="sd">    autox: Boolean</span>
+<span class="sd">        assigns integers (starting at 0) as x_vals</span>
+<span class="sd">    comment: str</span>
+<span class="sd">        comment line signifiers (inserted in regex ^[comment].*)</span>
+<span class="sd">    delim: str</span>
+<span class="sd">        delimeters for parsing data (inserted in regex [delim]+)</span>
+<span class="sd">    coerce: Boolean</span>
+<span class="sd">        raise exception if all values are are not numbers</span>
+<span class="sd">    weatherfile: str of file path</span>
+<span class="sd">        handles wea and epw file formates returning daylight parameters</span>
+<span class="sd">    drange: list of ints</span>
+<span class="sd">        limit series output to given indices.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    datax: list</span>
+<span class="sd">        list of x_vals for each y_val (pads with last item if necessary)</span>
+<span class="sd">        if there are more x_vals than y_vals does not return excess datax</span>
+<span class="sd">    datay: list</span>
+<span class="sd">        list for each y_val</span>
+<span class="sd">    head: list</span>
+<span class="sd">        if header=True list of labels for each y_val else []</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">weatherfile</span><span class="p">:</span>
+        <span class="n">datastr</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">read_epw</span><span class="p">(</span><span class="n">dataf</span><span class="p">)]</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;hour&#39;</span><span class="p">,</span> <span class="s1">&#39;direct normal&#39;</span><span class="p">,</span> <span class="s1">&#39;diffuse horizontal&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;global horizontal&#39;</span><span class="p">,</span> <span class="s1">&#39;sky cover&#39;</span><span class="p">]</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="p">[</span><span class="n">head</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">y_vals</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">datastr</span> <span class="o">=</span> <span class="n">read_data_file</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">xheader</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">delim</span><span class="p">,</span>
+                                 <span class="n">coerce</span><span class="o">=</span><span class="n">coerce</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="p">[</span><span class="n">datastr</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">y_vals</span><span class="p">]</span>
+            <span class="n">datastr</span> <span class="o">=</span> <span class="n">datastr</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+            <span class="n">datastr</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">datastr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">datastr</span><span class="p">))))</span>
+    <span class="k">if</span> <span class="n">drange</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">datastr</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datastr</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">drange</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_vals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">datay</span> <span class="o">=</span> <span class="n">coerce_data</span><span class="p">(</span><span class="n">datastr</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="n">dataf</span><span class="p">,</span> <span class="n">coerce</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">datay</span> <span class="o">=</span> <span class="p">[[]]</span>
+    <span class="k">if</span> <span class="n">autox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">datax</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">datay</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">inc</span> <span class="o">=</span> <span class="p">(</span><span class="n">autox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">autox</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">datax</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">j</span><span class="o">*</span><span class="n">inc</span><span class="o">+</span><span class="n">autox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">))])</span>
+            <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+                <span class="n">datax</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">autox</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="k">elif</span> <span class="n">weax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">daycount</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">151</span><span class="p">,</span> <span class="mi">181</span><span class="p">,</span> <span class="mi">212</span><span class="p">,</span> <span class="mi">243</span><span class="p">,</span> <span class="mi">273</span><span class="p">,</span> <span class="mi">304</span><span class="p">,</span> <span class="mi">334</span><span class="p">]</span>
+        <span class="n">datax</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">weax</span><span class="p">]</span>
+                 <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">datastr</span> <span class="k">if</span> <span class="n">isnum</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="n">weax</span><span class="p">[</span><span class="mi">0</span><span class="p">]])]</span>
+        <span class="n">datax</span> <span class="o">=</span> <span class="p">[[</span><span class="n">daycount</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">datax</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_vals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">datax</span> <span class="o">=</span> <span class="n">coerce_data</span><span class="p">(</span><span class="n">datastr</span><span class="p">,</span> <span class="n">x_vals</span><span class="p">,</span> <span class="n">dataf</span><span class="p">,</span> <span class="n">coerce</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">datax</span> <span class="o">=</span> <span class="p">[[]]</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">datax</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">datay</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">datax</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">datax</span> <span class="o">+=</span> <span class="p">[</span><span class="n">datax</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">datax</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">datay</span><span class="p">):</span>
+        <span class="n">datax</span> <span class="o">=</span> <span class="n">datax</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">datay</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">datax</span><span class="p">,</span> <span class="n">datay</span><span class="p">,</span> <span class="n">head</span></div>
+
+
+<div class="viewcode-block" id="read_all_data"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.read_all_data">[docs]</a><span class="k">def</span> <span class="nf">read_all_data</span><span class="p">(</span><span class="n">datafs</span><span class="p">,</span> <span class="n">x_vals</span><span class="o">=</span><span class="p">[],</span> <span class="n">y_vals</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    read multiple data files and pair x and y data call read_data</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    datafs: list of str</span>
+<span class="sd">        files to read data from</span>
+<span class="sd">    x_vals: list of ints or tuple int pairs</span>
+<span class="sd">        (fileidx, colidx) or colidx to read from each file</span>
+<span class="sd">    y_vals: list of ints or tuple int pairs</span>
+<span class="sd">        (fileidx, colidx) or colidx to read from each file</span>
+<span class="sd">    kwargs:</span>
+<span class="sd">        optional arguments for read_data</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    datax: list</span>
+<span class="sd">        list of x_vals for each y_val (pads with last item if necessary)</span>
+<span class="sd">    datay: list</span>
+<span class="sd">        list for each y_val</span>
+<span class="sd">    head: list</span>
+<span class="sd">        if header=True list of labels for each y_val else []</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">yds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;autox&#39;</span><span class="p">]:</span>
+            <span class="n">x_vals</span> <span class="o">=</span> <span class="n">y_vals</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_vals</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">:</span>
+            <span class="n">xd</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span><span class="n">datafs</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">xds</span> <span class="o">+=</span> <span class="n">xd</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">datafs</span><span class="p">:</span>
+                <span class="n">xd</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">xds</span> <span class="o">+=</span> <span class="n">xd</span>
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">y_vals</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">yd</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span><span class="n">datafs</span><span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[],</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">yds</span> <span class="o">+=</span> <span class="n">yd</span>
+            <span class="n">labels</span> <span class="o">+=</span> <span class="n">label</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">datafs</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">yd</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">yds</span> <span class="o">+=</span> <span class="n">yd</span>
+                <span class="n">labels</span> <span class="o">+=</span> <span class="n">label</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">xds</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">yds</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">xds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">xds</span> <span class="o">+=</span> <span class="p">[</span><span class="n">xds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">xds</span><span class="p">,</span> <span class="n">yds</span><span class="p">,</span> <span class="n">labels</span></div>
+
+
+<div class="viewcode-block" id="clean_tmp"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.clean_tmp">[docs]</a><span class="k">def</span> <span class="nf">clean_tmp</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;clasp_tmp&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">temps</span><span class="o">=</span><span class="p">[</span><span class="n">path</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;temps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">path</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Stephen Wasilewski.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

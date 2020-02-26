@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>click_callbacks &#8212; clasp (1.0.3) 1.0.3 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="script_tools" href="clasp.script_tools.html" />
+    <link rel="prev" title="click_ext" href="clasp.click_ext.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">clasp (1.0.3)</a></h1>
+
+
+
+
+
+
+
+
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="clasp.click_ext.html">click_ext</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">click_callbacks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#callbacks-by-type">Callbacks By type</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#file-input">File input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#string-parsing">String parsing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#number-parsing">Number parsing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="clasp.script_tools.html">script_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clasp.sphinx_click_ext.html">sphinx_click_ext</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="search.html">Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">Todo</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-clasp.click_callbacks">
+<span id="click-callbacks"></span><h1>click_callbacks<a class="headerlink" href="#module-clasp.click_callbacks" title="Permalink to this headline">¶</a></h1>
+<p>callbacks for special parsing of command line inputs</p>
+<div class="section" id="callbacks-by-type">
+<h2>Callbacks By type<a class="headerlink" href="#callbacks-by-type" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="file-input">
+<h3>File input<a class="headerlink" href="#file-input" title="Permalink to this headline">¶</a></h3>
+<p>file inputs can be given with wildcard expansion (in quotes so that the
+callback handles) using glob plus the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>[abc] (one of a, b, or c)</p></li>
+<li><p>[!abc] (none of a, b or c)</p></li>
+<li><p>‘-‘ (hyphen) collect the stdin into a temporary file (clasp_tmp*)</p></li>
+<li><p>~ expands user</p></li>
+</ul>
+</div></blockquote>
+<p>callback functions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>is_file: check if a single path exists (prompts for user input if file
+not found)</p></li>
+<li><p>are_files: recursively calls parse_file_list and prompts on error</p></li>
+<li><p>is_file_iter: use when multiple=True</p></li>
+<li><p>are_files_iter: use when mulitple=True</p></li>
+<li><p>are_files_or_str: tries to parse as files, then tries split_float, then
+split_int, then returns string</p></li>
+<li><p>are_files_or_str_iter: use when mulitple=True</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="string-parsing">
+<h3>String parsing<a class="headerlink" href="#string-parsing" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>split_str: split with shlex.split</p></li>
+<li><p>split_str_iter: use when multiple=True</p></li>
+<li><p>color_inp: return alpha string, split on whitespace,
+convert floats and parse tuples on ,</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="number-parsing">
+<h3>Number parsing<a class="headerlink" href="#number-parsing" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>tup_int: parses integer tuples from comma/space separated string</p></li>
+<li><p>tup_float: parses float tuples from comma/space separated string</p></li>
+<li><p>split_float: splits list of floats and extends ranges based on : notation</p></li>
+<li><p>split_int: splits list of ints and extends ranges based on : notation</p></li>
+</ul>
+</div></blockquote>
+<dl class="function">
+<dt id="clasp.click_callbacks.callback_error">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">callback_error</code><span class="sig-paren">(</span><em class="sig-param">s</em>, <em class="sig-param">param</em>, <em class="sig-param">example</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#callback_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.callback_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>standard error message for exceptions raised during argument parsing</p>
+<p>used by custom callback functions raises ClickException</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>value</em>) – </p></li>
+<li><p><strong>param</strong> (<em>click.core.Option</em>) – </p></li>
+<li><p><strong>example</strong> (<em>example of valid entry format</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.is_file">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">is_file</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#is_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.is_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks input file string with recursive prompt</p>
+<p>use os.environ[‘CLASP_PIPE’] = ‘1’ in parent script
+or set CLASP_PIPE=1
+to disable prompt and avoid hanging process</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.are_files">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">are_files</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em>, <em class="sig-param">prompt=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#are_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.are_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks input file list string with recursive prompt</p>
+<p>use os.environ[‘CLASP_PIPE’] = ‘1’ in parent script
+or set CLASP_PIPE=1
+to disable prompt and avoid hanging process</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.are_valid_paths">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">are_valid_paths</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#are_valid_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.are_valid_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks input file list</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.is_files_iter">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">is_files_iter</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#is_files_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.is_files_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>calls are_files for each item in iterable s use with multiple=True</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.are_files_iter">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">are_files_iter</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em>, <em class="sig-param">prompt=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#are_files_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.are_files_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>calls are_files for each item in iterable s use with multiple=True</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.are_files_or_str">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">are_files_or_str</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#are_files_or_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.are_files_or_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>tries are_files for each item then split_str</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.are_files_or_str_iter">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">are_files_or_str_iter</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#are_files_or_str_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.are_files_or_str_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>tries are_files then split_str use with multiple=True</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.split_str">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">split_str</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#split_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.split_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>splits space seperated string</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.split_str_iter">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">split_str_iter</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#split_str_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.split_str_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>calls are_files for each item in iterable s use with multiple=True</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.color_inp">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">color_inp</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#color_inp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.color_inp" title="Permalink to this definition">¶</a></dt>
+<dd><p>parses color tuple from comma/space seperated string or cmap name</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.tup_int">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">tup_int</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#tup_int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.tup_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>parses integer or len 2 tuples from comma/space separated string
+with range : notation</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.int_tups">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">int_tups</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#int_tups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.int_tups" title="Permalink to this definition">¶</a></dt>
+<dd><p>parses integer tuples from comma/space separated string</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.tup_float">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">tup_float</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#tup_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.tup_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>parses float tuples from comma/space separated string</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.tup_list">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">tup_list</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#tup_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.tup_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert tuple to list</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.split_float">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">split_float</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#split_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.split_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>splits list of floats and extends ranges based on : notation</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.split_int">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">split_int</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#split_int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.split_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>splits list of ints and extends ranges based on : notation</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.data_stream">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">data_stream</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">param</em>, <em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#data_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.data_stream" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.expandpat">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">expandpat</code><span class="sig-paren">(</span><em class="sig-param">pat</em>, <em class="sig-param">s</em>, <em class="sig-param">mark=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#expandpat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.expandpat" title="Permalink to this definition">¶</a></dt>
+<dd><p>expand sglob pattern for each character option</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pat</strong> (<em>regex</em>) – regex pattern to split on</p></li>
+<li><p><strong>s</strong> (<em>str</em>) – string to split</p></li>
+<li><p><strong>mark</strong> (<em>int</em>) – 0: include splitting mark in output
+1: skip splitting mark (assume 1 character in length)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>allpat</strong> – list of strings enumerating all possible combinations of pattern</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of strings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.sglob">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">sglob</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#sglob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.sglob" title="Permalink to this definition">¶</a></dt>
+<dd><p>super glob includes [abc] notation + [!abc] exclude notation</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.tmp_stdin">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">tmp_stdin</code><span class="sig-paren">(</span><em class="sig-param">ctx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#tmp_stdin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.tmp_stdin" title="Permalink to this definition">¶</a></dt>
+<dd><p>read stdin into temporary file</p>
+<p>use ctx.resilient_parsing=True to pass “-” directly</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clasp.click_callbacks.parse_file_list">
+<code class="sig-prename descclassname">clasp.click_callbacks.</code><code class="sig-name descname">parse_file_list</code><span class="sig-paren">(</span><em class="sig-param">ctx</em>, <em class="sig-param">s</em>, <em class="sig-param">valid=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clasp/click_callbacks.html#parse_file_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clasp.click_callbacks.parse_file_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>parses list of files using glob expansion</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Stephen Wasilewski.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/clasp.click_callbacks.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
