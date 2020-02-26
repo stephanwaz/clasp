@@ -3,6 +3,10 @@
 History
 =======
 
+1.0.2
+-----
+bug fixes
+
 1.0.0
 -----
 python 3 only, concurrent futures and direct template scripts
