@@ -294,16 +294,7 @@ def tmp_clean(ctx):
             pass
 
 
-def ConfigSectionMap(Config, section):
-    """maps ConfigParser section to dict"""
-    dict1 = {}
-    options = Config.options(section)
-    try:
-        cvars = Config.options('globals')
-    except Exception:
-        cvars = []
-    for cvar in cvars:
-        Config.set(section, cvar, Config.get('globals', cvar))
+def read_section(Config, dict1, section, options):
     for option in options:
         try:
             opt = Config.get(section, option)
@@ -320,6 +311,22 @@ def ConfigSectionMap(Config, section):
         except Exception as ex:
             click.echo("exception on {}! {}".format(option, ex), err=True)
             dict1[option] = None
+    return dict1
+
+
+def ConfigSectionMap(Config, section):
+    """maps ConfigParser section to dict"""
+    dict1 = {}
+    try:
+        options = Config.options(section)
+    except Exception:
+        options = []
+    try:
+        cvars = Config.options('globals')
+    except Exception:
+        cvars = []
+    read_section(Config, dict1, 'globals', cvars)
+    read_section(Config, dict1, section, options)
     return dict1
 
 
@@ -406,6 +413,8 @@ def get_config(ctx, config, outconfig, configalias, inputalias, template=None):
     subc = ctx.invoked_subcommand
     if configalias and template is not None:
         gargs = setargs(Parser, template, "{}_{}".format(com, configalias))
+    elif template is not None:
+        gargs = setargs(Parser, template, "{}_{}".format(com, subc))
     else:
         gargs = {}
     if configalias is not None and inputalias:
