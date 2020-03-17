@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>clasp.click_ext &#8212; clasp (1.0.3) 1.0.3 documentation</title>
+    <title>clasp.click_ext &#8212; clasp (1.0.4) 1.0.4 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">clasp (1.0.3)</a></h1>
+<h1 class="logo"><a href="../../index.html">clasp (1.0.4)</a></h1>
 
 
 
@@ -79,13 +79,13 @@
 <span class="sd">imports callbacks into namespace for convenience</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
 <span class="kn">import</span> <span class="nn">configparser</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="kn">import</span> <span class="nn">clasp.click_callbacks</span>
-<span class="kn">from</span> <span class="nn">clasp.click_callbacks</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">clasp.click_callbacks</span> <span class="kn">import</span> <span class="o">*</span>
 
 
 <span class="c1">#: Edited from click completion script to avoid running out of turn (faster)</span>
@@ -123,7 +123,7 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="c1">#: basic script template for one offs</span>
-<span class="n">script_template</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;&#39;&#39;#!/usr/bin/env python</span>
+<span class="n">script_template</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;#!/usr/bin/env python</span>
 <span class="s1">from clasp import click</span>
 <span class="s1">import clasp.click_ext as clk</span>
 <span class="s1">import clasp.script_tools as cst</span>
@@ -153,7 +153,7 @@
 
 
 <span class="c1">#: basic script template for command subcommand structure (using config files)</span>
-<span class="n">script_template2</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;&#39;&#39;#!/usr/bin/env python</span>
+<span class="n">script_template2</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;#!/usr/bin/env python</span>
 <span class="s1">from clasp import click</span>
 <span class="s1">import clasp.click_ext as clk</span>
 <span class="s1">import clasp.script_tools as cst</span>
@@ -363,16 +363,7 @@
             <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="ConfigSectionMap"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.ConfigSectionMap">[docs]</a><span class="k">def</span> <span class="nf">ConfigSectionMap</span><span class="p">(</span><span class="n">Config</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;maps ConfigParser section to dict&quot;&quot;&quot;</span>
-    <span class="n">dict1</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">options</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">cvars</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="s1">&#39;globals&#39;</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="n">cvars</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">cvar</span> <span class="ow">in</span> <span class="n">cvars</span><span class="p">:</span>
-        <span class="n">Config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">cvar</span><span class="p">,</span> <span class="n">Config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;globals&#39;</span><span class="p">,</span> <span class="n">cvar</span><span class="p">))</span>
+<div class="viewcode-block" id="read_section"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.read_section">[docs]</a><span class="k">def</span> <span class="nf">read_section</span><span class="p">(</span><span class="n">Config</span><span class="p">,</span> <span class="n">dict1</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">opt</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
@@ -389,6 +380,22 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
             <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;exception on </span><span class="si">{}</span><span class="s2">! </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">ex</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">dict1</span><span class="p">[</span><span class="n">option</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">dict1</span></div>
+
+
+<div class="viewcode-block" id="ConfigSectionMap"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.ConfigSectionMap">[docs]</a><span class="k">def</span> <span class="nf">ConfigSectionMap</span><span class="p">(</span><span class="n">Config</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;maps ConfigParser section to dict&quot;&quot;&quot;</span>
+    <span class="n">dict1</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cvars</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="s1">&#39;globals&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">cvars</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">read_section</span><span class="p">(</span><span class="n">Config</span><span class="p">,</span> <span class="n">dict1</span><span class="p">,</span> <span class="s1">&#39;globals&#39;</span><span class="p">,</span> <span class="n">cvars</span><span class="p">)</span>
+    <span class="n">read_section</span><span class="p">(</span><span class="n">Config</span><span class="p">,</span> <span class="n">dict1</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dict1</span></div>
 
 
@@ -475,6 +482,8 @@
     <span class="n">subc</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">invoked_subcommand</span>
     <span class="k">if</span> <span class="n">configalias</span> <span class="ow">and</span> <span class="n">template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">gargs</span> <span class="o">=</span> <span class="n">setargs</span><span class="p">(</span><span class="n">Parser</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">configalias</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">gargs</span> <span class="o">=</span> <span class="n">setargs</span><span class="p">(</span><span class="n">Parser</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">subc</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">gargs</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">configalias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">inputalias</span><span class="p">:</span>
@@ -640,7 +649,7 @@
       &copy;2018, Stephen Wasilewski.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>clasp.sphinx_click_ext &#8212; clasp (1.0.3) 1.0.3 documentation</title>
+    <title>clasp.sphinx_click_ext &#8212; clasp (1.0.4) 1.0.4 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">clasp (1.0.3)</a></h1>
+<h1 class="logo"><a href="../../index.html">clasp (1.0.4)</a></h1>
 
 
 
@@ -94,8 +94,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sphinx_click.ext</span> <span class="k">as</span> <span class="nn">ext</span>
-<span class="kn">from</span> <span class="nn">clasp.click_ext</span> <span class="k">import</span> <span class="n">index_param</span><span class="p">,</span> <span class="n">index_seps</span>
-<span class="kn">from</span> <span class="nn">clasp.click_callbacks</span> <span class="k">import</span> <span class="n">pretty_callback_names</span> <span class="k">as</span> <span class="n">pcn</span>
+<span class="kn">from</span> <span class="nn">clasp.click_ext</span> <span class="kn">import</span> <span class="n">index_param</span><span class="p">,</span> <span class="n">index_seps</span>
+<span class="kn">from</span> <span class="nn">clasp.click_callbacks</span> <span class="kn">import</span> <span class="n">pretty_callback_names</span> <span class="k">as</span> <span class="n">pcn</span>
 
 
 <span class="k">def</span> <span class="nf">_format_options</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
@@ -125,7 +125,7 @@
                             <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
                     <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
                         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;TEXT&#39;</span>
-                    <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;.+&gt;&#39;</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;&lt;</span><span class="si">{name}</span><span class="s1">&gt;&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;.+&gt;&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{name}</span><span class="s1">&gt;&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
                 <span class="k">yield</span> <span class="n">line</span>
             <span class="k">yield</span> <span class="s1">&#39;&#39;</span>
 
@@ -211,7 +211,7 @@
       &copy;2018, Stephen Wasilewski.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
