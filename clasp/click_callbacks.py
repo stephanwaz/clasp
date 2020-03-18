@@ -249,12 +249,14 @@ def color_inp(ctx, param, s):
         return s
 
 
-def tup_int(ctx, param, s):
+def tup_int(ctx, param, s, recurs=False):
     """parses integer or len 2 tuples from comma/space separated string
     with range : notation"""
     if s is None:
         so = None
     else:
+        if param.multiple and not recurs:
+            return [tup_int(ctx, param, s2, recurs=True) for s2 in s]
         try:
             so = []
             for x in s.split():
