@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>clasp.click_callbacks &#8212; clasp (1.0.4) 1.0.4 documentation</title>
+    <title>clasp.click_callbacks &#8212; clasp (1.0.5) 1.0.5 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">clasp (1.0.4)</a></h1>
+<h1 class="logo"><a href="../../index.html">clasp (1.0.5)</a></h1>
 
 
 
@@ -318,12 +318,14 @@
         <span class="k">return</span> <span class="n">s</span></div>
 
 
-<div class="viewcode-block" id="tup_int"><a class="viewcode-back" href="../../clasp.click_callbacks.html#clasp.click_callbacks.tup_int">[docs]</a><span class="k">def</span> <span class="nf">tup_int</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+<div class="viewcode-block" id="tup_int"><a class="viewcode-back" href="../../clasp.click_callbacks.html#clasp.click_callbacks.tup_int">[docs]</a><span class="k">def</span> <span class="nf">tup_int</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">recurs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;parses integer or len 2 tuples from comma/space separated string</span>
 <span class="sd">    with range : notation&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">so</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">multiple</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">recurs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">tup_int</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">recurs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">so</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
