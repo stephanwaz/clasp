@@ -1,3 +1,7 @@
+ipyparallel
+click>=7.0
+sphinx-click
+future
 pip
 bumpversion==0.5.3
 wheel==0.30.0
