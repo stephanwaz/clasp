@@ -103,7 +103,7 @@ def is_file(ctx, param, s):
     """
     if s == '-':
         return tmp_stdin(ctx)
-    if s is None:
+    if s in [None, 'None', 'none']:
         return None
     command = ctx.info_name
     name = param.name
@@ -132,7 +132,7 @@ def are_files(ctx, param, s, prompt=True):
     or set CLASP_PIPE=1
     to disable prompt and avoid hanging process
     """
-    if s is None:
+    if s in [None, 'None', 'none']:
         return None
     command = ctx.info_name
     name = param.name
@@ -157,7 +157,7 @@ def are_files(ctx, param, s, prompt=True):
 def are_valid_paths(ctx, param, s):
     """checks input file list
     """
-    if s is None:
+    if s in [None, 'None', 'none']:
         return None
     try:
         return parse_file_list(ctx, s, valid=True)
@@ -213,7 +213,7 @@ def are_files_or_str_iter(ctx, param, s):
 
 def split_str(ctx, param, s):
     """splits space seperated string"""
-    if s is None:
+    if s in [None, 'None', 'none']:
         return None
     elif len(s) == 0:
         return ''
@@ -252,11 +252,15 @@ def color_inp(ctx, param, s):
 def tup_int(ctx, param, s, recurs=False):
     """parses integer or len 2 tuples from comma/space separated string
     with range : notation"""
-    if s is None:
+    if s in [None, 'None', 'none']:
         so = None
     else:
         if param.multiple and not recurs:
-            return [tup_int(ctx, param, s2, recurs=True) for s2 in s]
+            so = [tup_int(ctx, param, s2, recurs=True) for s2 in s]
+            if None in so:
+                return None
+            else:
+                return [tup_int(ctx, param, s2, recurs=True) for s2 in s]
         try:
             so = []
             for x in s.split():
@@ -273,7 +277,7 @@ def tup_int(ctx, param, s, recurs=False):
 
 def int_tups(ctx, param, s):
     """parses integer tuples from comma/space separated string"""
-    if s is None:
+    if s in [None, 'None', 'none']:
         so = None
     else:
         try:
@@ -287,7 +291,7 @@ def int_tups(ctx, param, s):
 
 def tup_float(ctx, param, s):
     """parses float tuples from comma/space separated string"""
-    if s is None:
+    if s in [None, 'None', 'none']:
         so = None
     else:
         try:
@@ -312,7 +316,7 @@ def tup_list(ctx, param, s):
 
 def split_float(ctx, param, s):
     """splits list of floats and extends ranges based on : notation"""
-    if s is None:
+    if s in [None, 'None', 'none']:
         result = None
     else:
         try:
@@ -332,7 +336,7 @@ def split_float(ctx, param, s):
 
 def split_int(ctx, param, s):
     """splits list of ints and extends ranges based on : notation"""
-    if s is None:
+    if s in [None, 'None', 'none']:
         result = None
     else:
         try:
@@ -352,7 +356,7 @@ def split_int(ctx, param, s):
 
 
 def data_stream(ctx, param, s):
-    if s is None:
+    if s in [None, 'None', 'none']:
         result = None
     elif s == '-':
         result = sys.stdin.buffer
