@@ -518,17 +518,22 @@ def read_data(dataf, x_vals=[0], y_vals=[-1], rows=False, header=False,
     else:
         datastr = read_data_file(dataf, header, xheader, comment, delim,
                                  coerce=coerce)
-        if header:
+        if rows:
+            if header:
+                head = datastr[0]
+                datastr = list(map(list, list(zip(*datastr[1:]))))
+            else:
+                datastr = list(map(list, list(zip(*datastr))))
+                head = []
+        elif header:
             head = [datastr[0][i] for i in y_vals]
             datastr = datastr[1:]
         else:
             head = []
         if reverse:
             datastr.reverse()
-        if rows:
-            datastr = list(map(list, list(zip(*datastr))))
     if drange is not None:
-        datastr = [v for i, v in enumerate(datastr) if i in drange]
+        datastr = [datastr[i] for i in drange]
     if len(y_vals) > 0:
         datay = coerce_data(datastr, y_vals, dataf, coerce)
     else:
