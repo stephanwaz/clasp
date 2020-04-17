@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>clasp.script_tools &#8212; clasp (1.0.5) 1.0.5 documentation</title>
+    <title>clasp.script_tools &#8212; clasp (1.0.6) 1.0.6 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">clasp (1.0.5)</a></h1>
+<h1 class="logo"><a href="../../index.html">clasp (1.0.6)</a></h1>
 
 
 
@@ -587,17 +587,22 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">datastr</span> <span class="o">=</span> <span class="n">read_data_file</span><span class="p">(</span><span class="n">dataf</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">xheader</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">delim</span><span class="p">,</span>
                                  <span class="n">coerce</span><span class="o">=</span><span class="n">coerce</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+                <span class="n">head</span> <span class="o">=</span> <span class="n">datastr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">datastr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">datastr</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">datastr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">datastr</span><span class="p">))))</span>
+                <span class="n">head</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="n">header</span><span class="p">:</span>
             <span class="n">head</span> <span class="o">=</span> <span class="p">[</span><span class="n">datastr</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">y_vals</span><span class="p">]</span>
             <span class="n">datastr</span> <span class="o">=</span> <span class="n">datastr</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">head</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
             <span class="n">datastr</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">rows</span><span class="p">:</span>
-            <span class="n">datastr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">datastr</span><span class="p">))))</span>
     <span class="k">if</span> <span class="n">drange</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">datastr</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datastr</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">drange</span><span class="p">]</span>
+        <span class="n">datastr</span> <span class="o">=</span> <span class="p">[</span><span class="n">datastr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">drange</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_vals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">datay</span> <span class="o">=</span> <span class="n">coerce_data</span><span class="p">(</span><span class="n">datastr</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="n">dataf</span><span class="p">,</span> <span class="n">coerce</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>clasp.click_callbacks &#8212; clasp (1.0.5) 1.0.5 documentation</title>
+    <title>clasp.click_callbacks &#8212; clasp (1.0.6) 1.0.6 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">clasp (1.0.5)</a></h1>
+<h1 class="logo"><a href="../../index.html">clasp (1.0.6)</a></h1>
 
 
 
@@ -172,7 +172,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">tmp_stdin</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">command</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">info_name</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span>
@@ -201,7 +201,7 @@
 <span class="sd">    or set CLASP_PIPE=1</span>
 <span class="sd">    to disable prompt and avoid hanging process</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">command</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">info_name</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span>
@@ -226,7 +226,7 @@
 <div class="viewcode-block" id="are_valid_paths"><a class="viewcode-back" href="../../clasp.click_callbacks.html#clasp.click_callbacks.are_valid_paths">[docs]</a><span class="k">def</span> <span class="nf">are_valid_paths</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;checks input file list</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">parse_file_list</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">valid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -282,7 +282,7 @@
 
 <div class="viewcode-block" id="split_str"><a class="viewcode-back" href="../../clasp.click_callbacks.html#clasp.click_callbacks.split_str">[docs]</a><span class="k">def</span> <span class="nf">split_str</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;splits space seperated string&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;&#39;</span>
@@ -321,11 +321,15 @@
 <div class="viewcode-block" id="tup_int"><a class="viewcode-back" href="../../clasp.click_callbacks.html#clasp.click_callbacks.tup_int">[docs]</a><span class="k">def</span> <span class="nf">tup_int</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">recurs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;parses integer or len 2 tuples from comma/space separated string</span>
 <span class="sd">    with range : notation&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
         <span class="n">so</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">multiple</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">recurs</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">tup_int</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">recurs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s</span><span class="p">]</span>
+            <span class="n">so</span> <span class="o">=</span> <span class="p">[</span><span class="n">tup_int</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">recurs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s</span><span class="p">]</span>
+            <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="n">so</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">tup_int</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">recurs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">so</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
@@ -342,7 +346,7 @@
 
 <div class="viewcode-block" id="int_tups"><a class="viewcode-back" href="../../clasp.click_callbacks.html#clasp.click_callbacks.int_tups">[docs]</a><span class="k">def</span> <span class="nf">int_tups</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;parses integer tuples from comma/space separated string&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
         <span class="n">so</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -356,7 +360,7 @@
 
 <div class="viewcode-block" id="tup_float"><a class="viewcode-back" href="../../clasp.click_callbacks.html#clasp.click_callbacks.tup_float">[docs]</a><span class="k">def</span> <span class="nf">tup_float</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;parses float tuples from comma/space separated string&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
         <span class="n">so</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -381,7 +385,7 @@
 
 <div class="viewcode-block" id="split_float"><a class="viewcode-back" href="../../clasp.click_callbacks.html#clasp.click_callbacks.split_float">[docs]</a><span class="k">def</span> <span class="nf">split_float</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;splits list of floats and extends ranges based on : notation&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -401,7 +405,7 @@
 
 <div class="viewcode-block" id="split_int"><a class="viewcode-back" href="../../clasp.click_callbacks.html#clasp.click_callbacks.split_int">[docs]</a><span class="k">def</span> <span class="nf">split_int</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;splits list of ints and extends ranges based on : notation&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -421,7 +425,7 @@
 
 
 <div class="viewcode-block" id="data_stream"><a class="viewcode-back" href="../../clasp.click_callbacks.html#clasp.click_callbacks.data_stream">[docs]</a><span class="k">def</span> <span class="nf">data_stream</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">elif</span> <span class="n">s</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">buffer</span>
