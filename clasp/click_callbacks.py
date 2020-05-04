@@ -39,6 +39,7 @@ String parsing
     * split_str_iter: use when multiple=True
     * color_inp: return alpha string, split on whitespace,
       convert floats and parse tuples on ,
+    * char0: return first character
 
 Number parsing
 ~~~~~~~~~~~~~~
@@ -123,6 +124,10 @@ def is_file(ctx, param, s):
             return is_file(ctx, param, s2)
         else:
             raise click.Abort()
+
+
+def char0(ctx, param, s):
+    return s[0].lower()
 
 
 def are_files(ctx, param, s, prompt=True):
