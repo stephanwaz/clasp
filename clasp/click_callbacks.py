@@ -7,11 +7,9 @@
 
 """callbacks for special parsing of command line inputs
 
-Callbacks By type
------------------
+**Callbacks By type**
 
-File input
-~~~~~~~~~~
+**File input**
 
 file inputs can be given with wildcard expansion (in quotes so that the
 callback handles) using glob plus the following:
@@ -21,7 +19,7 @@ callback handles) using glob plus the following:
     * '-' (hyphen) collect the stdin into a temporary file (clasp_tmp*)
     * ~ expands user
 
-callback functions:
+**callback functions**
 
     * is_file: check if a single path exists (prompts for user input if file
       not found)
@@ -32,8 +30,7 @@ callback functions:
       split_int, then returns string
     * are_files_or_str_iter: use when mulitple=True
 
-String parsing
-~~~~~~~~~~~~~~
+**String parsing**
 
     * split_str: split with shlex.split
     * split_str_iter: use when multiple=True
@@ -41,8 +38,7 @@ String parsing
       convert floats and parse tuples on ,
     * char0: return first character
 
-Number parsing
-~~~~~~~~~~~~~~
+**Number parsing**
 
     * tup_int: parses integer tuples from comma/space separated string
     * tup_float: parses float tuples from comma/space separated string

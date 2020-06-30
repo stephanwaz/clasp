@@ -14,10 +14,21 @@ from builtins import str
 import configparser
 import collections
 import traceback
+import functools
+import sys
 
 import clasp.click_callbacks
 from clasp.click_callbacks import *
 
+
+callback_help = clasp.click_callbacks.__doc__
+
+def add_callback_info(func):
+    if func.__doc__ is None:
+        func.__doc__ = callback_help
+    else:
+        func.__doc__ += "\n\n" + callback_help
+    return func
 
 #: Edited from click completion script to avoid running out of turn (faster)
 COMPLETION_SCRIPT_BASH = '''
@@ -63,7 +74,7 @@ import clasp.script_tools as cst
 @click.argument('arg1')
 @clk.shared_decs(clk.command_decs('0.1'))
 def main(ctx, arg1, **kwargs):
-    """{clasp.click_callbacks.__doc__}"""
+    """{callback_help}"""
     if kwargs['opts']:
         kwargs['opts'] = False
         clk.echo_args(arg1, **kwargs)
@@ -216,6 +227,47 @@ def click_ext(click):
     return click
 
 
+def printconfigs(ctx, param, s):
+    if s:
+        for k, v in ctx.command.commands.items():
+            opts = {}
+            for p in v.params:
+                if p.human_readable_name not in ['opts', 'debug', 'version']:
+                    opts[p.human_readable_name] = p.get_default(ctx)
+            print_config(ctx, (k, opts), sys.stdout, None, None, True)
+        sys.exit(0)
+
+
+def wrap_command():
+    """decorator to execute command within standardized error handling"""
+    def wrapped_call(func):
+        @functools.wraps(func)
+        def handle_call(ctx, *args, **kwargs):
+            cname = func.__name__
+            try:
+                chain = ctx.parent.command.__dict__['chain']
+            except KeyError:
+                chain = False
+            if chain:
+                kwargs['opts'] = kwargs['opts'] or ctx.parent.params['opts']
+                kwargs['debug'] = kwargs['debug'] or ctx.parent.params['debug']
+            if kwargs['opts']:
+                kwargs['opts'] = False
+                click.echo(f'\n{cname} options:\n', err=True)
+                echo_args(**kwargs)
+            else:
+                try:
+                    func(ctx, *args, **kwargs)
+                except click.Abort:
+                    raise
+                except Exception as ex:
+                    print_except(ex, kwargs['debug'])
+                    raise click.Abort
+            return cname, kwargs, ctx
+        return handle_call
+    return wrapped_call
+
+
 def main_decs(v):
     """set of shared decorators for all main command groups
 
@@ -242,7 +294,7 @@ def main_decs(v):
     return md
 
 
-def command_decs(v):
+def command_decs(v, wrap=False):
     """set of shared decorators for all sub commands
 
     Parameters
@@ -262,6 +314,8 @@ def command_decs(v):
           click.version_option(version=v),
           click.pass_context
     ]
+    if wrap:
+        cd.append(wrap_command())
     return cd
 
 
@@ -292,6 +346,18 @@ def tmp_clean(ctx):
             os.remove(i)
         except Exception:
             pass
+
+
+def invoke_dependency(ctx, cmd, objkey, obj):
+    kws = ctx.parent.command.commands[cmd].context_settings['default_map']
+    for p in ctx.parent.command.commands[cmd].params:
+        try:
+            kws[p.name] = p.process_value(ctx, kws[p.name])
+        except KeyError:
+            kws[p.name] = p.get_default(ctx)
+    kws.update(reload=True, overwrite=False)
+    s = obj(ctx.obj[objkey], **kws)
+    ctx.obj[cmd] = s
 
 
 def read_section(Config, dict1, section, options):
@@ -432,6 +498,29 @@ def get_config(ctx, config, outconfig, configalias, inputalias, template=None):
     ctx.command.commands[subc].context_settings['default_map'] = gargs
 
 
+def get_config_chained(ctx, config, outconfig, configalias, inputalias):
+    """load config file into click options"""
+    Parser = configparser.ConfigParser()
+    com = ctx.info_name.split("_")[-1]
+    bad = outconfig is None and (config is not None or configalias)
+    for subc in ctx.command.commands:
+        if configalias is not None and inputalias:
+            alias = "{}_{}".format(configalias, subc)
+            gargs = setargs(Parser, config, alias)
+        else:
+            alias = "{}_{}".format(com, subc)
+            gargs = setargs(Parser, config, alias)
+        if not gargs and bad:
+            click.echo("WARNING: {} not found in local config file: {} or "
+                       "global config file: {}"
+                       "".format(alias, config, template), err=True)
+            raise click.Abort()
+        else:
+            bad = False
+        ctx.command.commands[subc].context_settings['default_map'] = gargs
+    if bad:
+        raise click.Abort()
+
 def match_multiple(ctx, subc):
     """identify params with multiple=True for config file parsing"""
     ismultiple = {}
@@ -467,12 +556,15 @@ def add_opt_comment(comments, opts):
     return comments + "\n\n"
 
 
-def print_config(ctx, opts, outconfig, config, configalias):
+def print_config(ctx, opts, outconfig, config, configalias, chain=False):
     """write config file from click options"""
     ismultiple = match_multiple(ctx, opts[0])
     com = ctx.info_name.split("_")[-1]
     if configalias is not None:
-        opt = "{}_{}".format(com, configalias)
+        if chain:
+            opt = "{}_{}".format(configalias, opts[0])
+        else:
+            opt = "{}_{}".format(com, configalias)
     else:
         opt = "{}_{}".format(com, opts[0])
     Parser = configparser.ConfigParser()
@@ -499,10 +591,13 @@ def print_config(ctx, opts, outconfig, config, configalias):
     for s in Parser._sections:
         srt = sorted(list(Parser._sections[s].items()), key=lambda t: t[0])
         Parser._sections[s] = collections.OrderedDict(srt)
-    f = open(outconfig, 'w')
-    f.write(comments)
-    Parser.write(f)
-    f.close()
+    if hasattr(outconfig, 'write'):
+        Parser.write(outconfig)
+    else:
+        f = open(outconfig, 'w')
+        f.write(comments)
+        Parser.write(f)
+        f.close()
 
 
 def print_except(ex, debug=False):
