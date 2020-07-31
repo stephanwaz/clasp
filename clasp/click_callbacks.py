@@ -53,7 +53,7 @@ import shlex
 import tempfile
 from glob import glob
 import click
-
+from clasp.script_tools import sglob
 import clasp.script_tools as cst
 
 pretty_callback_names = {
@@ -367,52 +367,6 @@ def data_stream(ctx, param, s):
         except Exception:
             callback_error(s, param, 'should be an existing file')
     return result
-
-
-def expandpat(pat, s, mark=0):
-    """expand sglob pattern for each character option
-
-    Parameters
-    ----------
-    pat: regex
-        regex pattern to split on
-    s: str
-        string to split
-    mark: int
-        0: include splitting mark in output
-        1: skip splitting mark (assume 1 character in length)
-
-    Returns
-    -------
-    allpat: list of strings
-        list of strings enumerating all possible combinations of pattern
-    """
-    if re.search(pat, s):
-        parts = re.split(pat, s)
-        marks = re.findall(pat, s)
-        patm = []
-        for i, ma in enumerate(marks):
-            part = [parts[i]] * (len(ma) - (2 + mark))
-            for j, mai in enumerate(ma[1 + mark:-1]):
-                part[j] += mai
-            patm.append(part)
-        patm.append([parts[-1]])
-        allpat = [''.join(i) for i in zip(*cst.crossref_all(patm))]
-        return allpat
-    else:
-        return []
-
-
-def sglob(s):
-    '''super glob includes [abc] notation + [!abc] exclude notation'''
-    inre = r'\[[\w\d\-\_\.]+\]'
-    exre = r'\[\![\w\d\-\_\.]+\]'
-    inpat = expandpat(inre, s) + [s]
-    exglob = cst.flat_list([expandpat(exre, i, 1) for i in inpat])
-    inglob = [re.sub(exre, '*', i) for i in inpat]
-    infiles = set(cst.flat_list([glob(i) for i in inglob]))
-    exfiles = set(cst.flat_list([glob(i) for i in exglob]))
-    return sorted(list(infiles.difference(exfiles)))
 
 
 def tmp_stdin(ctx):

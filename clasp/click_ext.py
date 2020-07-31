@@ -260,6 +260,10 @@ def wrap_command():
                     func(ctx, *args, **kwargs)
                 except click.Abort:
                     raise
+                except click.exceptions.Exit as ex:
+                    if ex.exit_code != 0:
+                        print_except(ex, kwargs['debug'])
+                        raise click.Abort
                 except Exception as ex:
                     print_except(ex, kwargs['debug'])
                     raise click.Abort
@@ -348,16 +352,15 @@ def tmp_clean(ctx):
             pass
 
 
-def invoke_dependency(ctx, cmd, objkey, obj):
-    kws = ctx.parent.command.commands[cmd].context_settings['default_map']
-    for p in ctx.parent.command.commands[cmd].params:
+def invoke_dependency(ctx, cmd, *args):
+    kws = ctx.parent.command.commands[cmd.name].context_settings['default_map']
+    for p in ctx.parent.command.commands[cmd.name].params:
         try:
             kws[p.name] = p.process_value(ctx, kws[p.name])
         except KeyError:
             kws[p.name] = p.get_default(ctx)
     kws.update(reload=True, overwrite=False)
-    s = obj(ctx.obj[objkey], **kws)
-    ctx.obj[cmd] = s
+    cmd.callback(*args, **kws)
 
 
 def read_section(Config, dict1, section, options):
