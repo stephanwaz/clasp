@@ -272,7 +272,7 @@ def wrap_command():
     return wrapped_call
 
 
-def main_decs(v):
+def main_decs(v, writeconfig=True):
     """set of shared decorators for all main command groups
 
     Parameters
@@ -286,7 +286,6 @@ def main_decs(v):
     """
     md = [
           click.option('--config', '-c', type=click.Path(exists=True)),
-          click.option('--outconfig', '-oc', type=click.Path(file_okay=True)),
           click.option('--configalias', '-ca',
                        help="store config in alias section. use to store "
                        "multiple settings for same command"),
@@ -295,6 +294,9 @@ def main_decs(v):
           click.version_option(version=v),
           click.pass_context
     ]
+    if writeconfig:
+        md.append(click.option('--outconfig', '-oc',
+                  type=click.Path(file_okay=True)))
     return md
 
 
@@ -514,9 +516,8 @@ def get_config_chained(ctx, config, outconfig, configalias, inputalias):
             alias = "{}_{}".format(com, subc)
             gargs = setargs(Parser, config, alias)
         if not gargs and bad:
-            click.echo("WARNING: {} not found in local config file: {} or "
-                       "global config file: {}"
-                       "".format(alias, config, template), err=True)
+            click.echo("WARNING: {} not found in local config file: {}"
+                       "".format(alias, config), err=True)
             raise click.Abort()
         else:
             bad = False
