@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>clasp.script_tools &#8212; clasp (1.0.6) 1.0.6 documentation</title>
+    <title>clasp.script_tools &#8212; clasp (1.0.7) 1.0.7 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -25,7 +25,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">clasp (1.0.6)</a></h1>
+<h1 class="logo"><a href="../../index.html">clasp (1.0.7)</a></h1>
 
 
 
@@ -57,7 +57,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="documentwrapper">
@@ -81,6 +81,7 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -694,6 +695,52 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;temps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">path</span></div>
+
+
+<div class="viewcode-block" id="expandpat"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.expandpat">[docs]</a><span class="k">def</span> <span class="nf">expandpat</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">mark</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;expand sglob pattern for each character option</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pat: regex</span>
+<span class="sd">        regex pattern to split on</span>
+<span class="sd">    s: str</span>
+<span class="sd">        string to split</span>
+<span class="sd">    mark: int</span>
+<span class="sd">        0: include splitting mark in output</span>
+<span class="sd">        1: skip splitting mark (assume 1 character in length)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    allpat: list of strings</span>
+<span class="sd">        list of strings enumerating all possible combinations of pattern</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">marks</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">patm</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ma</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">marks</span><span class="p">):</span>
+            <span class="n">part</span> <span class="o">=</span> <span class="p">[</span><span class="n">parts</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ma</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="n">mark</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">mai</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ma</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">mark</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">part</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">mai</span>
+            <span class="n">patm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+        <span class="n">patm</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">allpat</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">crossref_all</span><span class="p">(</span><span class="n">patm</span><span class="p">))]</span>
+        <span class="k">return</span> <span class="n">allpat</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="sglob"><a class="viewcode-back" href="../../clasp.script_tools.html#clasp.script_tools.sglob">[docs]</a><span class="k">def</span> <span class="nf">sglob</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;super glob includes [abc] notation + [!abc] exclude notation&#39;&#39;&#39;</span>
+    <span class="n">inre</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\[[\w\d\-\_\.]+\]&#39;</span>
+    <span class="n">exre</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\[\![\w\d\-\_\.]+\]&#39;</span>
+    <span class="n">inpat</span> <span class="o">=</span> <span class="n">expandpat</span><span class="p">(</span><span class="n">inre</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">s</span><span class="p">]</span>
+    <span class="n">exglob</span> <span class="o">=</span> <span class="n">flat_list</span><span class="p">([</span><span class="n">expandpat</span><span class="p">(</span><span class="n">exre</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inpat</span><span class="p">])</span>
+    <span class="n">inglob</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">exre</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inpat</span><span class="p">]</span>
+    <span class="n">infiles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">flat_list</span><span class="p">([</span><span class="n">glob</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inglob</span><span class="p">]))</span>
+    <span class="n">exfiles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">flat_list</span><span class="p">([</span><span class="n">glob</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">exglob</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">infiles</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">exfiles</span><span class="p">)))</span></div>
 </pre></div>
 
           </div>
@@ -706,7 +753,7 @@
       &copy;2018, Stephen Wasilewski.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

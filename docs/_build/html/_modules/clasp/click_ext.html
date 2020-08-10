@@ -1,17 +1,17 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>clasp.click_ext &#8212; clasp (1.0.6) 1.0.6 documentation</title>
+    <title>clasp.click_ext &#8212; clasp (1.0.7) 1.0.7 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -25,7 +25,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">clasp (1.0.6)</a></h1>
+<h1 class="logo"><a href="../../index.html">clasp (1.0.7)</a></h1>
 
 
 
@@ -57,7 +57,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="documentwrapper">
@@ -83,10 +83,21 @@
 <span class="kn">import</span> <span class="nn">configparser</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">import</span> <span class="nn">clasp.click_callbacks</span>
 <span class="kn">from</span> <span class="nn">clasp.click_callbacks</span> <span class="kn">import</span> <span class="o">*</span>
 
+
+<span class="n">callback_help</span> <span class="o">=</span> <span class="n">clasp</span><span class="o">.</span><span class="n">click_callbacks</span><span class="o">.</span><span class="vm">__doc__</span>
+
+<div class="viewcode-block" id="add_callback_info"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.add_callback_info">[docs]</a><span class="k">def</span> <span class="nf">add_callback_info</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">callback_help</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">callback_help</span>
+    <span class="k">return</span> <span class="n">func</span></div>
 
 <span class="c1">#: Edited from click completion script to avoid running out of turn (faster)</span>
 <span class="n">COMPLETION_SCRIPT_BASH</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
@@ -132,7 +143,7 @@
 <span class="s1">@click.argument(&#39;arg1&#39;)</span>
 <span class="s1">@clk.shared_decs(clk.command_decs(&#39;0.1&#39;))</span>
 <span class="s1">def main(ctx, arg1, **kwargs):</span>
-<span class="s1">    &quot;&quot;&quot;</span><span class="si">{clasp.click_callbacks.__doc__}</span><span class="s1">&quot;&quot;&quot;</span>
+<span class="s1">    &quot;&quot;&quot;</span><span class="si">{callback_help}</span><span class="s1">&quot;&quot;&quot;</span>
 <span class="s1">    if kwargs[&#39;opts&#39;]:</span>
 <span class="s1">        kwargs[&#39;opts&#39;] = False</span>
 <span class="s1">        clk.echo_args(arg1, **kwargs)</span>
@@ -285,7 +296,52 @@
     <span class="k">return</span> <span class="n">click</span></div>
 
 
-<div class="viewcode-block" id="main_decs"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.main_decs">[docs]</a><span class="k">def</span> <span class="nf">main_decs</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="printconfigs"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.printconfigs">[docs]</a><span class="k">def</span> <span class="nf">printconfigs</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">s</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">opts</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">human_readable_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;opts&#39;</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">]:</span>
+                    <span class="n">opts</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">human_readable_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_default</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+            <span class="n">print_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">opts</span><span class="p">),</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="wrap_command"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.wrap_command">[docs]</a><span class="k">def</span> <span class="nf">wrap_command</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;decorator to execute command within standardized error handling&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">wrapped_call</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">handle_call</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">cname</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">chain</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;chain&#39;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">chain</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">chain</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;opts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;opts&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">ctx</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;opts&#39;</span><span class="p">]</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">ctx</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;opts&#39;</span><span class="p">]:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;opts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{cname}</span><span class="s1"> options:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">echo_args</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">func</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">:</span>
+                    <span class="k">raise</span>
+                <span class="k">except</span> <span class="n">click</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">Exit</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ex</span><span class="o">.</span><span class="n">exit_code</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">print_except</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">])</span>
+                        <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                    <span class="n">print_except</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">])</span>
+                    <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span>
+            <span class="k">return</span> <span class="n">cname</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">ctx</span>
+        <span class="k">return</span> <span class="n">handle_call</span>
+    <span class="k">return</span> <span class="n">wrapped_call</span></div>
+
+
+<div class="viewcode-block" id="main_decs"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.main_decs">[docs]</a><span class="k">def</span> <span class="nf">main_decs</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">writeconfig</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;set of shared decorators for all main command groups</span>
 
 <span class="sd">    Parameters</span>
@@ -299,7 +355,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">md</span> <span class="o">=</span> <span class="p">[</span>
           <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
-          <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--outconfig&#39;</span><span class="p">,</span> <span class="s1">&#39;-oc&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">file_okay</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
           <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--configalias&#39;</span><span class="p">,</span> <span class="s1">&#39;-ca&#39;</span><span class="p">,</span>
                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;store config in alias section. use to store &quot;</span>
                        <span class="s2">&quot;multiple settings for same command&quot;</span><span class="p">),</span>
@@ -308,10 +363,13 @@
           <span class="n">click</span><span class="o">.</span><span class="n">version_option</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">v</span><span class="p">),</span>
           <span class="n">click</span><span class="o">.</span><span class="n">pass_context</span>
     <span class="p">]</span>
+    <span class="k">if</span> <span class="n">writeconfig</span><span class="p">:</span>
+        <span class="n">md</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--outconfig&#39;</span><span class="p">,</span> <span class="s1">&#39;-oc&#39;</span><span class="p">,</span>
+                  <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">file_okay</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">md</span></div>
 
 
-<div class="viewcode-block" id="command_decs"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.command_decs">[docs]</a><span class="k">def</span> <span class="nf">command_decs</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="command_decs"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.command_decs">[docs]</a><span class="k">def</span> <span class="nf">command_decs</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;set of shared decorators for all sub commands</span>
 
 <span class="sd">    Parameters</span>
@@ -331,6 +389,8 @@
           <span class="n">click</span><span class="o">.</span><span class="n">version_option</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">v</span><span class="p">),</span>
           <span class="n">click</span><span class="o">.</span><span class="n">pass_context</span>
     <span class="p">]</span>
+    <span class="k">if</span> <span class="n">wrap</span><span class="p">:</span>
+        <span class="n">cd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wrap_command</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">cd</span></div>
 
 
@@ -361,6 +421,17 @@
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="invoke_dependency"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.invoke_dependency">[docs]</a><span class="k">def</span> <span class="nf">invoke_dependency</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">kws</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">cmd</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">context_settings</span><span class="p">[</span><span class="s1">&#39;default_map&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">cmd</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kws</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">process_value</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">kws</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">kws</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_default</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="n">kws</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">reload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">cmd</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="read_section"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.read_section">[docs]</a><span class="k">def</span> <span class="nf">read_section</span><span class="p">(</span><span class="n">Config</span><span class="p">,</span> <span class="n">dict1</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
@@ -501,6 +572,28 @@
     <span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">subc</span><span class="p">]</span><span class="o">.</span><span class="n">context_settings</span><span class="p">[</span><span class="s1">&#39;default_map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gargs</span></div>
 
 
+<div class="viewcode-block" id="get_config_chained"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.get_config_chained">[docs]</a><span class="k">def</span> <span class="nf">get_config_chained</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">outconfig</span><span class="p">,</span> <span class="n">configalias</span><span class="p">,</span> <span class="n">inputalias</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;load config file into click options&quot;&quot;&quot;</span>
+    <span class="n">Parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+    <span class="n">com</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">info_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">bad</span> <span class="o">=</span> <span class="n">outconfig</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">configalias</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">subc</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">commands</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">configalias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">inputalias</span><span class="p">:</span>
+            <span class="n">alias</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">configalias</span><span class="p">,</span> <span class="n">subc</span><span class="p">)</span>
+            <span class="n">gargs</span> <span class="o">=</span> <span class="n">setargs</span><span class="p">(</span><span class="n">Parser</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">alias</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alias</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">subc</span><span class="p">)</span>
+            <span class="n">gargs</span> <span class="o">=</span> <span class="n">setargs</span><span class="p">(</span><span class="n">Parser</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">alias</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">gargs</span> <span class="ow">and</span> <span class="n">bad</span><span class="p">:</span>
+            <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s2">&quot;WARNING: </span><span class="si">{}</span><span class="s2"> not found in local config file: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                       <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alias</span><span class="p">,</span> <span class="n">config</span><span class="p">),</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">subc</span><span class="p">]</span><span class="o">.</span><span class="n">context_settings</span><span class="p">[</span><span class="s1">&#39;default_map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gargs</span>
+    <span class="k">if</span> <span class="n">bad</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="match_multiple"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.match_multiple">[docs]</a><span class="k">def</span> <span class="nf">match_multiple</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">subc</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;identify params with multiple=True for config file parsing&quot;&quot;&quot;</span>
     <span class="n">ismultiple</span> <span class="o">=</span> <span class="p">{}</span>
@@ -536,12 +629,15 @@
     <span class="k">return</span> <span class="n">comments</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="print_config"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.print_config">[docs]</a><span class="k">def</span> <span class="nf">print_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">outconfig</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">configalias</span><span class="p">):</span>
+<div class="viewcode-block" id="print_config"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.print_config">[docs]</a><span class="k">def</span> <span class="nf">print_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">outconfig</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">configalias</span><span class="p">,</span> <span class="n">chain</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;write config file from click options&quot;&quot;&quot;</span>
     <span class="n">ismultiple</span> <span class="o">=</span> <span class="n">match_multiple</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">opts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">com</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">info_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">configalias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">opt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">configalias</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">chain</span><span class="p">:</span>
+            <span class="n">opt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">configalias</span><span class="p">,</span> <span class="n">opts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">opt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">configalias</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">opt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">opts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">Parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
@@ -568,10 +664,13 @@
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">Parser</span><span class="o">.</span><span class="n">_sections</span><span class="p">:</span>
         <span class="n">srt</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">Parser</span><span class="o">.</span><span class="n">_sections</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">Parser</span><span class="o">.</span><span class="n">_sections</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">(</span><span class="n">srt</span><span class="p">)</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outconfig</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span>
-    <span class="n">Parser</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">outconfig</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">):</span>
+        <span class="n">Parser</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">outconfig</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outconfig</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span>
+        <span class="n">Parser</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="print_except"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.print_except">[docs]</a><span class="k">def</span> <span class="nf">print_except</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -649,7 +748,7 @@
       &copy;2018, Stephen Wasilewski.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
