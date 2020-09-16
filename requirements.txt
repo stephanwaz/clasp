@@ -2,3 +2,5 @@ ipyparallel
 click>=7.0
 sphinx-click
 future
+docutils
+sphinx
