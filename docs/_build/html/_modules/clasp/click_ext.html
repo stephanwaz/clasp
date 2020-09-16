@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>clasp.click_ext &#8212; clasp (1.0.7) 1.0.7 documentation</title>
+    <title>clasp.click_ext &#8212; clasp (1.1.0) 1.1.0 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">clasp (1.0.7)</a></h1>
+<h1 class="logo"><a href="../../index.html">clasp (1.1.0)</a></h1>
 
 
 
@@ -78,7 +78,7 @@
 
 <span class="sd">imports callbacks into namespace for convenience</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
+<span class="kn">import</span> <span class="nn">types</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
 <span class="kn">import</span> <span class="nn">configparser</span>
 <span class="kn">import</span> <span class="nn">collections</span>
@@ -86,11 +86,17 @@
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
+<span class="kn">import</span> <span class="nn">sphinx.builders.text</span>
+<span class="kn">import</span> <span class="nn">sphinx.writers.text</span>
+<span class="kn">from</span> <span class="nn">docutils.parsers.rst</span> <span class="kn">import</span> <span class="n">Parser</span> <span class="k">as</span> <span class="n">RSTParser</span>
+<span class="kn">import</span> <span class="nn">docutils.utils</span>
+<span class="kn">from</span> <span class="nn">docutils.frontend</span> <span class="kn">import</span> <span class="n">OptionParser</span>
+
 <span class="kn">import</span> <span class="nn">clasp.click_callbacks</span>
 <span class="kn">from</span> <span class="nn">clasp.click_callbacks</span> <span class="kn">import</span> <span class="o">*</span>
 
-
 <span class="n">callback_help</span> <span class="o">=</span> <span class="n">clasp</span><span class="o">.</span><span class="n">click_callbacks</span><span class="o">.</span><span class="vm">__doc__</span>
+
 
 <div class="viewcode-block" id="add_callback_info"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.add_callback_info">[docs]</a><span class="k">def</span> <span class="nf">add_callback_info</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -215,6 +221,34 @@
     <span class="sd">&quot;&quot;&quot;customize click help messages and bash complete&quot;&quot;&quot;</span>
     <span class="n">orig_init</span> <span class="o">=</span> <span class="n">click</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Option</span><span class="o">.</span><span class="fm">__init__</span>
 
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">RSTParser</span><span class="p">()</span>
+    <span class="n">cmpt</span> <span class="o">=</span> <span class="p">(</span><span class="n">RSTParser</span><span class="p">,)</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">OptionParser</span><span class="p">(</span><span class="n">components</span><span class="o">=</span><span class="n">cmpt</span><span class="p">)</span><span class="o">.</span><span class="n">get_default_values</span><span class="p">()</span>
+    <span class="n">settings</span><span class="o">.</span><span class="n">tab_size</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">document</span> <span class="o">=</span> <span class="n">docutils</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">new_document</span><span class="p">(</span><span class="s1">&#39;&lt;rst-doc&gt;&#39;</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">SimpleNamespace</span><span class="p">(</span>
+            <span class="n">srcdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">confdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">outdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">doctreedir</span><span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="p">,</span>
+            <span class="n">events</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SimpleNamespace</span><span class="p">(</span>
+                    <span class="n">text_newlines</span><span class="o">=</span><span class="s2">&quot;native&quot;</span><span class="p">,</span>
+                    <span class="n">text_sectionchars</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span>
+                    <span class="n">text_add_secnumbers</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">text_secnumber_suffix</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+            <span class="n">tags</span><span class="o">=</span><span class="nb">set</span><span class="p">(),</span>
+            <span class="n">registry</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SimpleNamespace</span><span class="p">(</span>
+                    <span class="n">create_translator</span><span class="o">=</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">something</span><span class="p">,</span>
+                    <span class="n">new_builder</span><span class="p">:</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">writers</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">TextTranslator</span><span class="p">(</span>
+                            <span class="n">document</span><span class="p">,</span> <span class="n">new_builder</span>
+                            <span class="p">)</span>
+                    <span class="p">),</span>
+            <span class="p">)</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">builders</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">TextBuilder</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">new_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">orig_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;show_default&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -224,11 +258,21 @@
         <span class="sd">&quot;&quot;&quot;modified help text formatter for compatibility with sphinx-click.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">help</span><span class="p">:</span>
             <span class="n">formatter</span><span class="o">.</span><span class="n">write_paragraph</span><span class="p">()</span>
-            <span class="k">with</span> <span class="n">formatter</span><span class="o">.</span><span class="n">indentation</span><span class="p">():</span>
-                <span class="n">indent</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="n">formatter</span><span class="o">.</span><span class="n">current_indent</span>
-                <span class="n">formatter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">indent</span> <span class="o">+</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">help</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">indent</span><span class="p">)))</span>
+            <span class="n">rst</span> <span class="o">=</span> <span class="n">_process_as_rst</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">help</span><span class="p">)</span>
+            <span class="n">formatter</span><span class="o">.</span><span class="n">indent</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">rst</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+                <span class="n">formatter</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="n">formatter</span><span class="o">.</span><span class="n">dedent</span><span class="p">()</span>
             <span class="n">formatter</span><span class="o">.</span><span class="n">write_paragraph</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_process_as_rst</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">document</span><span class="p">)</span>
+        <span class="n">translator</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">writers</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">TextTranslator</span><span class="p">(</span><span class="n">document</span><span class="p">,</span>
+                                                        <span class="n">builder</span><span class="p">)</span>
+        <span class="n">document</span><span class="o">.</span><span class="n">walkabout</span><span class="p">(</span><span class="n">translator</span><span class="p">)</span>
+        <span class="n">rst</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">document</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">rst</span>
 
     <span class="k">def</span> <span class="nf">format_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">formatter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Writes all the options into the formatter if they exist.&quot;&quot;&quot;</span>
@@ -246,11 +290,23 @@
                     <span class="n">rv0</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">callback</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
                     <span class="n">rv</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rv0</span><span class="p">),)</span> <span class="o">+</span> <span class="n">rv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
                 <span class="n">opts</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rv</span><span class="p">))</span>
-        <span class="n">seps</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">index_seps</span><span class="p">(</span><span class="n">opts</span><span class="p">)]</span>
+        <span class="n">seps</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{i[1]}</span><span class="s2">&quot;</span> <span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">index_seps</span><span class="p">(</span><span class="n">opts</span><span class="p">)]</span>
         <span class="n">opts</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">opts</span> <span class="o">+</span> <span class="n">seps</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))]</span>
         <span class="k">if</span> <span class="n">opts</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">formatter</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s1">&#39;Options&#39;</span><span class="p">):</span>
-                <span class="n">formatter</span><span class="o">.</span><span class="n">write_dl</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+                <span class="n">maxwidth</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">writers</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">MAXWIDTH</span>
+                <span class="n">indent</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">*</span><span class="n">formatter</span><span class="o">.</span><span class="n">current_indent</span>
+                <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
+                    <span class="n">formatter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{indent}{opt[0]}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">rst</span> <span class="o">=</span> <span class="n">_process_as_rst</span><span class="p">(</span><span class="n">opt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">formatter</span><span class="o">.</span><span class="n">indent</span><span class="p">()</span>
+                    <span class="n">formatter</span><span class="o">.</span><span class="n">indent</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">rst</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+                        <span class="n">formatter</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                    <span class="n">formatter</span><span class="o">.</span><span class="n">dedent</span><span class="p">()</span>
+                    <span class="n">formatter</span><span class="o">.</span><span class="n">dedent</span><span class="p">()</span>
+                    <span class="n">formatter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">sphinx</span><span class="o">.</span><span class="n">writers</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">MAXWIDTH</span> <span class="o">=</span> <span class="n">maxwidth</span>
     <span class="n">click</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Option</span><span class="o">.</span><span class="fm">__init__</span> <span class="o">=</span> <span class="n">new_init</span>
     <span class="n">click</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Command</span><span class="o">.</span><span class="n">format_help_text</span> <span class="o">=</span> <span class="n">format_help_text</span>
     <span class="n">click</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Command</span><span class="o">.</span><span class="n">format_options</span> <span class="o">=</span> <span class="n">format_options</span>
@@ -354,7 +410,8 @@
 <span class="sd">        decorator list for main command to manage config file usage</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">md</span> <span class="o">=</span> <span class="p">[</span>
-          <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+          <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s2">&quot;path of config file to load&quot;</span><span class="p">),</span>
           <span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--configalias&#39;</span><span class="p">,</span> <span class="s1">&#39;-ca&#39;</span><span class="p">,</span>
                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;store config in alias section. use to store &quot;</span>
                        <span class="s2">&quot;multiple settings for same command&quot;</span><span class="p">),</span>
@@ -365,7 +422,8 @@
     <span class="p">]</span>
     <span class="k">if</span> <span class="n">writeconfig</span><span class="p">:</span>
         <span class="n">md</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--outconfig&#39;</span><span class="p">,</span> <span class="s1">&#39;-oc&#39;</span><span class="p">,</span>
-                  <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">file_okay</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
+                  <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">file_okay</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                  <span class="n">help</span><span class="o">=</span><span class="s2">&quot;path of config file to write/update&quot;</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">md</span></div>
 
 
@@ -507,7 +565,9 @@
 
 <div class="viewcode-block" id="index_param"><a class="viewcode-back" href="../../clasp.click_ext.html#clasp.click_ext.index_param">[docs]</a><span class="k">def</span> <span class="nf">index_param</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;tag param with index to sort by option type for help display&#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">human_readable_name</span> <span class="o">==</span> <span class="s1">&#39;help&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">human_readable_name</span> <span class="o">==</span> <span class="s1">&#39;version&#39;</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="k">elif</span> <span class="n">param</span><span class="o">.</span><span class="n">human_readable_name</span> <span class="o">==</span> <span class="s1">&#39;help&#39;</span><span class="p">:</span>
         <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="k">elif</span> <span class="n">param</span><span class="o">.</span><span class="n">human_readable_name</span> <span class="o">==</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span>
         <span class="n">a</span> <span class="o">=</span> <span class="mi">9</span>
@@ -541,7 +601,7 @@
         <span class="n">seps</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mf">3.5</span><span class="p">,</span> <span class="s2">&quot;FLAGS (DEFAULT TRUE):&quot;</span><span class="p">))</span>
     <span class="k">if</span> <span class="mi">5</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
         <span class="n">seps</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mf">4.5</span><span class="p">,</span> <span class="s2">&quot;FLAGS (DEFAULT FALSE):&quot;</span><span class="p">))</span>
-    <span class="k">if</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">]:</span>
         <span class="n">seps</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mf">7.5</span><span class="p">,</span> <span class="s1">&#39;HELP:&#39;</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">seps</span></div>
 

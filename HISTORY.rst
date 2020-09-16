@@ -3,6 +3,12 @@
 History
 =======
 
+1.1.0
+-----
+better parsing for --help output (can parse basic rst)
+made changes to support chained commands
+
+
 1.0.2
 -----
 bug fixes

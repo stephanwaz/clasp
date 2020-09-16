@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>clasp.sphinx_click_ext &#8212; clasp (1.0.7) 1.0.7 documentation</title>
+    <title>clasp.sphinx_click_ext &#8212; clasp (1.1.0) 1.1.0 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">clasp (1.0.7)</a></h1>
+<h1 class="logo"><a href="../../index.html">clasp (1.1.0)</a></h1>
 
 
 
@@ -93,10 +93,25 @@
 <span class="sd">usage: in sphinx docs/conf.py add to extensions (list): &#39;clasp.sphinx_click_ext&#39;</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">clasp</span> <span class="kn">import</span> <span class="n">click</span>
 <span class="kn">import</span> <span class="nn">sphinx_click.ext</span> <span class="k">as</span> <span class="nn">ext</span>
 <span class="kn">from</span> <span class="nn">clasp.click_ext</span> <span class="kn">import</span> <span class="n">index_param</span><span class="p">,</span> <span class="n">index_seps</span>
 <span class="kn">from</span> <span class="nn">clasp.click_callbacks</span> <span class="kn">import</span> <span class="n">pretty_callback_names</span> <span class="k">as</span> <span class="n">pcn</span>
 
+
+
+<span class="k">def</span> <span class="nf">_filter_commands</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">commands</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return list of used commands.&quot;&quot;&quot;</span>
+    <span class="n">lookup</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s1">&#39;commands&#39;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">lookup</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">click</span><span class="o">.</span><span class="n">MultiCommand</span><span class="p">):</span>
+        <span class="n">lookup</span> <span class="o">=</span> <span class="n">_get_lazyload_commands</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">command</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">commands</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">lookup</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">commands</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">lookup</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">lookup</span><span class="p">]</span>
+    
 
 <span class="k">def</span> <span class="nf">_format_options</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Format all `click.Option` for a `click.Command`.&quot;&quot;&quot;</span>
@@ -141,6 +156,7 @@
         <span class="k">yield</span> <span class="n">line</span>
 
     <span class="k">yield</span> <span class="s1">&#39;.. program:: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">command_path</span><span class="p">)</span>
+    
 
     <span class="c1"># arguments</span>
 
@@ -174,10 +190,7 @@
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">line</span>
 
-    <span class="c1"># if we&#39;re nesting commands, we need to do this slightly differently</span>
-    <span class="k">if</span> <span class="n">show_nested</span><span class="p">:</span>
-        <span class="k">return</span>
-
+    <span class="c1"># sub commands</span>
     <span class="n">commands</span> <span class="o">=</span> <span class="n">ext</span><span class="o">.</span><span class="n">_filter_commands</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">commands</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">commands</span><span class="p">:</span>
@@ -190,6 +203,7 @@
         <span class="k">yield</span> <span class="s1">&#39;&#39;</span>
 
 
+<span class="n">ext</span><span class="o">.</span><span class="n">_filter_commands</span> <span class="o">=</span> <span class="n">_filter_commands</span>
 <span class="n">ext</span><span class="o">.</span><span class="n">_format_options</span> <span class="o">=</span> <span class="n">_format_options</span>
 <span class="n">ext</span><span class="o">.</span><span class="n">_format_command</span> <span class="o">=</span> <span class="n">_format_command</span>
 
