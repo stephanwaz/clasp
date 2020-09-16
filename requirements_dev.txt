@@ -1,5 +1,4 @@
 click>=7.0
-sphinx-click
 future
 pip
 bumpversion==0.5.3
@@ -18,4 +17,4 @@ sphinx-click
 sphinxcontrib-programoutput
 
 docutils
-Sphinx
+sphinx==3.0.4
