@@ -164,6 +164,7 @@ def click_ext(click):
             outdir=None,
             doctreedir="/",
             events=None,
+            warn=None,
             config=types.SimpleNamespace(
                     text_newlines="native",
                     text_sectionchars="=",
