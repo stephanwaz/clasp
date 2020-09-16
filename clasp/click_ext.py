@@ -152,6 +152,34 @@ def click_ext(click):
     """customize click help messages and bash complete"""
     orig_init = click.core.Option.__init__
 
+    parser = RSTParser()
+    cmpt = (RSTParser,)
+    settings = OptionParser(components=cmpt).get_default_values()
+    settings.tab_size = 4
+    document = docutils.utils.new_document('<rst-doc>', settings)
+
+    app = types.SimpleNamespace(
+            srcdir=None,
+            confdir=None,
+            outdir=None,
+            doctreedir="/",
+            events=None,
+            config=types.SimpleNamespace(
+                    text_newlines="native",
+                    text_sectionchars="=",
+                    text_add_secnumbers=False,
+                    text_secnumber_suffix=".",
+                    ),
+            tags=set(),
+            registry=types.SimpleNamespace(
+                    create_translator=lambda s, something,
+                    new_builder: sphinx.writers.text.TextTranslator(
+                            document, new_builder
+                            )
+                    ),
+            )
+    builder = sphinx.builders.text.TextBuilder(app)
+
     def new_init(self, *args, **kwargs):
         orig_init(self, *args, **kwargs)
         if 'show_default' not in kwargs:
@@ -161,11 +189,21 @@ def click_ext(click):
         """modified help text formatter for compatibility with sphinx-click."""
         if self.help:
             formatter.write_paragraph()
-            with formatter.indentation():
-                indent = ' ' * formatter.current_indent
-                formatter.write(indent +
-                                self.help.replace("\n", "\n{}".format(indent)))
+            rst = _process_as_rst(self.help)
+            formatter.indent()
+            for line in rst.splitlines():
+                formatter.write_text(line)
+            formatter.dedent()
             formatter.write_paragraph()
+
+    def _process_as_rst(text):
+        parser.parse(text, document)
+        translator = sphinx.writers.text.TextTranslator(document,
+                                                        builder)
+        document.walkabout(translator)
+        rst = translator.body.replace("\n\n", "\n")
+        document.clear()
+        return rst
 
     def format_options(self, ctx, formatter):
         """Writes all the options into the formatter if they exist."""
@@ -188,44 +226,10 @@ def click_ext(click):
         if opts:
             with formatter.section('Options'):
                 maxwidth = sphinx.writers.text.MAXWIDTH
-                sphinx.writers.text.MAXWIDTH = 100000
                 indent = ' '*formatter.current_indent
-
-                parser = RSTParser()
-                cmpt = (RSTParser,)
-                settings = OptionParser(components=cmpt).get_default_values()
-                settings.tab_size = 4
-                document = docutils.utils.new_document('<rst-doc>', settings)
-
-                app = types.SimpleNamespace(
-                        srcdir=None,
-                        confdir=None,
-                        outdir=None,
-                        doctreedir="/",
-                        events=None,
-                        config=types.SimpleNamespace(
-                                text_newlines="native",
-                                text_sectionchars="=",
-                                text_add_secnumbers=False,
-                                text_secnumber_suffix=".",
-                                ),
-                        tags=set(),
-                        registry=types.SimpleNamespace(
-                                create_translator=lambda s, something,
-                                new_builder: sphinx.writers.text.TextTranslator(
-                                    document, new_builder
-                                    )
-                                ),
-                        )
-                builder = sphinx.builders.text.TextBuilder(app)
                 for opt in opts:
                     formatter.write(f"{indent}{opt[0]}\n")
-                    parser.parse(opt[1], document)
-                    translator = sphinx.writers.text.TextTranslator(document,
-                                                                    builder)
-                    document.walkabout(translator)
-                    rst = translator.body.replace("\n\n", "\n")
-                    document.clear()
+                    rst = _process_as_rst(opt[1])
                     formatter.indent()
                     formatter.indent()
                     for line in rst.splitlines():
