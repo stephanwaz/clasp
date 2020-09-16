@@ -24,10 +24,25 @@
 usage: in sphinx docs/conf.py add to extensions (list): 'clasp.sphinx_click_ext'
 """
 import re
+from clasp import click
 import sphinx_click.ext as ext
 from clasp.click_ext import index_param, index_seps
 from clasp.click_callbacks import pretty_callback_names as pcn
 
+
+
+def _filter_commands(ctx, commands=None):
+    """Return list of used commands."""
+    lookup = getattr(ctx.command, 'commands', {})
+    if not lookup and isinstance(ctx.command, click.MultiCommand):
+        lookup = _get_lazyload_commands(ctx.command)
+
+    if commands is None:
+        return lookup.values()
+
+    names = [name.strip() for name in commands.split(',')]
+    return [lookup[name] for name in names if name in lookup]
+    
 
 def _format_options(ctx):
     """Format all `click.Option` for a `click.Command`."""
@@ -72,6 +87,7 @@ def _format_command(ctx, show_nested, commands=None):
         yield line
 
     yield '.. program:: {}'.format(ctx.command_path)
+    
 
     # arguments
 
@@ -105,10 +121,7 @@ def _format_command(ctx, show_nested, commands=None):
     for line in lines:
         yield line
 
-    # if we're nesting commands, we need to do this slightly differently
-    if show_nested:
-        return
-
+    # sub commands
     commands = ext._filter_commands(ctx, commands)
 
     if commands:
@@ -121,6 +134,7 @@ def _format_command(ctx, show_nested, commands=None):
         yield ''
 
 
+ext._filter_commands = _filter_commands
 ext._format_options = _format_options
 ext._format_command = _format_command
 

@@ -9,7 +9,7 @@
 
 imports callbacks into namespace for convenience
 """
-
+import types
 from builtins import str
 import configparser
 import collections
@@ -17,11 +17,17 @@ import traceback
 import functools
 import sys
 
+import sphinx.builders.text
+import sphinx.writers.text
+from docutils.parsers.rst import Parser as RSTParser
+import docutils.utils
+from docutils.frontend import OptionParser
+
 import clasp.click_callbacks
 from clasp.click_callbacks import *
 
-
 callback_help = clasp.click_callbacks.__doc__
+
 
 def add_callback_info(func):
     if func.__doc__ is None:
@@ -177,11 +183,57 @@ def click_ext(click):
                     rv0[-1] = callback.upper()
                     rv = (''.join(rv0),) + rv[1:]
                 opts.append((a, name, rv))
-        seps = [(i[0], ("\n" + i[1] + "\n", '')) for i in index_seps(opts)]
+        seps = [(i[0], (f"\n{i[1]}" , '')) for i in index_seps(opts)]
         opts = [i[-1] for i in sorted(opts + seps, key=lambda x: (x[0], x[1]))]
         if opts:
             with formatter.section('Options'):
-                formatter.write_dl(opts)
+                maxwidth = sphinx.writers.text.MAXWIDTH
+                sphinx.writers.text.MAXWIDTH = 100000
+                indent = ' '*formatter.current_indent
+
+                parser = RSTParser()
+                cmpt = (RSTParser,)
+                settings = OptionParser(components=cmpt).get_default_values()
+                settings.tab_size = 4
+                document = docutils.utils.new_document('<rst-doc>', settings)
+
+                app = types.SimpleNamespace(
+                        srcdir=None,
+                        confdir=None,
+                        outdir=None,
+                        doctreedir="/",
+                        events=None,
+                        config=types.SimpleNamespace(
+                                text_newlines="native",
+                                text_sectionchars="=",
+                                text_add_secnumbers=False,
+                                text_secnumber_suffix=".",
+                                ),
+                        tags=set(),
+                        registry=types.SimpleNamespace(
+                                create_translator=lambda s, something,
+                                new_builder: sphinx.writers.text.TextTranslator(
+                                    document, new_builder
+                                    )
+                                ),
+                        )
+                builder = sphinx.builders.text.TextBuilder(app)
+                for opt in opts:
+                    formatter.write(f"{indent}{opt[0]}\n")
+                    parser.parse(opt[1], document)
+                    translator = sphinx.writers.text.TextTranslator(document,
+                                                                    builder)
+                    document.walkabout(translator)
+                    rst = translator.body.replace("\n\n", "\n")
+                    document.clear()
+                    formatter.indent()
+                    formatter.indent()
+                    for line in rst.splitlines():
+                        formatter.write_text(line)
+                    formatter.dedent()
+                    formatter.dedent()
+                    formatter.write("\n")
+            sphinx.writers.text.MAXWIDTH = maxwidth
     click.core.Option.__init__ = new_init
     click.core.Command.format_help_text = format_help_text
     click.core.Command.format_options = format_options
@@ -285,7 +337,8 @@ def main_decs(v, writeconfig=True):
         decorator list for main command to manage config file usage
     """
     md = [
-          click.option('--config', '-c', type=click.Path(exists=True)),
+          click.option('--config', '-c', type=click.Path(exists=True),
+                       help="path of config file to load"),
           click.option('--configalias', '-ca',
                        help="store config in alias section. use to store "
                        "multiple settings for same command"),
@@ -296,7 +349,8 @@ def main_decs(v, writeconfig=True):
     ]
     if writeconfig:
         md.append(click.option('--outconfig', '-oc',
-                  type=click.Path(file_okay=True)))
+                  type=click.Path(file_okay=True),
+                  help="path of config file to write/update"))
     return md
 
 
@@ -438,7 +492,9 @@ def setargs(Config, ini, section):
 
 def index_param(ctx, param):
     '''tag param with index to sort by option type for help display'''
-    if param.human_readable_name == 'help':
+    if param.human_readable_name == 'version':
+        a = 11
+    elif param.human_readable_name == 'help':
         a = 10
     elif param.human_readable_name == 'debug':
         a = 9
@@ -472,7 +528,7 @@ def index_seps(params):
         seps.append((3.5, "FLAGS (DEFAULT TRUE):"))
     if 5 in sections:
         seps.append((4.5, "FLAGS (DEFAULT FALSE):"))
-    if [i for i in [8, 9, 10] if i in sections]:
+    if [i for i in [8, 9, 10, 11] if i in sections]:
         seps.append((7.5, 'HELP:'))
     return seps
 
