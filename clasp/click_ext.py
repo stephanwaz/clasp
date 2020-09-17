@@ -36,6 +36,13 @@ def add_callback_info(func):
         func.__doc__ += "\n\n" + callback_help
     return func
 
+
+def pretty_name(r):
+    def wrapper(f):
+        f.prettyname = r
+        return f
+    return wrapper
+
 #: Edited from click completion script to avoid running out of turn (faster)
 COMPLETION_SCRIPT_BASH = '''
 %(complete_func)s() {
@@ -214,7 +221,11 @@ def click_ext(click):
             if rv is not None:
                 a, name, _ = index_param(ctx, param)
                 try:
-                    callback = pretty_callback_names[param.callback.__name__]
+                    try:
+                        callback = param.callback.prettyname
+                    except AttributeError:
+                        callback = pretty_callback_names[
+                            param.callback.__name__]
                 except (AttributeError, KeyError):
                     pass
                 else:
