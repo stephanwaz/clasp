@@ -16,6 +16,7 @@ import collections
 import traceback
 import functools
 import sys
+import shutil
 
 import sphinx.builders.text
 import sphinx.writers.text
@@ -216,6 +217,8 @@ def click_ext(click):
     def format_options(self, ctx, formatter):
         """Writes all the options into the formatter if they exist."""
         opts = []
+        twidth = max(shutil.get_terminal_size((80, 20)).columns, 80)
+        sphinx.writers.text.MAXWIDTH = twidth - 10
         for param in self.get_params(ctx):
             rv = param.get_help_record(ctx)
             if rv is not None:
@@ -237,7 +240,7 @@ def click_ext(click):
         opts = [i[-1] for i in sorted(opts + seps, key=lambda x: (x[0], x[1]))]
         if opts:
             with formatter.section('Options'):
-                maxwidth = sphinx.writers.text.MAXWIDTH
+                formatter.width = sphinx.writers.text.MAXWIDTH
                 indent = ' '*formatter.current_indent
                 for opt in opts:
                     formatter.write(f"{indent}{opt[0]}\n")
@@ -249,7 +252,6 @@ def click_ext(click):
                     formatter.dedent()
                     formatter.dedent()
                     formatter.write("\n")
-            sphinx.writers.text.MAXWIDTH = maxwidth
     click.core.Option.__init__ = new_init
     click.core.Command.format_help_text = format_help_text
     click.core.Command.format_options = format_options
