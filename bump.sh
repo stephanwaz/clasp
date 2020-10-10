@@ -30,7 +30,7 @@ then
 			git tag v$new_version
 			git push --tags
 		fi
-		git push origin dev3
+		git push
 	fi
 	read -p "build? " -n 1 -r
 	echo
