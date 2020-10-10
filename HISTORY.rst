@@ -3,6 +3,10 @@
 History
 =======
 
+1.1.1
+-----
+cleanup RST parsing
+
 1.1.0
 -----
 better parsing for --help output (can parse basic rst)
