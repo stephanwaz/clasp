@@ -206,7 +206,7 @@ def click_ext(click):
             formatter.write_paragraph()
 
     def _process_as_rst(text):
-        parser.parse(text, document)
+        parser.parse(text.replace("*", "\\*"), document)
         translator = sphinx.writers.text.TextTranslator(document,
                                                         builder)
         document.walkabout(translator)

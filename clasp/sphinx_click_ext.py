@@ -30,7 +30,6 @@ from clasp.click_ext import index_param, index_seps
 from clasp.click_callbacks import pretty_callback_names as pcn
 
 
-
 def _filter_commands(ctx, commands=None):
     """Return list of used commands."""
     lookup = getattr(ctx.command, 'commands', {})
@@ -109,6 +108,8 @@ def _format_command(ctx, show_nested, commands=None):
         yield ''
 
     for line in lines:
+        if ':default:' in line:
+            line = line.replace("*", "\\*")
         yield line
 
     # environment variables
@@ -141,6 +142,7 @@ ext._format_command = _format_command
 
 class ClaspClickDirective(ext.ClickDirective):
     pass
+
 
 def setup(app):
     app.add_directive('click', ClaspClickDirective)
