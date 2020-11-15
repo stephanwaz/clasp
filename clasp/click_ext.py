@@ -240,13 +240,14 @@ def click_ext(click):
         opts = [i[-1] for i in sorted(opts + seps, key=lambda x: (x[0], x[1]))]
         if opts:
             with formatter.section('Options'):
-                formatter.width = sphinx.writers.text.MAXWIDTH
                 indent = ' '*formatter.current_indent
                 for opt in opts:
                     formatter.write(f"{indent}{opt[0]}\n")
                     rst = _process_as_rst(opt[1])
                     formatter.indent()
                     formatter.indent()
+                    formatter.width = (sphinx.writers.text.MAXWIDTH +
+                                       formatter.current_indent*2)
                     for line in rst.splitlines():
                         formatter.write_text(line)
                     formatter.dedent()
