@@ -257,44 +257,6 @@ def click_ext(click):
     click.core.Command.format_help_text = format_help_text
     click.core.Command.format_options = format_options
 
-    import click._bashcomplete as _bc
-
-    def get_completion_script(prog_name, complete_var, shell):
-        cf_name = _bc._invalid_ident_char_re.sub('',
-                                                 prog_name.replace('-', '_'))
-        if shell == 'zsh':
-            script = _bc.COMPLETION_SCRIPT_ZSH
-        else:
-            script = COMPLETION_SCRIPT_BASH
-        return (script % {
-            'complete_func': '_%s_completion' % cf_name,
-            'script_names': prog_name,
-            'autocomplete_var': complete_var,
-        }).strip() + ';'
-
-    def bashcomplete(cli, prog_name, complete_var, complete_instr):
-        if complete_instr.startswith('source'):
-            shell = 'zsh' if complete_instr == 'source_zsh' else 'bash'
-            click.echo(get_completion_script(prog_name, complete_var, shell))
-            return True
-        elif complete_instr == 'complete' or complete_instr == 'complete_zsh':
-            return _bc.do_complete(cli, prog_name,
-                                   complete_instr == 'complete_zsh')
-        return False
-
-    def _bashcomplete(cmd, prog_name, complete_var=None):
-        """Internal handler for the bash completion support."""
-        if complete_var is None:
-            complete_var = '_%s_COMPLETE' % (prog_name.replace('-', '_'))
-            complete_var = complete_var.upper()
-        complete_instr = os.environ.get(complete_var)
-        if not complete_instr:
-            return
-        if bashcomplete(cmd, prog_name, complete_var, complete_instr):
-            click.core.fast_exit(1)
-
-    click.core._bashcomplete = _bashcomplete
-    click._bashcomplete.COMPLETION_SCRIPT_BASH = COMPLETION_SCRIPT_BASH
     return click
 
 
