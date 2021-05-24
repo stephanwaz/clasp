@@ -51,29 +51,30 @@ import re
 import sys
 import shlex
 import tempfile
-from glob import glob
+
 import click
 from clasp.script_tools import sglob
 import clasp.script_tools as cst
 
 pretty_callback_names = {
-'is_file' : 'FILE',
-'are_files': 'FILES',
-'is_file_iter': 'FILES',
-'are_files_iter': 'FILES',
-'are_files_or_str': 'FILES,INTS,FLOATS,TEXTS',
-'are_files_or_str_iter': 'FILES,INTS,FLOATS,TEXTS',
-'split_str': 'TEXTS',
-'split_str_iter': 'TEXTS',
-'color_inp': 'COLORS',
-'tup_int': 'INTS INTS,INTS',
-'tup_float': 'FLOATS, FLOATS,FLOATS',
-'split_float': 'FLOATS',
-'split_int': 'INTS',
-'are_valid_paths': 'PATHS',
-'int_tups': 'INT,INT INT,INT',
-'tup_list': 'TEXT',
-}
+    'is_file' : 'FILE',
+    'are_files': 'FILES',
+    'is_file_iter': 'FILES',
+    'are_files_iter': 'FILES',
+    'are_files_or_str': 'FILES,INTS,FLOATS,TEXTS',
+    'are_files_or_str_iter': 'FILES,INTS,FLOATS,TEXTS',
+    'split_str': 'TEXTS',
+    'split_str_iter': 'TEXTS',
+    'color_inp': 'COLORS',
+    'tup_int': 'INTS INTS,INTS',
+    'tup_float': 'FLOATS, FLOATS,FLOATS',
+    'split_float': 'FLOATS',
+    'split_int': 'INTS',
+    'are_valid_paths': 'PATHS',
+    'int_tups': 'INT,INT INT,INT',
+    'tup_list': 'TEXT',
+    }
+
 
 def callback_error(s, param, example):
     """standard error message for exceptions raised during argument parsing

@@ -427,14 +427,14 @@ def tmp_clean(ctx):
             pass
 
 
-def invoke_dependency(ctx, cmd, *args):
+def invoke_dependency(ctx, cmd, *args, **kwargs):
     kws = ctx.parent.command.commands[cmd.name].context_settings['default_map']
     for p in ctx.parent.command.commands[cmd.name].params:
         try:
             kws[p.name] = p.process_value(ctx, kws[p.name])
         except KeyError:
             kws[p.name] = p.get_default(ctx)
-    kws.update(reload=True, overwrite=False)
+    kws.update(**kwargs)
     cmd.callback(*args, **kws)
 
 
