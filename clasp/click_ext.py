@@ -15,7 +15,6 @@ import configparser
 import collections
 import traceback
 import functools
-import sys
 import shutil
 
 import sphinx.builders.text
@@ -84,25 +83,13 @@ from clasp import click
 import clasp.click_ext as clk
 import clasp.script_tools as cst
 
+"""{callback_help}"""
+
 @click.command()
 @click.argument('arg1')
-@clk.shared_decs(clk.command_decs('0.1'))
+@clk.shared_decs(clk.command_decs('0.1', wrap=True))
 def main(ctx, arg1, **kwargs):
-    """{callback_help}"""
-    if kwargs['opts']:
-        kwargs['opts'] = False
-        clk.echo_args(arg1, **kwargs)
-    else:
-        try:
-            pass
-        except click.Abort:
-            raise
-        except Exception as ex:
-            clk.print_except(ex, kwargs['debug'])
-    try:
-        clk.tmp_clean(ctx)
-    except Exception:
-        pass
+    pass
 
 if __name__ == '__main__':
     main()'''
@@ -114,6 +101,8 @@ from clasp import click
 import clasp.click_ext as clk
 import clasp.script_tools as cst
 
+"""{callback_help}"""
+
 @click.group()
 @clk.shared_decs(clk.main_decs('0.1'))
 def main(ctx, config, outconfig, configalias, inputalias):
@@ -123,20 +112,9 @@ def main(ctx, config, outconfig, configalias, inputalias):
 
 @main.command()
 @click.argument('arg1')
-@clk.shared_decs(clk.command_decs('0.1'))
+@clk.shared_decs(clk.command_decs('0.1', wrap=True))
 def XXX(ctx, arg1, **kwargs):
-    """{clasp.click_callbacks.__doc__}"""
-    if kwargs['opts']:
-        kwargs['opts'] = False
-        clk.echo_args(arg1, **kwargs)
-    else:
-        try:
-            pass
-        except click.Abort:
-            raise
-        except Exception as ex:
-            clk.print_except(ex, kwargs['debug'])
-    return 'XXX', kwargs, ctx
+    pass
 
 
 @main.resultcallback()
@@ -279,7 +257,7 @@ def wrap_command():
             cname = func.__name__
             try:
                 chain = ctx.parent.command.__dict__['chain']
-            except KeyError:
+            except (KeyError, AttributeError):
                 chain = False
             if chain:
                 kwargs['opts'] = kwargs['opts'] or ctx.parent.params['opts']
