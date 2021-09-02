@@ -382,8 +382,10 @@ def tmp_stdin(ctx):
         f.close()
         if ctx.obj is None:
             ctx.obj = dict(temps=[path])
-        else:
+        elif 'temps' in ctx.obj:
             ctx.obj['temps'].append(path)
+        else:
+            ctx.obj['temps'] = [path]
         return path
     else:
         return "-"
