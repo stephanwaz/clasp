@@ -3,6 +3,23 @@
 History
 =======
 
+1.1.6
+-----
+bugfix on tmp_file creation if ctx.obj exists but temps does not
+bugfix in template scripts
+
+1.1.5
+-----
+upgrade to click 8.0
+
+1.1.4
+-----
+pass kwargs overrides to invoke_dependency
+
+1.1.3
+-----
+fixed format width issue on --help
+
 1.1.1
 -----
 cleanup RST parsing
