@@ -371,9 +371,9 @@ def invoke_dependency(ctx, cmd, *args, **kwargs):
     kws = ctx.parent.command.commands[cmd.name].context_settings['default_map']
     for p in ctx.parent.command.commands[cmd.name].params:
         try:
-            kws[p.name] = p.process_value(ctx, kws[p.name])
+            kws[p.name] = p.process_value(ctx.parent, kws[p.name])
         except KeyError:
-            kws[p.name] = p.get_default(ctx)
+            kws[p.name] = p.get_default(ctx.parent)
     kws.update(**kwargs)
     cmd.callback(*args, **kws)
 
