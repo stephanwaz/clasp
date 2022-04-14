@@ -3,6 +3,10 @@
 History
 =======
 
+1.1.7
+-----
+bugfix in invoke_dependency
+
 1.1.6
 -----
 bugfix on tmp_file creation if ctx.obj exists but temps does not
