@@ -3,6 +3,7 @@ import clasp.script_tools as mgr
 import os
 #pytest -s -v test_script_tools.py
 
+
 def test_pipeline():
     """py.test for pipeline"""
     data = [
@@ -16,22 +17,22 @@ def test_pipeline():
         assert result == a
     os.system("rm test.hdr")
 
+
+def fac(b):
+    def test(a,b):
+        """return a*b!"""
+        if b == 1:
+            return a
+        else:
+            return test(a*b,b-1)
+    return test(1, b)
+
+
 def test_cluster_call():
     """py.test for cluster_call"""
-    
-    def fac(b):
-        def test(a,b):
-            """return a*b!"""
-            if b == 1:
-                return a
-            else:
-                return test(a*b,b-1)
-        return test(1,b)
-    data = [
-    (fac,(range(1,10),))
-    ]
-    answer = [[1,2,6,24,120,720,5040,40320,362880]]
-    for d,a in zip(data,answer):
+    data = [(fac, (range(1,10),))]
+    answer = [[1, 2, 6, 24, 120, 720, 5040, 40320, 362880]]
+    for d, a in zip(data, answer):
         result = mgr.cluster_call(*d)
         assert result == a
 
