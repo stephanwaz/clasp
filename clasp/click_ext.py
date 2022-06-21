@@ -12,6 +12,7 @@ imports callbacks into namespace for convenience
 import types
 from builtins import str
 import configparser
+from configparser import ExtendedInterpolation
 import collections
 import traceback
 import functools
@@ -494,7 +495,7 @@ def index_seps(params):
 
 def get_config(ctx, config, outconfig, configalias, inputalias, template=None):
     """load config file into click options"""
-    Parser = configparser.ConfigParser()
+    Parser = configparser.ConfigParser(interpolation=ExtendedInterpolation())
     com = ctx.info_name.split("_")[-1]
     subc = ctx.invoked_subcommand
     if configalias and template is not None:
@@ -520,7 +521,7 @@ def get_config(ctx, config, outconfig, configalias, inputalias, template=None):
 
 def get_config_chained(ctx, config, outconfig, configalias, inputalias):
     """load config file into click options"""
-    Parser = configparser.ConfigParser()
+    Parser = configparser.ConfigParser(interpolation=ExtendedInterpolation())
     com = ctx.info_name.split("_")[-1]
     bad = outconfig is None and (config is not None or configalias)
     for subc in ctx.command.commands:
@@ -586,7 +587,7 @@ def print_config(ctx, opts, outconfig, config, configalias, chain=False):
             opt = "{}_{}".format(com, configalias)
     else:
         opt = "{}_{}".format(com, opts[0])
-    Parser = configparser.ConfigParser()
+    Parser = configparser.ConfigParser(interpolation=ExtendedInterpolation())
     try:
         Parser.read(config)
     except Exception:
