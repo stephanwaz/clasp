@@ -3,6 +3,10 @@
 History
 =======
 
+1.1.8
+-----
+added extendedinterpolation to config parser ${section:variable}
+
 1.1.7
 -----
 bugfix in invoke_dependency
