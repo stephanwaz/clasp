@@ -6,7 +6,7 @@
 # =======================================================================
 
 """library of functions helpful for cli script development and parallel
-computing particulary w/ subprocess calls."""
+computing particulary with subprocess calls."""
 import sys
 import shlex
 import subprocess

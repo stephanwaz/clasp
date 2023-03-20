@@ -4,6 +4,7 @@ clasp (|release|)
 clasp is  tools for command line and subprocess script development
 
 .. toctree::
+   :maxdepth: 1
 
    clasp.click_ext
    clasp.click_callbacks
