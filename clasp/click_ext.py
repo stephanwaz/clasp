@@ -233,10 +233,10 @@ def wrap_command():
                     raise
                 except click.exceptions.Exit as ex:
                     if ex.exit_code != 0:
-                        print_except(ex, kwargs['debug'])
+                        print_except(ex, kwargs['debug'], ctx=ctx)
                         raise click.Abort
                 except Exception as ex:
-                    print_except(ex, kwargs['debug'])
+                    print_except(ex, kwargs['debug'], ctx=ctx)
                     raise click.Abort
             return cname, kwargs, ctx
         return handle_call
@@ -320,11 +320,14 @@ def shared_decs(decs):
 def tmp_clean(ctx):
     """remove files placed int temps context object
     (called at end of scripts)"""
-    for i in ctx.obj['temps']:
-        try:
-            os.remove(i)
-        except Exception:
-            pass
+    try:
+        for i in ctx.obj['temps']:
+            try:
+                os.remove(i)
+            except Exception:
+                pass
+    except (KeyError, TypeError):
+        pass
 
 
 def invoke_dependency(ctx, cmd, *args, **kwargs):
@@ -341,7 +344,10 @@ def invoke_dependency(ctx, cmd, *args, **kwargs):
 def read_section(Config, dict1, section, options):
     for option in options:
         try:
-            opt = Config.get(section, option)
+            try:
+                opt = Config.get(section, option)
+            except configparser.InterpolationSyntaxError:
+                opt = Config.get(section, option, raw=True)
             if re.match(r'.+_\d+', option):
                 opto = option.rsplit("_", 1)[0]
                 try:
@@ -353,6 +359,7 @@ def read_section(Config, dict1, section, options):
             else:
                 dict1[option] = opt
         except Exception as ex:
+            print(ex.__class__)
             click.echo("exception on {}! {}".format(option, ex), err=True)
             dict1[option] = None
     return dict1
@@ -579,10 +586,12 @@ def print_config(ctx, opts, outconfig, config, configalias, chain=False):
         f.close()
 
 
-def print_except(ex, debug=False):
+def print_except(ex, debug=False, ctx=None):
     """general human readable exception message"""
     if debug:
         traceback.print_exc()
+    elif ctx is not None:
+        tmp_clean(ctx)
     click.echo("\n**************\n**************", err=True)
     click.echo("Execution failed:", err=True)
     click.echo("{}: {}".format(type(ex).__name__, ex), err=True)
