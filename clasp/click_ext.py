@@ -565,7 +565,7 @@ def print_config(ctx, opts, outconfig, config, configalias, chain=False):
     comments = config_comments(config, outconfig)
     for i, v in list(opts[1].items()):
         try:
-            if ismultiple[i]:
+            if ismultiple[i] and v is not None:
                 for j, k in enumerate(v):
                     subo = "{}_{:03d}".format(i, j)
                     Parser = formatarg(Parser, opt, subo, k)

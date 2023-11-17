@@ -219,6 +219,12 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
         returns stdout of pipeline (will be None if outfile is given)
     """
     temps, commands = subpipe(commands)
+    if caperr:
+        f, pt = tempfile.mkstemp(dir="./", prefix='clasp_tmp')
+        stderr = open(pt, 'wb')
+    else:
+        pt = None
+        stderr = None
     pops = [0]*len(commands)
     if outfile is not None and not hasattr(outfile, 'read'):
         if cwd is not None:
@@ -246,13 +252,9 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
         else:
             stdout = subprocess.PIPE
         try:
-            if caperr:
-                pops[i] = subprocess.Popen(shlex.split(commands[i]),
-                                           stdin=stdin, stdout=stdout, cwd=cwd,
-                                           stderr=subprocess.PIPE)
-            else:
-                pops[i] = subprocess.Popen(shlex.split(commands[i]),
-                                           stdin=stdin, stdout=stdout, cwd=cwd)
+            pops[i] = subprocess.Popen(shlex.split(commands[i]),
+                                       stdin=stdin, stdout=stdout, cwd=cwd,
+                                       stderr=stderr)
         except OSError:
             message = "invalid command / no such file: {}".format(commands[i])
             raise OSError(2, message)
@@ -277,7 +279,12 @@ def pipeline(commands, outfile=None, inp=None, close=False, cwd=None,
     for temp in temps:
         os.remove(temp)
     if caperr:
-        return output, out[1]
+        stderr.close()
+        err = open(pt, 'rb')
+        out1 = err.read()
+        err.close()
+        os.remove(pt)
+        return output, out1
     else:
         return output
 
@@ -462,6 +469,8 @@ def read_data_file(dataf, header=False, xheader=False, comment="#",
         click.echo("File: {} has no data".format(dataf), err=True)
         raise click.Abort()
     datastr = [[j.strip() for j in re.split(delim, i.strip())] for i in dl]
+    if header:
+        datastr[0] = shlex.split(" ".join(datastr[0]))
     f.close()
     return datastr
 
